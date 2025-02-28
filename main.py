@@ -1,6 +1,7 @@
 from PyQt5.QtWidgets import QApplication, QWidget, QPushButton, QVBoxLayout, QLabel
 import sys
 from pages.income.view_income import IncomeWindow
+from pages.wallet.view_wallet import WalletView
 
 class Dashboard(QWidget):
     def __init__(self):
@@ -19,10 +20,14 @@ class Dashboard(QWidget):
         self.btn_outcome = QPushButton("Tambah Outcome", self)
         # self.btn_outcome.clicked.connect()
 
+        self.btn_wallet = QPushButton("Wallet", self)
+        self.btn_wallet.clicked.connect(self.open_wallet)
+
         self.layout = QVBoxLayout()
         self.layout.addWidget(self.label)
         self.layout.addWidget(self.btn_income)
         self.layout.addWidget(self.btn_outcome)
+        self.layout.addWidget(self.btn_wallet)
 
         self.setLayout(self.layout)
 
@@ -35,7 +40,8 @@ class Dashboard(QWidget):
         pass
 
     def open_wallet(self):
-        pass
+        self.wallet_window = WalletView()
+        self.wallet_window.show()
 
     def open_wishlist(self):
         pass
