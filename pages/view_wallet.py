@@ -98,10 +98,3 @@ class WalletView(QWidget):
         if confirm == QMessageBox.Yes:
             self.wallet_controller.delete_wallet(name)
             self.load_wallets()
-
-
-# if __name__ == "__main__":
-#     app = QApplication(sys.argv)
-#     window = WalletView()
-#     window.show()
-#     sys.exit(app.exec_())

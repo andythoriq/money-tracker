@@ -1,7 +1,7 @@
 from PyQt5.QtWidgets import QApplication, QWidget, QPushButton, QVBoxLayout, QLabel
 import sys
-from pages.income.view_income import IncomeWindow
-from pages.wallet.view_wallet import WalletView
+from pages.view_income import IncomeWindow
+from pages.view_wallet import WalletView
 
 class Dashboard(QWidget):
     def __init__(self):
