@@ -37,3 +37,16 @@ class Wallet:
         """Menghapus wallet"""
         self.wallets = [wallet for wallet in self.wallets if wallet[0] != name]
         self.save_wallets()
+
+    def update_balance(self, name, amount, transaction_type):
+        """Mengupdate saldo wallet berdasarkan transaksi"""
+        for wallet in self.wallets:
+            if wallet[0] == name:
+                current_balance = int(wallet[1])
+                if transaction_type == "income":
+                    wallet[1] = str(current_balance + amount)
+                elif transaction_type == "outcome":
+                    wallet[1] = str(current_balance - amount)
+                self.save_wallets()
+                return True
+        return False

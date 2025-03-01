@@ -3,7 +3,8 @@ import os
 class Income:
     FILE_PATH = "database/income.txt"
 
-    def __init__(self):
+    def __init__(self, wallet_controller):
+        self.wallet_controller = wallet_controller
         self.incomes = self.load_incomes()
 
     def load_incomes(self):
@@ -20,6 +21,10 @@ class Income:
                 file.write(",".join(income) + "\n")
 
     def add_income(self, amount, category, wallet, description, date):
-        """Menambah pemasukan baru"""
-        self.incomes.append([str(amount), category, wallet, description, date])
+        """Menambah income baru & update saldo wallet"""
+        new_id = str(len(self.incomes) + 1)
+        self.incomes.append([new_id, str(amount), category, wallet, description, date])
         self.save_incomes()
+
+        # Update saldo di wallet
+        self.wallet_controller.update_balance(wallet, int(amount), "income")

@@ -1,21 +1,22 @@
-import sys
 from PyQt5.QtWidgets import (
-    QApplication, QWidget, QVBoxLayout, QHBoxLayout, QPushButton,
+    QWidget, QVBoxLayout, QHBoxLayout, QPushButton,
     QTableWidget, QTableWidgetItem, QLineEdit, QLabel, QGroupBox, QSpinBox, QMessageBox, QInputDialog
 )
 from controller.wallet import Wallet
 
 class WalletView(QWidget):
-    def __init__(self):
-        super().__init__()
+    def __init__(self, parent=None):
+        super().__init__(parent)
         self.wallet_controller = Wallet()
         self.init_ui()
 
     def init_ui(self):
-        self.setWindowTitle("Kelola Wallet")
-        self.setGeometry(100, 100, 500, 400)
-
         layout = QVBoxLayout()
+
+        # Tombol kembali ke Dashboard
+        self.btn_back = QPushButton("Kembali")
+        self.btn_back.clicked.connect(self.go_back)
+        layout.addWidget(self.btn_back)
 
         # === BOX TAMBAH WALLET ===
         self.group_add_wallet = QGroupBox("Tambah Wallet")
@@ -48,6 +49,11 @@ class WalletView(QWidget):
 
         self.setLayout(layout)
         self.load_wallets()
+
+    def go_back(self):
+        """Kembali ke Dashboard"""
+        if self.parent():
+            self.parent().setCurrentIndex(0)  # Indeks 0 adalah Dashboard
 
     def load_wallets(self):
         """Memuat data wallet ke tabel"""
