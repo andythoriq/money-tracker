@@ -19,14 +19,14 @@ class Dashboard(QWidget):
         # Halaman utama (Dashboard)
         self.main_menu = QWidget()
 
-        # Halaman lainnya (Wallet, Income, Outcome) diberikan akses ke stack
+        # Halaman lainnya
         self.wallet_view = WalletView(self.stack)
-        self.income_view = IncomeView()
-        self.outcome_view = OutcomeView()
+        self.income_view = IncomeView(self.stack)
+        self.outcome_view = OutcomeView(self.stack)
 
         self.init_main_menu()
-        self.stack.addWidget(self.main_menu)  # Index 0 -> Dashboard
-        self.stack.addWidget(self.wallet_view)  # Index 1 -> WalletView
+        self.stack.addWidget(self.main_menu)
+        self.stack.addWidget(self.wallet_view)
         self.stack.addWidget(self.income_view)
         self.stack.addWidget(self.outcome_view)
 
@@ -41,10 +41,10 @@ class Dashboard(QWidget):
         layout.addWidget(self.label)
 
         self.btn_income = QPushButton("Tambah Income", self)
-        self.btn_income.clicked.connect(lambda: self.stack.setCurrentWidget(self.income_view))
+        self.btn_income.clicked.connect(lambda: self.show_income())
 
         self.btn_outcome = QPushButton("Tambah Outcome", self)
-        self.btn_outcome.clicked.connect(lambda: self.stack.setCurrentWidget(self.outcome_view))
+        self.btn_outcome.clicked.connect(lambda: self.show_outcome())
 
         self.btn_wallet = QPushButton("Wallet", self)
         self.btn_wallet.clicked.connect(lambda: self.stack.setCurrentWidget(self.wallet_view))
@@ -54,6 +54,14 @@ class Dashboard(QWidget):
         layout.addWidget(self.btn_wallet)
 
         self.main_menu.setLayout(layout)
+
+    def show_income(self):
+        self.income_view.refresh_combobox()
+        self.stack.setCurrentWidget(self.income_view)
+
+    def show_outcome(self):
+        self.outcome_view.refresh_combobox()
+        self.stack.setCurrentWidget(self.outcome_view)
 
 if __name__ == '__main__':
     app = QApplication(sys.argv)

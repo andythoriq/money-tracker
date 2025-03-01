@@ -6,6 +6,7 @@ class IncomeView(QWidget):
     def __init__(self, parent=None):
         super().__init__(parent)
         self.income_controller = Income(Wallet)
+        self.wallet_controller = Wallet()
         self.init_ui()
 
     def init_ui(self):
@@ -38,6 +39,12 @@ class IncomeView(QWidget):
         layout.addWidget(self.btn_back)
 
         self.setLayout(layout)
+
+    def refresh_combobox(self):
+        """Memuat QComboBox"""
+        self.input_wallet.clear()
+        wallet_names = self.wallet_controller.load_wallet_names()
+        self.input_wallet.addItems(wallet_names)
 
     def add_income(self):
         """Menambahkan pemasukan"""
