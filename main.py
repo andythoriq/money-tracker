@@ -1,6 +1,5 @@
 from PyQt5.QtWidgets import QApplication, QWidget, QPushButton, QVBoxLayout, QLabel
 import sys
-from pages.view_income import IncomeWindow
 from pages.view_wallet import WalletView
 
 class Dashboard(QWidget):
@@ -15,7 +14,7 @@ class Dashboard(QWidget):
         self.label = QLabel("Welcome to Money Tracker", self)
 
         self.btn_income = QPushButton("Tambah Income", self)
-        self.btn_income.clicked.connect(self.open_income)
+        # self.btn_income.clicked.connect(self.open_income)
 
         self.btn_outcome = QPushButton("Tambah Outcome", self)
         # self.btn_outcome.clicked.connect()
@@ -33,8 +32,7 @@ class Dashboard(QWidget):
 
     # method untuk masing-masing window
     def open_income(self):
-        self.income_window = IncomeWindow()
-        self.income_window.show()
+        pass
 
     def open_outcome(self):
         pass
