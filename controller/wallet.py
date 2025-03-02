@@ -46,7 +46,7 @@ class Wallet:
                 if transaction_type == "income":
                     wallet[1] = str(current_balance + amount)
                 elif transaction_type == "outcome":
-                    if (current_balance < int(amount)):
+                    if (current_balance < amount):
                         return False
 
                     wallet[1] = str(current_balance - amount)

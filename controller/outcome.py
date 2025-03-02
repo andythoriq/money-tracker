@@ -22,11 +22,10 @@ class Outcome:
 
     def add_outcome(self, amount, category, wallet, description, date):
         """Menambah outcome baru & update saldo wallet"""
-        new_id = str(len(self.outcomes) + 1)
-        self.outcomes.append([new_id, str(amount), category, wallet, description, date])
-
         # Update saldo di wallet
         if (self.wallet_controller.update_balance(wallet, int(amount), "outcome")):
+            new_id = str(len(self.outcomes) + 1)
+            self.outcomes.append([new_id, str(amount), category, wallet, description, date])
             self.save_outcomes()
             return True
         

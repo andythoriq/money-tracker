@@ -72,7 +72,7 @@ class OutcomeView(QWidget):
         desc = self.input_desc.text().strip()
         date = self.input_date.text().strip()
         if amount:
-            if (self.outcome_controller.add_outcome(amount, category, wallet, desc, date)) == False:
+            if self.outcome_controller.add_outcome(amount, category, wallet, desc, date) == False:
                 print("Gagal menambahkan data (perhatikan jumlah uang yang dimasukkan!)")
 
             self.refresh_inputs()
