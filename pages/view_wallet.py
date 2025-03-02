@@ -26,8 +26,10 @@ class WalletView(QWidget):
         self.input_name.setPlaceholderText("Nama Wallet")
 
         self.input_amount = QSpinBox()
+        self.input_amount.setMinimum(0)
         self.input_amount.setMaximum(1000000000)
         self.input_amount.setPrefix("Rp ")
+        self.input_amount.setSingleStep(50000)
 
         self.btn_add = QPushButton("Tambah")
         self.btn_add.clicked.connect(self.add_wallet)

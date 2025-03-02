@@ -45,18 +45,21 @@ class Dashboard(QWidget):
 
         self.btn_income = QPushButton("Tambah Income", self)
         self.btn_income.clicked.connect(lambda: (
-            self.income_view.refresh_combobox(),
+            self.income_view.refresh_inputs(),
             self.stack.setCurrentWidget(self.income_view)
         ))
 
         self.btn_outcome = QPushButton("Tambah Outcome", self)
         self.btn_outcome.clicked.connect(lambda: (
-            self.outcome_view.refresh_combobox(), 
+            self.outcome_view.refresh_inputs(), 
             self.stack.setCurrentWidget(self.outcome_view)
         ))
 
         self.btn_wallet = QPushButton("Wallet", self)
-        self.btn_wallet.clicked.connect(lambda: self.stack.setCurrentWidget(self.wallet_view))
+        self.btn_wallet.clicked.connect(lambda: (
+            self.wallet_view.load_wallets(),
+            self.stack.setCurrentWidget(self.wallet_view)
+        ))
 
         self.btn_category = QPushButton("Manage Categories")
         self.btn_category.clicked.connect(lambda: self.stack.setCurrentWidget(self.category_view))

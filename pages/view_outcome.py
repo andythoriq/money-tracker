@@ -1,4 +1,4 @@
-from PyQt5.QtWidgets import QWidget, QVBoxLayout, QLabel, QLineEdit, QPushButton, QComboBox, QDateEdit
+from PyQt5.QtWidgets import QWidget, QVBoxLayout, QLabel, QLineEdit, QPushButton, QComboBox, QDateEdit, QSpinBox
 from PyQt5.QtGui import QRegExpValidator
 from PyQt5.QtCore import QRegExp
 from controller.outcome import Outcome
@@ -16,14 +16,18 @@ class OutcomeView(QWidget):
     def init_ui(self):
         layout = QVBoxLayout()
 
-        self.input_amount = QLineEdit()
+        self.input_amount = QSpinBox()
+        self.input_amount.setMinimum(0)
+        self.input_amount.setMaximum(1000000000)
+        self.input_amount.setPrefix("Rp ")
+        self.input_amount.setSingleStep(50000)
         self.input_category = QComboBox()
         self.input_wallet = QComboBox()
         self.input_desc = QLineEdit()
         self.input_desc.setValidator(QRegExpValidator(QRegExp("[a-zA-Z0-9 ]+")))
         self.input_date = QDateEdit()
 
-        layout.addWidget(QLabel("Masukkan Jumlah"))
+        layout.addWidget(QLabel("Masukkan Jumlah Pengeluaran"))
         layout.addWidget(self.input_amount)
         layout.addWidget(QLabel("Pilih Kategori"))
         layout.addWidget(self.input_category)
@@ -45,29 +49,33 @@ class OutcomeView(QWidget):
 
         self.setLayout(layout)
 
-    def refresh_combobox(self):
+    def refresh_inputs(self):
         """Memuat ulang QComboBox"""
+        self.input_amount.setValue(0)
+        self.input_desc.clear()
+        self.input_date.clear()
         self.input_category.clear()
         self.input_wallet.clear()
+        
         category_names = self.category_controller.load_category_names("outcome")
-        wallet_names = self.wallet_controller.load_wallet_names()
+        wallets = self.wallet_controller.load_wallets()
+
         self.input_category.addItems(category_names)
-        self.input_wallet.addItems(wallet_names)
+        for wallet in wallets:
+            self.input_wallet.addItem(f"{wallet[0]} - Rp {wallet[1]}", wallet[0])
 
     def add_outcome(self):
         """Menambahkan pengeluaran"""
-        amount = self.input_amount.text().strip()
+        amount = self.input_amount.value()
         category = self.input_category.currentText().strip()
-        wallet = self.input_wallet.currentText().strip()
+        wallet = self.input_wallet.currentData()
         desc = self.input_desc.text().strip()
         date = self.input_date.text().strip()
         if amount:
             if (self.outcome_controller.add_outcome(amount, category, wallet, desc, date)) == False:
                 print("Gagal menambahkan data (perhatikan jumlah uang yang dimasukkan!)")
 
-            self.input_amount.clear()
-            self.input_desc.clear()
-            self.input_date.clear()
+            self.refresh_inputs()
         else:
             print("Jumlah tidak boleh kosong!")
 

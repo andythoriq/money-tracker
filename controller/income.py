@@ -24,7 +24,10 @@ class Income:
         """Menambah income baru & update saldo wallet"""
         new_id = str(len(self.incomes) + 1)
         self.incomes.append([new_id, str(amount), category, wallet, description, date])
-        self.save_incomes()
 
         # Update saldo di wallet
-        self.wallet_controller.update_balance(wallet, int(amount), "income")
+        if (self.wallet_controller.update_balance(wallet, int(amount), "income")):
+            self.save_incomes()
+            return True
+        
+        return False

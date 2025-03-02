@@ -13,11 +13,6 @@ class Wallet:
         with open(self.FILE_PATH, "r") as file:
             return [line.strip().split(",") for line in file.readlines()]
 
-    def load_wallet_names(self):
-        """Mengembalikan daftar nama wallet dalam bentuk list"""
-        wallets = self.load_wallets()
-        return [wallet[0] + " - Rp " + wallet[1] for wallet in wallets]
-
     def save_wallets(self):
         """Menyimpan data wallet ke file"""
         with open(self.FILE_PATH, "w") as file:
