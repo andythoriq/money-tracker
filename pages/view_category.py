@@ -71,10 +71,10 @@ class CategoryView(QWidget):
 
             # Tombol Delete
             btn_delete = QPushButton("Delete")
-            btn_delete.clicked.connect(lambda _, n=name: self.confirm_delete(n))
+            btn_delete.clicked.connect(lambda _, n=name, t=category_type: self.confirm_delete(n,t))
             self.table.setCellWidget(row_idx, 2, btn_delete)
 
-    def confirm_delete(self, name):
+    def confirm_delete(self, name, category_type):
         """Popup konfirmasi sebelum menghapus kategori"""
         reply = QMessageBox.question(
             self, "Delete Category",
@@ -83,7 +83,7 @@ class CategoryView(QWidget):
         )
 
         if reply == QMessageBox.Yes:
-            self.category_controller.delete_category(name)
+            self.category_controller.delete_category(name, category_type)
             self.load_categories()
 
     def back_to_dashboard(self):

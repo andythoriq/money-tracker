@@ -16,7 +16,7 @@ class Wallet:
     def load_wallet_names(self):
         """Mengembalikan daftar nama wallet dalam bentuk list"""
         wallets = self.load_wallets()
-        return [wallet[0] for wallet in wallets]
+        return [wallet[0] + " - Rp " + wallet[1] for wallet in wallets]
 
     def save_wallets(self):
         """Menyimpan data wallet ke file"""
@@ -51,7 +51,12 @@ class Wallet:
                 if transaction_type == "income":
                     wallet[1] = str(current_balance + amount)
                 elif transaction_type == "outcome":
+                    if (current_balance < int(amount)):
+                        return False
+
                     wallet[1] = str(current_balance - amount)
+
                 self.save_wallets()
                 return True
+
         return False

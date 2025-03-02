@@ -21,13 +21,14 @@ class Category:
         with open(self.FILE_PATH, "a") as file:
             file.write(f"{name},{category_type}\n")
 
-    def delete_category(self, name):
+    def delete_category(self, name, category_type):
         """
         Menghapus kategori berdasarkan nama.
         :param name: Nama kategori yang ingin dihapus
+        :param category_type: Category yang ingin  dihapus
         """
         categories = self.load_categories()
-        new_categories = [cat for cat in categories if cat[0] != name]
+        new_categories = [cat for cat in categories if not (cat[0] == name and cat[1] == category_type)]
 
         with open(self.FILE_PATH, "w") as file:
             for cat in new_categories:
