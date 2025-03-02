@@ -50,13 +50,14 @@ class IncomeView(QWidget):
         self.setLayout(layout)
 
     def refresh_inputs(self):
-        """Memuat QComboBox"""
         self.input_amount.setValue(0)
         self.input_desc.clear()
         self.input_date.clear()
+
+    def refresh_combobox(self):
         self.input_category.clear()
         self.input_wallet.clear()
-        
+
         category_names = self.category_controller.load_category_names("income")
         wallets = self.wallet_controller.load_wallets()
 
@@ -71,11 +72,13 @@ class IncomeView(QWidget):
         wallet = self.input_wallet.currentData()
         desc = self.input_desc.text().strip()
         date = self.input_date.text().strip()
+
         if amount:
             if self.income_controller.add_income(amount, category, wallet, desc, date) == False:
                 print("Gagal menambahkan data")
 
             self.refresh_inputs()
+            self.refresh_combobox()
         else:
             print("Jumlah tidak boleh kosong!")
 

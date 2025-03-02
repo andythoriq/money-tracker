@@ -45,13 +45,13 @@ class Dashboard(QWidget):
 
         self.btn_income = QPushButton("Tambah Income", self)
         self.btn_income.clicked.connect(lambda: (
-            self.income_view.refresh_inputs(),
+            self.income_view.refresh_combobox(),
             self.stack.setCurrentWidget(self.income_view)
         ))
 
         self.btn_outcome = QPushButton("Tambah Outcome", self)
         self.btn_outcome.clicked.connect(lambda: (
-            self.outcome_view.refresh_inputs(), 
+            self.outcome_view.refresh_combobox(), 
             self.stack.setCurrentWidget(self.outcome_view)
         ))
 
