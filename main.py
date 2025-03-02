@@ -3,6 +3,7 @@ import sys
 from pages.view_wallet import WalletView
 from pages.view_income import IncomeView
 from pages.view_outcome import OutcomeView
+from pages.view_category import CategoryView
 
 class Dashboard(QWidget):
     def __init__(self):
@@ -23,12 +24,14 @@ class Dashboard(QWidget):
         self.wallet_view = WalletView(self.stack)
         self.income_view = IncomeView(self.stack)
         self.outcome_view = OutcomeView(self.stack)
+        self.category_view = CategoryView(self.stack)
 
         self.init_main_menu()
         self.stack.addWidget(self.main_menu)
         self.stack.addWidget(self.wallet_view)
         self.stack.addWidget(self.income_view)
         self.stack.addWidget(self.outcome_view)
+        self.stack.addWidget(self.category_view)
 
         main_layout = QVBoxLayout()
         main_layout.addWidget(self.stack)
@@ -49,9 +52,13 @@ class Dashboard(QWidget):
         self.btn_wallet = QPushButton("Wallet", self)
         self.btn_wallet.clicked.connect(lambda: self.stack.setCurrentWidget(self.wallet_view))
 
+        self.btn_category = QPushButton("Manage Categories")
+        self.btn_category.clicked.connect(lambda: self.stack.setCurrentWidget(self.category_view))
+
         layout.addWidget(self.btn_income)
         layout.addWidget(self.btn_outcome)
         layout.addWidget(self.btn_wallet)
+        layout.addWidget(self.btn_category)
 
         self.main_menu.setLayout(layout)
 
