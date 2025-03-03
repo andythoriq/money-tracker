@@ -46,6 +46,10 @@ class IncomeView(QWidget):
         wallet_names = self.wallet_controller.load_wallet_names()
         self.input_wallet.addItems(wallet_names)
 
+        self.input_category.clear()
+        category_names = ["Makanan", "Minuman", "Hiburan", "Elektronik", "Transportasi", "Kesehatan", "Lainnya"]
+        self.input_category.addItems(category_names)
+
     def add_income(self):
         """Menambahkan pemasukan"""
         amount = self.input_amount.text().strip()

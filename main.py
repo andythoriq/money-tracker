@@ -1,70 +1,25 @@
-from PyQt5.QtWidgets import QApplication, QWidget, QPushButton, QVBoxLayout, QLabel, QStackedWidget
 import sys
-from pages.view_wallet import WalletView
-from pages.view_income import IncomeView
-from pages.view_outcome import OutcomeView
-
-class Dashboard(QWidget):
-    def __init__(self):
-        super().__init__()
-        self.init_ui()
-
-    def init_ui(self):
-        self.setWindowTitle("Money Tracker - Dashboard")
-        # self.setGeometry(100, 100, 400, 300)
-        self.setGeometry(300, 300, 600, 500)
-
-        self.stack = QStackedWidget(self)
-
-        # Halaman utama (Dashboard)
-        self.main_menu = QWidget()
-
-        # Halaman lainnya
-        self.wallet_view = WalletView(self.stack)
-        self.income_view = IncomeView(self.stack)
-        self.outcome_view = OutcomeView(self.stack)
-
-        self.init_main_menu()
-        self.stack.addWidget(self.main_menu)
-        self.stack.addWidget(self.wallet_view)
-        self.stack.addWidget(self.income_view)
-        self.stack.addWidget(self.outcome_view)
-
-        main_layout = QVBoxLayout()
-        main_layout.addWidget(self.stack)
-        self.setLayout(main_layout)
-
-    def init_main_menu(self):
-        layout = QVBoxLayout()
-
-        self.label = QLabel("Welcome to Money Tracker", self)
-        layout.addWidget(self.label)
-
-        self.btn_income = QPushButton("Tambah Income", self)
-        self.btn_income.clicked.connect(lambda: self.show_income())
-
-        self.btn_outcome = QPushButton("Tambah Outcome", self)
-        self.btn_outcome.clicked.connect(lambda: self.show_outcome())
-
-        self.btn_wallet = QPushButton("Wallet", self)
-        self.btn_wallet.clicked.connect(lambda: self.stack.setCurrentWidget(self.wallet_view))
-
-        layout.addWidget(self.btn_income)
-        layout.addWidget(self.btn_outcome)
-        layout.addWidget(self.btn_wallet)
-
-        self.main_menu.setLayout(layout)
-
-    def show_income(self):
-        self.income_view.refresh_combobox()
-        self.stack.setCurrentWidget(self.income_view)
-
-    def show_outcome(self):
-        self.outcome_view.refresh_combobox()
-        self.stack.setCurrentWidget(self.outcome_view)
+from PyQt5.QtWidgets import QApplication
+from pages.view_splashscreen import SplashScreen
+from pages.view_dashboard import Dashboard, load_stylesheet
+from PyQt5.QtCore import QTimer
 
 if __name__ == '__main__':
     app = QApplication(sys.argv)
-    dashboard = Dashboard()
-    dashboard.show()
+
+    load_stylesheet(app)
+
+    # Create and show splash screen
+    splash = SplashScreen()
+    splash.show()
+
+    # Load main window after delay
+    def start_main_window():
+        splash.close()  # Close splash screen
+        dashboard = Dashboard()
+        dashboard.show()
+
+    # Set delay before opening main window (e.g., 3 seconds)
+    QTimer.singleShot(3000, start_main_window)
+
     sys.exit(app.exec_())
