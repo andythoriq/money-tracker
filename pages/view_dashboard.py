@@ -1,10 +1,9 @@
 import sys
 from PyQt5.QtWidgets import QApplication, QWidget, QPushButton, QVBoxLayout, QLabel, QStackedWidget
-from PyQt5.QtCore import QTimer
-from pages.view_splashscreen import SplashScreen
 from pages.view_wallet import WalletView
 from pages.view_income import IncomeView
 from pages.view_outcome import OutcomeView
+from pages.view_category import CategoryView
 
 def load_stylesheet(app, filename="styles/style.qss"):
     with open(filename, "r") as file:
@@ -31,12 +30,14 @@ class Dashboard(QWidget):
         self.wallet_view = WalletView(self.stack)
         self.income_view = IncomeView(self.stack)
         self.outcome_view = OutcomeView(self.stack)
+        self.category_view = CategoryView(self.stack)
 
         self.init_main_menu()
         self.stack.addWidget(self.main_menu)
         self.stack.addWidget(self.wallet_view)
         self.stack.addWidget(self.income_view)
         self.stack.addWidget(self.outcome_view)
+        self.stack.addWidget(self.category_view)
 
         main_layout = QVBoxLayout()
         main_layout.addWidget(self.stack)
@@ -49,27 +50,32 @@ class Dashboard(QWidget):
         layout.addWidget(self.label)
 
         self.btn_income = QPushButton("Tambah Income", self)
-        self.btn_income.clicked.connect(lambda: self.show_income())
+        self.btn_income.clicked.connect(lambda: (
+            self.income_view.refresh_combobox(),
+            self.stack.setCurrentWidget(self.income_view)
+        ))
 
         self.btn_outcome = QPushButton("Tambah Outcome", self)
-        self.btn_outcome.clicked.connect(lambda: self.show_outcome())
+        self.btn_outcome.clicked.connect(lambda: (
+            self.outcome_view.refresh_combobox(), 
+            self.stack.setCurrentWidget(self.outcome_view)
+        ))
 
         self.btn_wallet = QPushButton("Wallet", self)
-        self.btn_wallet.clicked.connect(lambda: self.stack.setCurrentWidget(self.wallet_view))
+        self.btn_wallet.clicked.connect(lambda: (
+            self.wallet_view.load_wallets(),
+            self.stack.setCurrentWidget(self.wallet_view)
+        ))
+
+        self.btn_category = QPushButton("Manage Categories")
+        self.btn_category.clicked.connect(lambda: self.stack.setCurrentWidget(self.category_view))
 
         layout.addWidget(self.btn_income)
         layout.addWidget(self.btn_outcome)
         layout.addWidget(self.btn_wallet)
+        layout.addWidget(self.btn_category)
 
         self.main_menu.setLayout(layout)
-
-    def show_income(self):
-        self.income_view.refresh_combobox()
-        self.stack.setCurrentWidget(self.income_view)
-
-    def show_outcome(self):
-        self.outcome_view.refresh_combobox()
-        self.stack.setCurrentWidget(self.outcome_view)
 
     def center_on_screen(self):
         """Memusatkan jendela di tengah layar."""
