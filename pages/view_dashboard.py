@@ -3,6 +3,7 @@ from PyQt5.QtWidgets import QApplication, QWidget, QPushButton, QVBoxLayout, QLa
 from pages.view_wallet import WalletView
 from pages.view_income import IncomeView
 from pages.view_outcome import OutcomeView
+from pages.view_history import HistoryView
 from pages.view_category import CategoryView
 
 def load_stylesheet(app, filename="styles/style.qss"):
@@ -30,6 +31,7 @@ class Dashboard(QWidget):
         self.wallet_view = WalletView(self.stack)
         self.income_view = IncomeView(self.stack)
         self.outcome_view = OutcomeView(self.stack)
+        self.history_view = HistoryView(self.stack)
         self.category_view = CategoryView(self.stack)
 
         self.init_main_menu()
@@ -37,6 +39,7 @@ class Dashboard(QWidget):
         self.stack.addWidget(self.wallet_view)
         self.stack.addWidget(self.income_view)
         self.stack.addWidget(self.outcome_view)
+        self.stack.addWidget(self.history_view)
         self.stack.addWidget(self.category_view)
 
         main_layout = QVBoxLayout()
@@ -61,6 +64,12 @@ class Dashboard(QWidget):
             self.stack.setCurrentWidget(self.outcome_view)
         ))
 
+        self.btn_history = QPushButton("History Transaksi", self)
+        self.btn_history.clicked.connect(lambda: (
+            self.history_view.load_data("all"),
+            self.stack.setCurrentWidget(self.history_view)
+        ))
+
         self.btn_wallet = QPushButton("Wallet", self)
         self.btn_wallet.clicked.connect(lambda: (
             self.wallet_view.load_wallets(),
@@ -72,6 +81,7 @@ class Dashboard(QWidget):
 
         layout.addWidget(self.btn_income)
         layout.addWidget(self.btn_outcome)
+        layout.addWidget(self.btn_history)
         layout.addWidget(self.btn_wallet)
         layout.addWidget(self.btn_category)
 
