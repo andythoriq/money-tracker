@@ -1,4 +1,4 @@
-from PyQt5.QtWidgets import QWidget, QVBoxLayout, QPushButton, QTableWidget, QTableWidgetItem, QHBoxLayout, QLabel
+from PyQt5.QtWidgets import QWidget, QVBoxLayout, QPushButton, QTableWidget, QTableWidgetItem, QHBoxLayout, QLabel, QRadioButton, QButtonGroup
 from datetime import datetime
 from controller.income import Income
 from controller.outcome import Outcome
@@ -21,20 +21,29 @@ class HistoryView(QWidget):
         self.btn_back.clicked.connect(self.go_back)
         layout.addWidget(self.btn_back)
 
-        # Tombol Filter (Income, Outcome, Semua)
+        # Radio Button Filter (Income, Outcome, Semua)
         btn_layout = QHBoxLayout()
-        self.btn_income = QPushButton("Income")
-        self.btn_income.clicked.connect(lambda: self.load_data("income"))
+        self.radio_group = QButtonGroup(self)
 
-        self.btn_outcome = QPushButton("Outcome")
-        self.btn_outcome.clicked.connect(lambda: self.load_data("outcome"))
+        self.radio_income = QRadioButton("Income")
+        self.radio_outcome = QRadioButton("Outcome")
+        self.radio_all = QRadioButton("Semua")
 
-        self.btn_all = QPushButton("Semua")
-        self.btn_all.clicked.connect(lambda: self.load_data("all"))
+        self.radio_group.addButton(self.radio_income)
+        self.radio_group.addButton(self.radio_outcome)
+        self.radio_group.addButton(self.radio_all)
 
-        btn_layout.addWidget(self.btn_income)
-        btn_layout.addWidget(self.btn_outcome)
-        btn_layout.addWidget(self.btn_all)
+        # Set "Semua" sebagai default pilihan
+        self.radio_all.setChecked(True)
+
+        # Event handler untuk perubahan pilihan
+        self.radio_income.toggled.connect(lambda: self.load_data("income"))
+        self.radio_outcome.toggled.connect(lambda: self.load_data("outcome"))
+        self.radio_all.toggled.connect(lambda: self.load_data("all"))
+
+        btn_layout.addWidget(self.radio_income)
+        btn_layout.addWidget(self.radio_outcome)
+        btn_layout.addWidget(self.radio_all)
 
         layout.addLayout(btn_layout)
 
@@ -42,12 +51,13 @@ class HistoryView(QWidget):
         self.table = QTableWidget()
         self.table.setColumnCount(5)
         self.table.setHorizontalHeaderLabels(["Tanggal", "Jenis", "Jumlah", "Kategori", "Dompet"])
-        self.table.setSortingEnabled(True)  # Mengaktifkan sorting
+        self.table.setSortingEnabled(True)
+        self.table.setEditTriggers(QTableWidget.NoEditTriggers)
 
         layout.addWidget(self.table)
 
-        # Text Total
-        self.label = QLabel(f"Total : ")
+        # Label Total
+        self.label = QLabel(f"Total : Rp 0")
         layout.addWidget(self.label)
 
         self.setLayout(layout)
