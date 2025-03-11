@@ -1,8 +1,9 @@
 from PyQt5.QtWidgets import QWidget, QVBoxLayout, QLabel, QLineEdit, QPushButton, QComboBox, QDateEdit, QSpinBox
 from PyQt5.QtGui import QRegExpValidator
-from PyQt5.QtCore import QRegExp
+from PyQt5.QtCore import QRegExp, QDate
 from controller.income import Income
 from controller.category import Category
+from datetime import datetime
 from controller.wallet import Wallet
 
 class IncomeView(QWidget):
@@ -12,6 +13,11 @@ class IncomeView(QWidget):
         self.category_controller = Category()
         self.wallet_controller = Wallet()
         self.init_ui()
+
+    def gettime(self):
+        now = datetime.now()
+        date_str = now.strftime("%Y-%m-%d")
+        return QDate.fromString(date_str, "yyyy-MM-dd")
 
     def init_ui(self):
         layout = QVBoxLayout()
@@ -26,6 +32,7 @@ class IncomeView(QWidget):
         self.input_desc = QLineEdit()
         self.input_desc.setValidator(QRegExpValidator(QRegExp("[a-zA-Z0-9 ]+")))
         self.input_date = QDateEdit()
+        self.input_date.setDate(self.gettime())
 
         layout.addWidget(QLabel("Masukkan Jumlah Pemasukkan"))
         layout.addWidget(self.input_amount)
