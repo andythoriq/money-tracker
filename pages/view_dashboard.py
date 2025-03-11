@@ -67,6 +67,7 @@ class Dashboard(QWidget):
         self.btn_history = QPushButton("History Transaksi", self)
         self.btn_history.clicked.connect(lambda: (
             self.history_view.load_data("all"),
+            self.history_view.radio_all.setChecked(True),
             self.stack.setCurrentWidget(self.history_view)
         ))
 

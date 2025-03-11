@@ -14,6 +14,11 @@ class Wallet:
             return []
         with open(self.FILE_PATH, "r") as file:
             return [line.strip().split(",") for line in file.readlines()]
+        
+    def load_wallet_names(self):
+        """Memuat nama wallet dari file"""
+        wallets = self.load_wallets()
+        return [wallet[0] for wallet in wallets if len(wallet) > 0]
 
     def save_wallets(self, wallets):
         """Menyimpan data wallet ke file"""

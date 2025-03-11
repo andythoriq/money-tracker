@@ -1,18 +1,22 @@
 from PyQt5.QtWidgets import (
     QWidget, QVBoxLayout, QPushButton, QTableWidget, 
-    QTableWidgetItem, QHBoxLayout, QLabel, QRadioButton, QButtonGroup
+    QTableWidgetItem, QHBoxLayout, QLabel, QRadioButton, 
+    QButtonGroup, QDialog, QFormLayout, QSpinBox, 
+    QComboBox, QLineEdit, QCalendarWidget, QMessageBox
 )
 from datetime import datetime
 from controller.income import Income
 from controller.outcome import Outcome
 from controller.wallet import Wallet
-
+from controller.category import Category
 
 class HistoryView(QWidget):
     def __init__(self, parent=None):
         super().__init__(parent)
-        self.income_controller = Income(Wallet())
-        self.outcome_controller = Outcome(Wallet())
+        self.wallet_controller = Wallet()
+        self.category_controller = Category()
+        self.income_controller = Income(self.wallet_controller)
+        self.outcome_controller = Outcome(self.wallet_controller)
         self.init_ui()
 
     def init_ui(self):
@@ -24,7 +28,7 @@ class HistoryView(QWidget):
         self.btn_back.clicked.connect(self.go_back)
         layout.addWidget(self.btn_back)
 
-        # Radio Button Filter (Income, Outcome, Semua)
+        # Radio Button Filter
         btn_layout = QHBoxLayout()
         self.radio_group = QButtonGroup(self)
 
@@ -36,10 +40,7 @@ class HistoryView(QWidget):
         self.radio_group.addButton(self.radio_outcome)
         self.radio_group.addButton(self.radio_all)
 
-        # Set "Semua" sebagai default pilihan
         self.radio_all.setChecked(True)
-
-        # Event handler untuk perubahan pilihan
         self.radio_income.toggled.connect(lambda: self.load_data("income"))
         self.radio_outcome.toggled.connect(lambda: self.load_data("outcome"))
         self.radio_all.toggled.connect(lambda: self.load_data("all"))
@@ -47,13 +48,12 @@ class HistoryView(QWidget):
         btn_layout.addWidget(self.radio_income)
         btn_layout.addWidget(self.radio_outcome)
         btn_layout.addWidget(self.radio_all)
-
         layout.addLayout(btn_layout)
 
         # Tabel Transaksi
         self.table = QTableWidget()
-        self.table.setColumnCount(6)
-        self.table.setHorizontalHeaderLabels(["Tanggal", "Jenis", "Jumlah", "Kategori", "Dompet", "Deskripsi"])
+        self.table.setColumnCount(8)
+        self.table.setHorizontalHeaderLabels(["Tanggal", "Jenis", "Jumlah", "Kategori", "Dompet", "Deskripsi", "Edit", "Delete"])
         self.table.setSortingEnabled(True)
         self.table.setEditTriggers(QTableWidget.NoEditTriggers)
 
@@ -64,32 +64,32 @@ class HistoryView(QWidget):
         layout.addWidget(self.label)
 
         self.setLayout(layout)
-
-        # Load data awal (semua transaksi)
         self.load_data("all")
 
     def load_data(self, filter_type):
         """Memuat data ke tabel berdasarkan filter"""
-        self.table.setRowCount(0)  # Hapus isi tabel
+        self.table.setRowCount(0)
         transactions = []
         total = 0
 
-        # Ambil dan konversi data dari Income
+        # Load data income
         for income in self.income_controller.load_incomes():
             transactions.append({
-                "date": datetime.strptime(income[5], "%d/%m/%Y"),  # Ubah string tanggal ke datetime
-                "type": "Income",
+                "id": income[0],
+                "date": datetime.strptime(income[5], "%d/%m/%Y"),
+                "type": "income",
                 "amount": income[1],
                 "category": income[2],
                 "wallet": income[3],
-                "desc": income[4] 
+                "desc": income[4]
             })
 
-        # Ambil dan konversi data dari Outcome
+        # Load data outcome
         for outcome in self.outcome_controller.load_outcomes():
             transactions.append({
-                "date": datetime.strptime(outcome[5], "%d/%m/%Y"),  # Ubah string tanggal ke datetime
-                "type": "Outcome",
+                "id": outcome[0],
+                "date": datetime.strptime(outcome[5], "%d/%m/%Y"),
+                "type": "outcome",
                 "amount": outcome[1],
                 "category": outcome[2],
                 "wallet": outcome[3],
@@ -98,33 +98,104 @@ class HistoryView(QWidget):
 
         # Filter transaksi
         if filter_type == "income":
-            transactions = [t for t in transactions if t["type"] == "Income"]
+            transactions = [t for t in transactions if t["type"] == "income"]
         elif filter_type == "outcome":
-            transactions = [t for t in transactions if t["type"] == "Outcome"]
+            transactions = [t for t in transactions if t["type"] == "outcome"]
 
-        # Urutkan berdasarkan tanggal
         transactions.sort(key=lambda x: x["date"], reverse=True)
 
         # Tampilkan data di tabel
         self.table.setRowCount(len(transactions))
         for row, transaction in enumerate(transactions):
-            if transaction["type"] == "Income":
+            if transaction["type"] == "income":
                 total += int(transaction["amount"])
-            elif transaction["type"] == "Outcome":
+            else:
                 total -= int(transaction["amount"])
 
             self.table.setItem(row, 0, QTableWidgetItem(transaction["date"].strftime("%d/%m/%Y")))
             self.table.setItem(row, 1, QTableWidgetItem(transaction["type"]))
-            amnt = transaction["amount"]
-            self.table.setItem(row, 2, QTableWidgetItem(f"Rp - {amnt}"))
+            self.table.setItem(row, 2, QTableWidgetItem(f"Rp {transaction['amount']}"))
             self.table.setItem(row, 3, QTableWidgetItem(transaction["category"]))
             self.table.setItem(row, 4, QTableWidgetItem(transaction["wallet"]))
             self.table.setItem(row, 5, QTableWidgetItem(transaction["desc"]))
 
-        # Tampilkan Total
+            # Tombol Edit
+            btn_edit = QPushButton("Edit")
+            btn_edit.clicked.connect(lambda _, t=transaction: self.open_edit_popup(t))
+            self.table.setCellWidget(row, 6, btn_edit)
+
+            # Tombol Delete
+            btn_delete = QPushButton("Delete")
+            btn_delete.clicked.connect(lambda _, t=transaction: self.confirm_delete(t))
+            self.table.setCellWidget(row, 7, btn_delete)
+
         self.label.setText(f"Total : Rp {total}")
+
+    def open_edit_popup(self, transaction):
+        """Popup Edit Data"""
+        dialog = QDialog(self)
+        dialog.setWindowTitle("Edit Transaksi")
+        layout = QFormLayout(dialog)
+
+        # Widget Form
+        amount_input = QSpinBox()
+        amount_input.setMaximum(100000000)
+        amount_input.setValue(int(transaction["amount"]))
+
+        category_input = QComboBox()
+        category_input.addItems(self.category_controller.load_category_names(transaction["type"]))
+        category_input.setCurrentText(transaction["category"])
+
+        wallet_input = QComboBox()
+        wallet_input.addItems(self.wallet_controller.load_wallet_names())
+        wallet_input.setCurrentText(transaction["wallet"])
+
+        desc_input = QLineEdit(transaction["desc"])
+
+        date_input = QCalendarWidget()
+        date_input.setSelectedDate(transaction["date"])
+
+        layout.addRow("Jumlah:", amount_input)
+        layout.addRow("Kategori:", category_input)
+        layout.addRow("Dompet:", wallet_input)
+        layout.addRow("Deskripsi:", desc_input)
+        layout.addRow("Tanggal:", date_input)
+
+        # Tombol Simpan
+        btn_save = QPushButton("Simpan")
+        btn_save.clicked.connect(lambda: self.save_edit(transaction, amount_input, category_input, wallet_input, desc_input, date_input, dialog))
+        layout.addRow(btn_save)
+
+        dialog.setLayout(layout)
+        dialog.exec_()
+
+    def save_edit(self, transaction, amount, category, wallet, desc, date, dialog):
+        """Simpan perubahan edit transaksi"""
+        new_data = [transaction["id"], str(amount.value()), category.currentText(), wallet.currentText(), desc.text(), date.selectedDate().toString("dd/MM/yyyy")]
+
+        if transaction["type"] == "income":
+            self.income_controller.update_income(new_data)
+        else:
+            self.outcome_controller.update_outcome(new_data)
+
+        dialog.accept()
+        self.load_data(transaction["type"])
+
+    def confirm_delete(self, transaction):
+        """Konfirmasi Delete"""
+        msg = QMessageBox.question(self, "Konfirmasi Hapus",
+            f"Apakah Anda yakin ingin menghapus transaksi {transaction['type']} dengan jumlah Rp {transaction['amount']}?",
+            QMessageBox.Yes | QMessageBox.No)
+
+        if msg == QMessageBox.Yes:
+            if transaction["type"] == "income":
+                self.income_controller.delete_income(transaction["id"])
+            else:
+                self.outcome_controller.delete_outcome(transaction["id"])
+
+            self.load_data(transaction["type"])
 
     def go_back(self):
         """Kembali ke Dashboard"""
         if self.parent():
-            self.parent().setCurrentIndex(0)  # Indeks 0 adalah dashboard
+            self.parent().setCurrentIndex(0)
