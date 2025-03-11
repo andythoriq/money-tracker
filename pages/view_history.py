@@ -1,4 +1,7 @@
-from PyQt5.QtWidgets import QWidget, QVBoxLayout, QPushButton, QTableWidget, QTableWidgetItem, QHBoxLayout, QLabel, QRadioButton, QButtonGroup
+from PyQt5.QtWidgets import (
+    QWidget, QVBoxLayout, QPushButton, QTableWidget, 
+    QTableWidgetItem, QHBoxLayout, QLabel, QRadioButton, QButtonGroup
+)
 from datetime import datetime
 from controller.income import Income
 from controller.outcome import Outcome
@@ -49,8 +52,8 @@ class HistoryView(QWidget):
 
         # Tabel Transaksi
         self.table = QTableWidget()
-        self.table.setColumnCount(5)
-        self.table.setHorizontalHeaderLabels(["Tanggal", "Jenis", "Jumlah", "Kategori", "Dompet"])
+        self.table.setColumnCount(6)
+        self.table.setHorizontalHeaderLabels(["Tanggal", "Jenis", "Jumlah", "Kategori", "Dompet", "Deskripsi"])
         self.table.setSortingEnabled(True)
         self.table.setEditTriggers(QTableWidget.NoEditTriggers)
 
@@ -74,21 +77,23 @@ class HistoryView(QWidget):
         # Ambil dan konversi data dari Income
         for income in self.income_controller.load_incomes():
             transactions.append({
-                "date": datetime.strptime(income[5], "%d/%m/%y"),  # Ubah string tanggal ke datetime
+                "date": datetime.strptime(income[5], "%d/%m/%Y"),  # Ubah string tanggal ke datetime
                 "type": "Income",
                 "amount": income[1],
                 "category": income[2],
-                "wallet": income[3]
+                "wallet": income[3],
+                "desc": income[4] 
             })
 
         # Ambil dan konversi data dari Outcome
         for outcome in self.outcome_controller.load_outcomes():
             transactions.append({
-                "date": datetime.strptime(outcome[5], "%d/%m/%y"),  # Ubah string tanggal ke datetime
+                "date": datetime.strptime(outcome[5], "%d/%m/%Y"),  # Ubah string tanggal ke datetime
                 "type": "Outcome",
                 "amount": outcome[1],
                 "category": outcome[2],
-                "wallet": outcome[3]
+                "wallet": outcome[3],
+                "desc": outcome[4]
             })
 
         # Filter transaksi
@@ -114,6 +119,7 @@ class HistoryView(QWidget):
             self.table.setItem(row, 2, QTableWidgetItem(f"Rp - {amnt}"))
             self.table.setItem(row, 3, QTableWidgetItem(transaction["category"]))
             self.table.setItem(row, 4, QTableWidgetItem(transaction["wallet"]))
+            self.table.setItem(row, 5, QTableWidgetItem(transaction["desc"]))
 
         # Tampilkan Total
         self.label.setText(f"Total : Rp {total}")
