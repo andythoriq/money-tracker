@@ -4,7 +4,6 @@ from controller.income import Income
 from controller.outcome import Outcome
 from controller.wallet import Wallet
 
-
 class HistoryView(QWidget):
     def __init__(self, parent=None):
         super().__init__(parent)
@@ -63,8 +62,14 @@ class HistoryView(QWidget):
 
         # Ambil dan konversi data dari Income
         for income in self.income_controller.load_incomes():
+            try:
+                parsed_date = datetime.strptime(income[5], "%d/%m/%Y")
+            except ValueError:
+                print(f"Warning: Format tanggal salah -> {income[5]}")
+                parsed_date = datetime.today()  # Default ke hari ini jika error
+
             transactions.append({
-                "date": datetime.strptime(income[5], "%d/%m/%y"),  # Ubah string tanggal ke datetime
+                "date": parsed_date,
                 "type": "Income",
                 "amount": income[1],
                 "category": income[2],
@@ -73,8 +78,14 @@ class HistoryView(QWidget):
 
         # Ambil dan konversi data dari Outcome
         for outcome in self.outcome_controller.load_outcomes():
+            try:
+                parsed_date = datetime.strptime(outcome[5], "%d/%m/%Y")
+            except ValueError:
+                print(f"Warning: Format tanggal salah -> {outcome[5]}")
+                parsed_date = datetime.today()  # Default ke hari ini jika error
+
             transactions.append({
-                "date": datetime.strptime(outcome[5], "%d/%m/%y"),  # Ubah string tanggal ke datetime
+                "date": datetime.strptime(outcome[5], "%d/%m/%Y"),  # Ubah string tanggal ke datetime
                 "type": "Outcome",
                 "amount": outcome[1],
                 "category": outcome[2],
@@ -98,7 +109,12 @@ class HistoryView(QWidget):
             elif transaction["type"] == "Outcome":
                 total -= int(transaction["amount"])
 
-            self.table.setItem(row, 0, QTableWidgetItem(transaction["date"].strftime("%d/%m/%Y")))
+            if isinstance(transaction["date"], datetime):
+                date_str = transaction["date"].strftime("%d/%m/%Y")
+            else:
+                date_str = transaction["date"]  # Jika sudah string, biarkan
+            self.table.setItem(row, 0, QTableWidgetItem(date_str))
+
             self.table.setItem(row, 1, QTableWidgetItem(transaction["type"]))
             amnt = transaction["amount"]
             self.table.setItem(row, 2, QTableWidgetItem(f"Rp - {amnt}"))

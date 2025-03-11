@@ -19,7 +19,6 @@ class Dashboard(QWidget):
 
     def init_ui(self):
         self.setWindowTitle("Money Tracker - Dashboard")
-        # self.setGeometry(100, 100, 400, 300)
         self.setGeometry(400, 400, 600, 500)
 
         self.stack = QStackedWidget(self)
@@ -41,7 +40,7 @@ class Dashboard(QWidget):
         self.stack.addWidget(self.outcome_view)
         self.stack.addWidget(self.history_view)
         self.stack.addWidget(self.category_view)
-
+        
         main_layout = QVBoxLayout()
         main_layout.addWidget(self.stack)
         self.setLayout(main_layout)
@@ -78,6 +77,9 @@ class Dashboard(QWidget):
 
         self.btn_category = QPushButton("Manage Categories")
         self.btn_category.clicked.connect(lambda: self.stack.setCurrentWidget(self.category_view))
+
+        self.btn_statistic = QPushButton("Statistic")
+        self.btn_statistic.clicked.connect(lambda: self.stack.setCurrentWidget(self.statistic_view))
 
         layout.addWidget(self.btn_income)
         layout.addWidget(self.btn_outcome)

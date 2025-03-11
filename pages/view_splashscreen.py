@@ -7,7 +7,7 @@ class SplashScreen(QSplashScreen):
         super().__init__()
 
         # Set background image for splash screen
-        pixmap = QPixmap("img/splashscreen2.png") 
+        pixmap = QPixmap("img/splashscreenNew.png") 
         self.setPixmap(pixmap)
         self.setWindowFlag(Qt.FramelessWindowHint) 
 
@@ -26,4 +26,3 @@ class SplashScreen(QSplashScreen):
     def mousePressEvent(self, event):
         """Override mousePressEvent to prevent closing on click."""
         pass  
-
