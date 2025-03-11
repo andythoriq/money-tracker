@@ -7,6 +7,7 @@ from PyQt5.QtCore import QRegExp, QDate
 from controller.income import Income
 from controller.category import Category
 from controller.wallet import Wallet
+from controller.Popup import PopupWarning
 
 class IncomeView(QWidget):
     def __init__(self, parent=None):
@@ -87,14 +88,25 @@ class IncomeView(QWidget):
         desc = self.input_desc.text().strip()
         date = self.calendar.selectedDate().toString("dd/MM/yyyy")  # Ambil tanggal dari kalender
 
-        if amount:
-            if self.income_controller.add_income(amount, category, wallet, desc, date) == False:
-                print("Gagal menambahkan data")
-
+    # Cek apakah ada yang kosong
+        if amount == 0:
+            PopupWarning("Warning", "Jumlah pemasukkan tidak boleh kosong")
+            return
+        if not category:
+            PopupWarning("Warning", "Kategori tidak boleh kosong")
+            return
+        if not wallet:
+            PopupWarning("Warning", "Dompet tidak boleh kosong")
+            return
+        if not desc:
+            PopupWarning("Warning", "Deskripsi tidak boleh kosong")
+            return
+        
+        if self.income_controller.add_income(amount, category, wallet, desc, date):
             self.refresh_inputs()
             self.refresh_combobox()
         else:
-            print("Jumlah tidak boleh kosong!")
+            PopupWarning("Warning", "Gagal menyimpan pemasukkan!")
 
     def go_back(self):
         """Kembali ke Dashboard"""
