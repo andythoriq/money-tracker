@@ -35,3 +35,38 @@ class Outcome:
             return True
         
         return False
+
+    def update_outcome(self, updated_outcome):
+        """Mengupdate data outcome"""
+        outcomes = self.load_outcomes()
+        for i, outcome in enumerate(outcomes):
+            if outcome[0] == updated_outcome[0]:  # ID
+                # Update saldo
+                old_amount = int(outcome[1])
+                new_amount = int(updated_outcome[1])
+                self.wallet_controller.update_balance(outcome[3], -old_amount, "outcome")  # Tambah saldo lama
+                self.wallet_controller.update_balance(updated_outcome[3], new_amount, "outcome")  # Kurangi saldo baru
+                
+                # Outcome
+                outcomes[i] = updated_outcome
+                break
+
+        self.save_outcomes(outcomes)  # Simpan ke file
+
+    def delete_outcome(self, id):
+        """Menghapus outcome dengan id"""
+        outcomes = self.load_outcomes()
+
+        deleted_outcome = [outcome for outcome in outcomes if int(outcome[0]) == int(id)]
+        
+        if not deleted_outcome:
+            return False
+
+        deleted_outcome = deleted_outcome[0]
+
+        self.wallet_controller.update_balance(deleted_outcome[3], -int(deleted_outcome[1]), "outcome")
+
+        new_outcomes = [outcome for outcome in outcomes if int(outcome[0]) != int(id)]
+        self.save_outcomes(new_outcomes)
+
+        return True

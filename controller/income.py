@@ -35,3 +35,38 @@ class Income:
             return True
         
         return False
+
+    def update_income(self, updated_income):
+        """Mengupdate data income"""
+        incomes = self.load_incomes()
+        for i, income in enumerate(incomes):
+            if income[0] == updated_income[0]:  # ID
+                # saldo
+                old_amount = int(income[1])
+                new_amount = int(updated_income[1])
+                self.wallet_controller.update_balance(income[3], -old_amount, "income")  # Kurangi saldo lama
+                self.wallet_controller.update_balance(updated_income[3], new_amount, "income")  # Tambah saldo baru
+                
+                # Iincome
+                incomes[i] = updated_income
+                break
+
+        self.save_incomes(incomes)
+
+    def delete_income(self, id):
+        """Menghapus income dengan id"""
+        incomes = self.load_incomes()
+
+        deleted_income = [income for income in incomes if int(income[0]) == int(id)]
+        
+        if not deleted_income:
+            return False
+
+        deleted_income = deleted_income[0]
+
+        self.wallet_controller.update_balance(deleted_income[3], -int(deleted_income[1]), "income")
+
+        new_incomes = [income for income in incomes if int(income[0]) != int(id)]
+        self.save_incomes(new_incomes)
+
+        return True
