@@ -7,7 +7,7 @@ from PyQt5.QtCore import QRegExp, QDate
 from controller.income import Income
 from controller.category import Category
 from controller.wallet import Wallet
-from controller.Popup import PopupWarning
+from controller.Popup import PopupWarning, PopupSuccess
 
 class IncomeView(QWidget):
     def __init__(self, parent=None):
@@ -105,6 +105,7 @@ class IncomeView(QWidget):
         if self.income_controller.add_income(amount, category, wallet, desc, date):
             self.refresh_inputs()
             self.refresh_combobox()
+            PopupSuccess("Success", "Pemasukkan berhasil disimpan!")
         else:
             PopupWarning("Warning", "Gagal menyimpan pemasukkan!")
 

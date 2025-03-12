@@ -7,7 +7,7 @@ from PyQt5.QtCore import QRegExp, QDate
 from controller.outcome import Outcome
 from controller.category import Category
 from controller.wallet import Wallet
-from controller.Popup import PopupWarning
+from controller.Popup import PopupWarning, PopupSuccess
 
 class OutcomeView(QWidget):
     def __init__(self, parent=None):
@@ -102,9 +102,12 @@ class OutcomeView(QWidget):
             PopupWarning("Warning", "Deskripsi tidak boleh kosong")
             return
         
-        if self.income_controller.add_outcome(amount, category, wallet, desc, date):
+        if self.outcome_controller.add_outcome(amount, category, wallet, desc, date):
             self.refresh_inputs()
             self.refresh_combobox()
+            PopupSuccess("Success", "Pengeluaran berhasil disimpan!")
+        elif self.outcome_controller.add_outcome(amount, category, wallet, desc, date) == False:
+            PopupWarning("Warning", "Saldo tidak cukup")
         else:
             PopupWarning("Warning", "Gagal menyimpan pemasukkan!")
 

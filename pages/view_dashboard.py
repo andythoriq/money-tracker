@@ -20,7 +20,7 @@ class Dashboard(QWidget):
     def init_ui(self):
         self.setWindowTitle("Money Tracker - Dashboard")
         # self.setGeometry(100, 100, 400, 300)
-        self.setGeometry(400, 400, 600, 500)
+        self.setGeometry(400, 400, 1600, 900)
 
         self.stack = QStackedWidget(self)
 

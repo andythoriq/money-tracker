@@ -14,3 +14,16 @@ class PopupWarning(QMessageBox):
             self.setWindowIcon(QIcon(icon_path))
 
         self.exec_()
+
+class PopupSuccess(QMessageBox):
+    def __init__(self, title, message, icon_path=None):
+        super().__init__()
+        self.setWindowTitle(title)
+        self.setText(message)
+        self.setIcon(QMessageBox.Information)
+        self.setStandardButtons(QMessageBox.Ok)
+
+        if icon_path:
+            self.setWindowIcon(QIcon(icon_path))
+
+        self.exec_()
