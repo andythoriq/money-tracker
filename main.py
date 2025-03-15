@@ -1,7 +1,7 @@
 import sys
 from PyQt5.QtWidgets import QApplication
 from pages.view_splashscreen import SplashScreen
-from pages.view_dashboard import Dashboard, load_stylesheet
+from pages.Das
 from PyQt5.QtCore import QTimer
 
 if __name__ == '__main__':
