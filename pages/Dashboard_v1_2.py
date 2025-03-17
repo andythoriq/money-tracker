@@ -90,25 +90,38 @@ class Dashboard(QWidget):
         self.btn_income = QPushButton(self.HomeSection)
         self.btn_income.setIcon(QtGui.QIcon("../money-tracker/img/icon/add-income.png"))
         self.btn_income.setIconSize(QtCore.QSize(55, 61))
-        self.btn_income.clicked.connect(lambda: self.stack.setCurrentWidget(self.income_view))
+        self.btn_income.clicked.connect(lambda: (
+            self.income_view.refresh_combobox(),
+            self.stack.setCurrentWidget(self.income_view),
+        ))
         self.btn_income.setObjectName("btn_homeSection")
 
         self.btn_outcome = QPushButton(self.HomeSection)
         self.btn_outcome.setIcon(QtGui.QIcon("../money-tracker/img/icon/add-outcome.png"))
         self.btn_outcome.setIconSize(QtCore.QSize(55, 61))
-        self.btn_outcome.clicked.connect(lambda: self.stack.setCurrentWidget(self.outcome_view))
+        self.btn_outcome.clicked.connect(lambda: (
+            self.outcome_view.refresh_combobox(),
+            self.stack.setCurrentWidget(self.outcome_view),
+        ))
         self.btn_outcome.setObjectName("btn_homeSection")
 
         self.btn_wallet = QPushButton(self.HomeSection)
         self.btn_wallet.setIcon(QtGui.QIcon("../money-tracker/img/icon/wallet.png"))
         self.btn_wallet.setIconSize(QtCore.QSize(55, 61))
-        self.btn_wallet.clicked.connect(lambda: self.stack.setCurrentWidget(self.wallet_view))
+        self.btn_wallet.clicked.connect(lambda: (
+            self.wallet_view.load_wallets(),
+            self.stack.setCurrentWidget(self.wallet_view),
+        ))
         self.btn_wallet.setObjectName("btn_homeSection")
 
         self.btn_history = QPushButton(self.HomeSection)
         self.btn_history.setIcon(QtGui.QIcon("../money-tracker/img/icon/history.png"))
         self.btn_history.setIconSize(QtCore.QSize(55, 61))
-        self.btn_history.clicked.connect(lambda: self.stack.setCurrentWidget(self.history_view))
+        self.btn_history.clicked.connect(lambda: (
+            self.history_view.load_data("all"),
+            self.history_view.radio_all.setChecked(True),
+            self.stack.setCurrentWidget(self.history_view),
+        ))
         self.btn_history.setObjectName("btn_homeSection")
 
         self.btn_statistic = QPushButton(self.HomeSection)
@@ -125,7 +138,11 @@ class Dashboard(QWidget):
         self.btn_wishlist = QPushButton(self.HomeSection)
         self.btn_wishlist.setIcon(QtGui.QIcon("../money-tracker/img/icon/wishlist.png"))
         self.btn_wishlist.setIconSize(QtCore.QSize(55, 61))
-        self.btn_wishlist.clicked.connect(lambda: self.stack.setCurrentWidget(self.wishlist_view))
+        self.btn_wishlist.clicked.connect(lambda: (
+            self.wishlist_view.load_wishlists(),
+            self.wishlist_view.all_status.setChecked(True),
+            self.stack.setCurrentWidget(self.wishlist_view),
+        ))
         self.btn_wishlist.setObjectName("btn_homeSection")
 
         self.aboutUs = QPushButton(self.HomeSection)
