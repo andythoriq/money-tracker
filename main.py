@@ -1,11 +1,14 @@
 import sys
 from PyQt5.QtWidgets import QApplication
 from pages.view_splashscreen import SplashScreen
-from pages.Das
+from PyQt5.QtGui import QPalette, QColor
+from pages.Dashboard_v1_2 import Dashboard, load_stylesheet
 from PyQt5.QtCore import QTimer
 
 if __name__ == '__main__':
     app = QApplication(sys.argv)
+    palette = QPalette()
+    palette.setColor(QPalette.Window, QColor("#252931"))
 
     load_stylesheet(app)
 
