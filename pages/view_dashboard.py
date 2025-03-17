@@ -5,6 +5,7 @@ from pages.view_income import IncomeView
 from pages.view_outcome import OutcomeView
 from pages.view_history import HistoryView
 from pages.view_category import CategoryView
+from pages.view_wishlist import WishlistView
 
 def load_stylesheet(app, filename="styles/style.qss"):
     with open(filename, "r") as file:
@@ -19,6 +20,7 @@ class Dashboard(QWidget):
 
     def init_ui(self):
         self.setWindowTitle("Money Tracker - Dashboard")
+
         # self.setGeometry(100, 100, 400, 300)
         self.setGeometry(0, 0, 1600, 900)
 
@@ -34,6 +36,7 @@ class Dashboard(QWidget):
         self.outcome_view = OutcomeView(self.stack)
         self.history_view = HistoryView(self.stack)
         self.category_view = CategoryView(self.stack)
+        self.wishlist_view = WishlistView(self.stack)
 
         self.init_main_menu()
         self.stack.addWidget(self.main_menu)
@@ -42,6 +45,7 @@ class Dashboard(QWidget):
         self.stack.addWidget(self.outcome_view)
         self.stack.addWidget(self.history_view)
         self.stack.addWidget(self.category_view)
+        self.stack.addWidget(self.wishlist_view)
 
         main_layout = QVBoxLayout()
         main_layout.addWidget(self.stack)
@@ -81,11 +85,15 @@ class Dashboard(QWidget):
         self.category = QPushButton("Manage Categories")
         self.category.clicked.connect(lambda: self.stack.setCurrentWidget(self.category_view))
 
-        layout.addWidget(self.income)
-        layout.addWidget(self.outcome)
-        layout.addWidget(self.history)
-        layout.addWidget(self.wallet)
-        layout.addWidget(self.category)
+        self.btn_wishlist = QPushButton("Wish Lists")
+        self.btn_wishlist.clicked.connect(lambda: self.stack.setCurrentWidget(self.wishlist_view));
+
+        layout.addWidget(self.btn_income)
+        layout.addWidget(self.btn_outcome)
+        layout.addWidget(self.btn_history)
+        layout.addWidget(self.btn_wallet)
+        layout.addWidget(self.btn_category)
+        layout.addWidget(self.btn_wishlist)
 
         self.main_menu.setLayout(layout)
 
