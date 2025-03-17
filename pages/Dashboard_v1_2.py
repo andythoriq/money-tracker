@@ -149,7 +149,7 @@ class Dashboard(QWidget):
         self.btn_wishlist.setIcon(icon6)
         self.btn_wishlist.setIconSize(QtCore.QSize(55, 61))
         self.btn_wishlist.setObjectName("btn_homeSection")
-        self.btn_wishlist.clicked.connect(lambda: self.stack.setCurrentWidget(WishlistView(self.wishlist_view)))
+        self.btn_wishlist.clicked.connect(lambda: self.stack.setCurrentWidget(self.wishlist_view))
 
         self.aboutUs = QPushButton(self.HomeSection)
         self.aboutUs.setGeometry(QtCore.QRect(32, 820, 59, 59))
