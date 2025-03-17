@@ -1,7 +1,7 @@
-QLabel {
-    font-size: 14px;
-    color: #333;
+QWidgeta {
+    background-color: #252931;
 }
+#252931
 
 QPushButton {
     background-color: #4CAF50;
@@ -41,11 +41,6 @@ QLineEdit {
 }
 
 #HomeSection {
-    position: absolute;
-    width: 347px;
-    height: 900px;
-    left: 137px;
-    top: 117px;
     background: #121D2C;
     border: none;
     padding: 5px;;
@@ -54,6 +49,10 @@ QLineEdit {
 #logoApp {
     background: #7A9F60; 
     border-radius: 15px;
+}
+
+#btn_aboutUs {
+    text-align: left;
 }
 
 #btn_homeSection {
@@ -78,6 +77,8 @@ QLineEdit {
     font-family: Inter;
     font: 24pt;
     color: white;
+    text-align: right;
+    padding-right: 20px;
 }
 
 #btn_home {
