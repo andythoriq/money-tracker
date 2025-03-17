@@ -72,8 +72,8 @@ class WishlistView(QWidget):
 
         # === Tabel Wishlist ===
         self.wishlist_table = QTableWidget()
-        self.wishlist_table.setColumnCount(5)  
-        self.wishlist_table.setHorizontalHeaderLabels(["ID", "Nama", "Harga", "Status", "Aksi"])
+        self.wishlist_table.setColumnCount(6)  
+        self.wishlist_table.setHorizontalHeaderLabels(["ID", "Nama", "Harga", "Status", "E", "D"])
         layout.addWidget(self.wishlist_table)
 
         self.load_wishlists()
