@@ -1,6 +1,3 @@
-"""
-Simple example using BarGraphItem
-"""
 from income import Income
 from outcome import Outcome
 from wallet import Wallet
@@ -16,7 +13,7 @@ def NamaHariDariTanggal(tanggal_list):
 def MingguSkrng(offset=0):
     today = datetime.today()
     start_of_week = today - timedelta(days=today.weekday(), weeks=-offset)  # Geser minggu
-    return [(start_of_week + timedelta(days=i)).strftime("%Y-%m-%d") for i in range(7)]
+    return [f"{(start_of_week + timedelta(days=i)).day}/{(start_of_week + timedelta(days=i)).month}/{(start_of_week + timedelta(days=i)).year}" for i in range(7)]
 
 def BulanSkrngMingguan():
     today = datetime.today()
@@ -34,10 +31,6 @@ def BulanSkrngMingguan():
         current_week_start = current_week_end + timedelta(days=1)
 
     return minggu
-
-# Contoh pemanggilan fungsi
-for minggu in BulanSkrngMingguan():
-    print(minggu)
 
 # Ambil dan konversi data dari Outcome
 outcome_amount = []
@@ -67,6 +60,41 @@ sorted_amountI = list(sorted_amountI)
 sorted_tanggalO = list(sorted_tanggalO)
 sorted_amountO = list(sorted_amountO)
 
+yI = []
+yO = []
+temp = 0
+for x in MingguSkrng():
+    try:
+        indeks = sorted_tanggalI.index(x)
+        temp += sorted_amountI[indeks]
+        while True:
+            if indeks + 1 < len(sorted_tanggalI):
+                indeks += 1
+                if sorted_tanggalI[indeks] == x:
+                    temp += sorted_amountI[indeks]
+            else:
+                yI.append(temp)
+                temp = 0
+                break
+    except ValueError:
+        yI.append(0)
+
+for x in MingguSkrng():
+    try:
+        indeks = sorted_tanggalO.index(x)
+        temp += sorted_amountO[indeks]
+        while True:
+            if indeks + 1 < len(sorted_tanggalO):
+                indeks += 1
+                if sorted_tanggalO[indeks] == x:
+                    temp += sorted_amountO[indeks]
+            else:
+                yO.append(temp)
+                temp = 0
+                break
+    except ValueError:
+        yO.append(0)
+
 # Membuat aplikasi Qt
 app = QtWidgets.QApplication([])
 
@@ -93,8 +121,8 @@ layout.addWidget(plot_widget)
 tanggal = BulanSkrngMingguan()[0]# nama hari
 hari = NamaHariDariTanggal(tanggal) # tanggal hari
 
-y = np.random.randint(100, 500, len(hari))  # Data untuk sumbu y
-y2 = np.random.randint(100, 500, len(hari))  # Data untuk sumbu y2
+y = yI  # Data untuk sumbu y
+y2 = yO  # Data untuk sumbu y2
 
 # Menggunakan np.arange untuk membuat sumbu x
 x = np.arange(len(hari))  # Akan menghasilkan 7 hari
@@ -118,15 +146,15 @@ plot_widget.setLabel('left', 'Nilai')
 plot_widget.setLabel('bottom', 'Hari dan Tanggal')
 
 # Menambahkan tombol untuk menyimpan grafik
-def save_graph():
-    # Menggunakan export() untuk menyimpan grafik sebagai gambar
-    file_path, _ = QtWidgets.QFileDialog.getSaveFileName(window, "Save Graph", "", "PNG Files (*.png);;JPEG Files (*.jpg);;All Files (*)")
-    if file_path:
-        plot_widget.export(file_path)  # Menyimpan grafik ke file
+# def save_graph():
+#     # Menggunakan export() untuk menyimpan grafik sebagai gambar
+#     file_path, _ = QtWidgets.QFileDialog.getSaveFileName(window, "Save Graph", "", "PNG Files (*.png);;JPEG Files (*.jpg);;All Files (*)")
+#     if file_path:
+#         plot_widget.export(file_path)  # Menyimpan grafik ke file
 
-save_button = QtWidgets.QPushButton("Save Graph")
-save_button.clicked.connect(save_graph)
-layout.addWidget(save_button)
+# save_button = QtWidgets.QPushButton("Save Graph")
+# save_button.clicked.connect(save_graph)
+# layout.addWidget(save_button)
 
 # Membuat ComboBox di kanan atas
 # combo_box = QtWidgets.QComboBox()
