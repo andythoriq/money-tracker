@@ -8,6 +8,7 @@ from pages.view_history import HistoryView
 from pages.view_category import CategoryView
 from pages.view_wishlist import WishlistView
 from controller.Popup import PopupAboutUs
+from controller.wallet import Wallet
 
 def load_stylesheet(app, filename="styles/styleQWidget.qss"):
     if os.path.exists(filename):
@@ -26,6 +27,8 @@ class Dashboard(QWidget):
     def init_ui(self):
         """Inisialisasi tampilan UI utama"""
         self.setWindowTitle("Money Tracker")
+
+        self.wallet_controller = Wallet()
 
         # Stack untuk menyimpan berbagai halaman
         self.stack = QStackedWidget()
@@ -64,11 +67,12 @@ class Dashboard(QWidget):
         """Inisialisasi tampilan sidebar dan konten utama"""
         self.container = QGroupBox(self.main_menu)
         self.container.setObjectName("container")
-        self.container.setSizePolicy(QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Expanding)
-        self.container.setMaximumWidth(1253)  # Batasi lebar konten utama
+        self.container.setSizePolicy(QtWidgets.QSizePolicy.Fixed, QtWidgets.QSizePolicy.Expanding)
 
         self.layout_1 = QGroupBox(self.container)
         self.layout_1.setObjectName("Layout")
+        self.layout_1_ui()
+
         self.layout_2 = QGroupBox(self.container)
         self.layout_2.setObjectName("Layout")
         self.layout_3 = QGroupBox(self.container)
@@ -160,17 +164,37 @@ class Dashboard(QWidget):
 
         self.retranslateUi()
 
-
         # Atur ulang posisi dan ukuran tombol saat pertama kali dijalankan
         self.update_button_geometry()
+
+    def layout_1_ui(self):
+        layout = QVBoxLayout()
+        self.wallet_name = self.wallet_controller.get_wallet_name()
+        self.wallet_balance = self.wallet_controller.get_balance_by_name(self.wallet_name[0])
+        self.wallet_label = QLabel(self.wallet_name[0])
+        self.wallet_label.setObjectName("Label_1")
+        self.balance_label = QLabel(f"Rp. {str(self.wallet_balance)}")
+        self.balance_label.setObjectName("Label_1")
+
+        layout.addWidget(self.wallet_label)
+        layout.addWidget(self.balance_label)
+
+        self.layout_1.setLayout(layout)
+
+    def layout_2_ui(self):
+        layout = QVBoxLayout()
+
+        self.layout_2.setLayout(layout)
+
+
 
     def switch_page(self, page):
         if page == "dashboard":
             self.stack.setCurrentWidget(self.main_menu)
-            self.Container.setVisible(True)  # Tampilkan Container
+            self.container.setVisible(True)  # Tampilkan Container
         else:
             self.stack.setCurrentWidget(page)
-            self.Container.setVisible(False)  # Sembunyikan Container
+            self.container.setVisible(False)  # Sembunyikan Container
 
 
     def resizeEvent(self, event):

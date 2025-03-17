@@ -77,3 +77,8 @@ class Wallet:
         """Mendapatkan saldo wallet berdasarkan nama"""
         wallet = self.get_wallet_by_name(name)
         return int(wallet[1]) if wallet else None  # Mengembalikan saldo atau None jika tidak ditemukan
+    
+    def get_wallet_name(self):
+        wallets = self.load_wallets()
+        name = [line[0] for line in wallets]  # Ambil hanya nama wallet
+        return name

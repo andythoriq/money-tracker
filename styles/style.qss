@@ -40,7 +40,6 @@ QLineEdit {
     border-radius: 15px
 }
 
-
 #groupBox {
     position: absolute;
     background-color: #98C379;
@@ -51,6 +50,12 @@ QLineEdit {
     background: #121D2C;
     border: none;
     padding: 5px;;
+}
+
+#Label_1 {
+    font: 24pt;
+    color: white;
+    padding-left: 20px;
 }
 
 #logoApp {

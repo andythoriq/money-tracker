@@ -1,3 +1,4 @@
+from PyQt5 import QtGui
 from PyQt5.QtWidgets import QMessageBox
 from PyQt5.QtGui import QIcon
 
@@ -8,6 +9,7 @@ class PopupWarning(QMessageBox):
         self.setText(message)
         self.setIcon(QMessageBox.Warning)
         self.setStandardButtons(QMessageBox.Ok)
+        self.setObjectName("PopupWarning")
 
         # Menambahkan ikon kustom jika diberikan
         if icon_path:
@@ -22,7 +24,7 @@ class PopupSuccess(QMessageBox):
         self.setText(message)
         self.setIcon(QMessageBox.Information)
         self.setStandardButtons(QMessageBox.Ok)
-
+        self.setObjectName("PopupSuccess")
         if icon_path:
             self.setWindowIcon(QIcon(icon_path))
 
