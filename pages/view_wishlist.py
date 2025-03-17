@@ -212,4 +212,3 @@ class WishlistView(QWidget):
 
     def go_back(self):
         self.parent().setCurrentIndex(0)
->>>>>>> 5f5f152 (crud wishlists)
