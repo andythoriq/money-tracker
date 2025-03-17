@@ -15,6 +15,7 @@ from pages.view_income import IncomeView
 from pages.view_outcome import OutcomeView
 from pages.view_history import HistoryView
 from pages.view_category import CategoryView
+from pages.view_wishlist import WishlistView
 
 def load_stylesheet(app, filename="styles/style.qss"):
     if os.path.exists(filename):
@@ -28,6 +29,7 @@ class Dashboard(QWidget):
     def __init__(self):
         super().__init__()
         self.init_ui(self)
+        self.resizeScreen()
 
     def init_ui(self, Form):
         Form.setObjectName("Money Tracker")
@@ -43,6 +45,7 @@ class Dashboard(QWidget):
         self.outcome_view = OutcomeView(self.stack)
         self.history_view = HistoryView(self.stack)
         self.category_view = CategoryView(self.stack)
+        self.wishlist_view = WishlistView(self.stack)
 
         self.init_main_menu(Form)
         self.stack.addWidget(self.main_menu)
@@ -51,18 +54,17 @@ class Dashboard(QWidget):
         self.stack.addWidget(self.outcome_view)
         self.stack.addWidget(self.history_view)
         self.stack.addWidget(self.category_view)
+        self.stack.addWidget(self.wishlist_view)
 
         main_layout = QVBoxLayout()
         main_layout.addWidget(self.stack)
         Form.setLayout(main_layout)
 
     def init_main_menu(self, Form):
-        self.main_menu = QWidget()
-        main_menu_layout = QVBoxLayout()
-
+        self.main_menu = QStackedWidget(Form)
 
         self.HomeSection = QGroupBox(Form)
-        self.HomeSection.setGeometry(QtCore.QRect(0, 0, 357, 905))
+        self.HomeSection.setGeometry(QtCore.QRect(0, 0, 340, 900))
         self.HomeSection.setObjectName("HomeSection")
 
         self.btn_home = QPushButton(self.HomeSection)
@@ -86,7 +88,6 @@ class Dashboard(QWidget):
             self.stack.setCurrentWidget(self.income_view)
         ))
 
-
         self.btn_outcome = QPushButton(self.HomeSection)
         self.btn_outcome.setGeometry(QtCore.QRect(30, 276, 290, 76))
         icon1 = QtGui.QIcon()
@@ -98,7 +99,6 @@ class Dashboard(QWidget):
             self.outcome_view.refresh_combobox(), 
             self.stack.setCurrentWidget(self.outcome_view)
         ))
-
 
         self.btn_wallet = QPushButton(self.HomeSection)
         self.btn_wallet.setGeometry(QtCore.QRect(30, 362, 290, 76))
@@ -142,7 +142,6 @@ class Dashboard(QWidget):
         self.btn_category.setObjectName("btn_homeSection")
         self.btn_category.clicked.connect(lambda: self.stack.setCurrentWidget(self.category_view))
 
-
         self.btn_wishlist = QPushButton(self.HomeSection)
         self.btn_wishlist.setGeometry(QtCore.QRect(30, 702, 290, 76))
         icon6 = QtGui.QIcon()
@@ -150,6 +149,7 @@ class Dashboard(QWidget):
         self.btn_wishlist.setIcon(icon6)
         self.btn_wishlist.setIconSize(QtCore.QSize(55, 61))
         self.btn_wishlist.setObjectName("btn_homeSection")
+        self.btn_wishlist.clicked.connect(lambda: self.stack.setCurrentWidget(WishlistView(self.wishlist_view)))
 
         self.aboutUs = QPushButton(self.HomeSection)
         self.aboutUs.setGeometry(QtCore.QRect(32, 820, 59, 59))
@@ -163,8 +163,7 @@ class Dashboard(QWidget):
         self.label = QLabel(self.HomeSection)
         self.label.setGeometry(QtCore.QRect(250, 844, 61, 41))
         self.label.setToolTipDuration(-1)
-        self.label.setStyleSheet("color: white;\n"
-"background-color: #121D2C;")
+        self.label.setStyleSheet("color: white; background-color: #121D2C;")
         self.label.setObjectName("label")
 
         self.Container = QStackedWidget(self.main_menu)
@@ -207,3 +206,17 @@ class Dashboard(QWidget):
         self.btn_category.setText(_translate("Form", " Category"))
         self.btn_wishlist.setText(_translate("Form", " Wishlist"))
         self.label.setText(_translate("Form", "v1.2"))
+
+    def resizeScreen(self):
+        screen = QApplication.primaryScreen()
+        screen_rect = screen.availableGeometry()
+        screen_width = screen_rect.width()
+        screen_height = screen_rect.height()
+
+        window_width = int(screen_width * 0.6)  # 60% dari lebar layar
+        window_height = int(window_width * (3/4))  # Sesuai rasio 4:3
+
+        pos_x = (screen_width - window_width) // 2
+        pos_y = (screen_height - window_height) // 2
+
+        self.setGeometry(pos_x, pos_y, window_width, window_height)
