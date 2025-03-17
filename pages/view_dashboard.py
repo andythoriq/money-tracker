@@ -86,7 +86,11 @@ class Dashboard(QWidget):
         self.category.clicked.connect(lambda: self.stack.setCurrentWidget(self.category_view))
 
         self.btn_wishlist = QPushButton("Wish Lists")
-        self.btn_wishlist.clicked.connect(lambda: self.stack.setCurrentWidget(self.wishlist_view));
+        self.btn_wishlist.clicked.connect(lambda: (
+            self.wishlist_view.load_wishlists(),
+            self.wishlist_view.all_status.setChecked(True),
+            self.stack.setCurrentWidget(self.wishlist_view),
+        ))
 
         layout.addWidget(self.btn_income)
         layout.addWidget(self.btn_outcome)
