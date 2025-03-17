@@ -20,10 +20,12 @@ class Dashboard(QWidget):
 
     def init_ui(self):
         self.setWindowTitle("Money Tracker - Dashboard")
-        self.setGeometry(100, 100, 400, 300)
-        # self.setGeometry(400, 400, 1600, 900)
+
+        # self.setGeometry(100, 100, 400, 300)
+        self.setGeometry(0, 0, 1600, 900)
 
         self.stack = QStackedWidget(self)
+        
 
         # Halaman utama (Dashboard)
         self.main_menu = QWidget()
@@ -55,34 +57,35 @@ class Dashboard(QWidget):
         self.label = QLabel("Welcome to Money Tracker", self)
         layout.addWidget(self.label)
 
-        self.btn_income = QPushButton("Tambah Income", self)
-        self.btn_income.clicked.connect(lambda: (
+        self.income = QPushButton("Tambah Income", self)
+        self.income.clicked.connect(lambda: (
             self.income_view.refresh_combobox(),
             self.stack.setCurrentWidget(self.income_view)
         ))
 
-        self.btn_outcome = QPushButton("Tambah Outcome", self)
-        self.btn_outcome.clicked.connect(lambda: (
+        self.outcome = QPushButton("Tambah Outcome", self)
+        self.outcome.clicked.connect(lambda: (
             self.outcome_view.refresh_combobox(), 
             self.stack.setCurrentWidget(self.outcome_view)
         ))
 
-        self.btn_history = QPushButton("History Transaksi", self)
-        self.btn_history.clicked.connect(lambda: (
+        self.history = QPushButton("History Transaksi", self)
+        self.history.clicked.connect(lambda: (
             self.history_view.load_data("all"),
             self.history_view.radio_all.setChecked(True),
             self.stack.setCurrentWidget(self.history_view)
         ))
 
-        self.btn_wallet = QPushButton("Wallet", self)
-        self.btn_wallet.clicked.connect(lambda: (
+        self.wallet = QPushButton("Wallet", self)
+        self.wallet.clicked.connect(lambda: (
             self.wallet_view.load_wallets(),
             self.stack.setCurrentWidget(self.wallet_view)
         ))
 
-        self.btn_category = QPushButton("Manage Categories")
-        self.btn_category.clicked.connect(lambda: self.stack.setCurrentWidget(self.category_view))
+        self.category = QPushButton("Manage Categories")
+        self.category.clicked.connect(lambda: self.stack.setCurrentWidget(self.category_view))
 
+<<<<<<< HEAD
         self.btn_wishlist = QPushButton("Wish Lists")
         self.btn_wishlist.clicked.connect(lambda: self.stack.setCurrentWidget(self.wishlist_view));
 
@@ -92,6 +95,13 @@ class Dashboard(QWidget):
         layout.addWidget(self.btn_wallet)
         layout.addWidget(self.btn_category)
         layout.addWidget(self.btn_wishlist)
+=======
+        layout.addWidget(self.income)
+        layout.addWidget(self.outcome)
+        layout.addWidget(self.history)
+        layout.addWidget(self.wallet)
+        layout.addWidget(self.category)
+>>>>>>> origin/v1.2
 
         self.main_menu.setLayout(layout)
 
