@@ -32,6 +32,7 @@ class Dashboard(QWidget):
 
         # Halaman utama (Dashboard)
         self.main_menu = QWidget()
+        self.main_menu.setObjectName("main_menu")
 
         # Inisialisasi view-view lainnya
         self.wallet_view = WalletView(self.stack)
@@ -61,19 +62,19 @@ class Dashboard(QWidget):
 
     def init_main_menu(self):
         """Inisialisasi tampilan sidebar dan konten utama"""
-        self.container = QGroupBox()
+        self.container = QGroupBox(self.main_menu)
         self.container.setObjectName("container")
         self.container.setSizePolicy(QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Expanding)
         self.container.setMaximumWidth(1253)  # Batasi lebar konten utama
 
         self.layout_1 = QGroupBox(self.container)
-
+        self.layout_1.setObjectName("Layout")
         self.layout_2 = QGroupBox(self.container)
-
+        self.layout_2.setObjectName("Layout")
         self.layout_3 = QGroupBox(self.container)
-
+        self.layout_3.setObjectName("Layout")
         self.layout_4 = QGroupBox(self.container)
-
+        self.layout_4.setObjectName("Layout")
 
         self.HomeSection = QGroupBox()
         self.HomeSection.setObjectName("HomeSection")
@@ -86,6 +87,7 @@ class Dashboard(QWidget):
         self.btn_home.setIconSize(QtCore.QSize(80, 80))
         self.btn_home.clicked.connect(lambda: self.stack.setCurrentWidget(self.main_menu))
         self.btn_home.setObjectName("btn_home")
+        self.btn_home.clicked.connect(lambda: self.stack.setCurrentWidget(self.main_menu))
 
         self.btn_income = QPushButton(self.HomeSection)
         self.btn_income.setIcon(QtGui.QIcon("../money-tracker/img/icon/add-income.png"))
@@ -145,6 +147,15 @@ class Dashboard(QWidget):
         # Atur ulang posisi dan ukuran tombol saat pertama kali dijalankan
         self.update_button_geometry()
 
+    def switch_page(self, page):
+        if page == "dashboard":
+            self.stack.setCurrentWidget(self.main_menu)
+            self.Container.setVisible(True)  # Tampilkan Container
+        else:
+            self.stack.setCurrentWidget(page)
+            self.Container.setVisible(False)  # Sembunyikan Container
+
+
     def resizeEvent(self, event):
         """Override resizeEvent untuk menyesuaikan ukuran dan posisi tombol"""
         super().resizeEvent(event)
@@ -156,6 +167,11 @@ class Dashboard(QWidget):
         home_section_width = self.HomeSection.width()
         home_section_height = self.HomeSection.height()
 
+        container_section_width = self.container.width()
+        container_section_height = self.container.height()
+        button_layout_width = int(498)
+        button_layout_height = int(218)
+
         # Atur ukuran dan posisi tombol
         button_width = int(290)
         button_height = int(76)
@@ -163,7 +179,8 @@ class Dashboard(QWidget):
         margin = 12  # Jarak antar tombol
 
         # Posisi awal tombol
-        y_position = 20
+        y_position = 10
+        x_position = 30
 
         # Atur ulang posisi dan ukuran tombol
         self.btn_home.setGeometry(
@@ -242,6 +259,44 @@ class Dashboard(QWidget):
             y_position,
             button_width,
             button_height
+        )
+        y_position = 40
+        margin = 22
+        
+        self.layout_1.setGeometry(
+            x_position,
+            y_position,
+            button_layout_width,
+            button_layout_height
+        )
+        y_position += button_layout_height + margin
+        button_layout_height += 343
+
+        self.layout_2.setGeometry(
+            x_position,
+            y_position,
+            button_layout_width,
+            button_layout_height
+        )
+        y_position = 40
+        x_position += int(button_layout_width + margin)
+        button_layout_width = 638
+        button_layout_height = 502
+
+        self.layout_3.setGeometry(
+            x_position,
+            y_position,
+            button_layout_width,
+            button_layout_height
+        )
+        y_position += int(button_layout_height + margin)
+        button_layout_height -= 222
+
+        self.layout_4.setGeometry(
+            x_position,
+            y_position,
+            button_layout_width,
+            button_layout_height
         )
 
     def retranslateUi(self):
