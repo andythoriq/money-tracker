@@ -85,7 +85,6 @@ class Dashboard(QWidget):
         self.category = QPushButton("Manage Categories")
         self.category.clicked.connect(lambda: self.stack.setCurrentWidget(self.category_view))
 
-<<<<<<< HEAD
         self.btn_wishlist = QPushButton("Wish Lists")
         self.btn_wishlist.clicked.connect(lambda: self.stack.setCurrentWidget(self.wishlist_view));
 
@@ -95,13 +94,6 @@ class Dashboard(QWidget):
         layout.addWidget(self.btn_wallet)
         layout.addWidget(self.btn_category)
         layout.addWidget(self.btn_wishlist)
-=======
-        layout.addWidget(self.income)
-        layout.addWidget(self.outcome)
-        layout.addWidget(self.history)
-        layout.addWidget(self.wallet)
-        layout.addWidget(self.category)
->>>>>>> origin/v1.2
 
         self.main_menu.setLayout(layout)
 
