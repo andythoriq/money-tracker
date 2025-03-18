@@ -7,8 +7,8 @@ from pyqtgraph.Qt import QtWidgets
 from datetime import datetime, timedelta
 
 def NamaHariDariTanggal(tanggal_list):
-    # Mengonversi tanggal dalam string menjadi objek datetime dan mengambil nama hari
-    return [datetime.strptime(tanggal, "%Y-%m-%d").strftime("%A") for tanggal in tanggal_list]
+    # Mengonversi tanggal dalam format "day/month/year" menjadi objek datetime dan mengambil nama hari
+    return [datetime.strptime(tanggal, "%d/%m/%Y").strftime("%A") for tanggal in tanggal_list]
 
 def MingguSkrng(offset=0):
     today = datetime.today()
@@ -68,7 +68,7 @@ for x in MingguSkrng():
         indeks = sorted_tanggalI.index(x)
         temp += sorted_amountI[indeks]
         while True:
-            if indeks + 1 < len(sorted_tanggalI):
+            if indeks + 1 < len(sorted_tanggalI) and sorted_tanggalI[indeks + 1] == x:
                 indeks += 1
                 if sorted_tanggalI[indeks] == x:
                     temp += sorted_amountI[indeks]
@@ -84,7 +84,7 @@ for x in MingguSkrng():
         indeks = sorted_tanggalO.index(x)
         temp += sorted_amountO[indeks]
         while True:
-            if indeks + 1 < len(sorted_tanggalO):
+            if indeks + 1 < len(sorted_tanggalO) and sorted_tanggalO[indeks + 1] == x:
                 indeks += 1
                 if sorted_tanggalO[indeks] == x:
                     temp += sorted_amountO[indeks]
@@ -118,22 +118,22 @@ plot_widget.setMouseEnabled(x=False, y=False)
 layout.addWidget(plot_widget)
 
 # Data untuk x dan y
-tanggal = BulanSkrngMingguan()[0]# nama hari
+tanggal = MingguSkrng()# nama hari
 hari = NamaHariDariTanggal(tanggal) # tanggal hari
 
-y = yI  # Data untuk sumbu y
-y2 = yO  # Data untuk sumbu y2
+income_barItem = yI  # Data untuk sumbu y
+outcome_barItem = yO  # Data untuk sumbu y2
 
 # Menggunakan np.arange untuk membuat sumbu x
 x = np.arange(len(hari))  # Akan menghasilkan 7 hari
 
 # Membuat grafik batang
-bar_graph = pg.BarGraphItem(x=x-0.15, height=y, width=0.3, brush='b')
-bar_graph2 = pg.BarGraphItem(x=x+0.15, height=y2, width=0.3, brush='g')
+income_graph = pg.BarGraphItem(x=x-0.15, height=income_barItem, width=0.3, brush='b')
+outcome_graph = pg.BarGraphItem(x=x+0.15, height=outcome_barItem, width=0.3, brush='g')
 
 # Menambahkan grafik batang ke plot
-plot_widget.addItem(bar_graph)
-plot_widget.addItem(bar_graph2)
+plot_widget.addItem(income_graph)
+plot_widget.addItem(outcome_graph)
 
 # Membuat label yang mencakup hari dan tanggal
 labels = [f"{hari[i]}\n({tanggal[i]})" for i in range(len(hari))]
@@ -146,24 +146,50 @@ plot_widget.setLabel('left', 'Nilai')
 plot_widget.setLabel('bottom', 'Hari dan Tanggal')
 
 # Menambahkan tombol untuk menyimpan grafik
-# def save_graph():
-#     # Menggunakan export() untuk menyimpan grafik sebagai gambar
-#     file_path, _ = QtWidgets.QFileDialog.getSaveFileName(window, "Save Graph", "", "PNG Files (*.png);;JPEG Files (*.jpg);;All Files (*)")
-#     if file_path:
-#         plot_widget.export(file_path)  # Menyimpan grafik ke file
+def save_graph():
+    # Menggunakan export() untuk menyimpan grafik sebagai gambar
+    file_path, _ = QtWidgets.QFileDialog.getSaveFileName(window, "Save Graph", "", "PNG Files (*.png);;JPEG Files (*.jpg);;All Files (*)")
+    if file_path:
+        plot_widget.export(file_path)  # Menyimpan grafik ke file
 
-# save_button = QtWidgets.QPushButton("Save Graph")
-# save_button.clicked.connect(save_graph)
-# layout.addWidget(save_button)
+save_button = QtWidgets.QPushButton("Save Graph")
+save_button.clicked.connect(save_graph)
+layout.addWidget(save_button)
 
 # Membuat ComboBox di kanan atas
-# combo_box = QtWidgets.QComboBox()
-# combo_box.addItem('Option 1')
-# combo_box.addItem('Option 2')
-# combo_box.addItem('Option 3')
+combo_box = QtWidgets.QComboBox()
+combo_box.addItem('Option 1')
+combo_box.addItem('Option 2')
+combo_box.addItem('Option 3')
 
 # Menambahkan ComboBox ke layout
-# layout.addWidget(combo_box)
+layout.addWidget(combo_box)
+
+def on_option_changed(self):
+        # Mendapatkan pilihan yang dipilih
+        selected_option = self.combo_box.currentText()
+
+        if selected_option == 'Option 1':
+            self.do_something_option1()
+        elif selected_option == 'Option 2':
+            self.do_something_option2()
+        elif selected_option == 'Option 3':
+            self.do_something_option3()
+
+def do_something_option1(self):
+    print("Anda memilih Option 1!")
+    # Lakukan sesuatu untuk Option 1, misalnya tampilkan pesan
+    QtWidgets.QMessageBox.information(self, "Option 1", "Anda memilih Option 1!")
+
+def do_something_option2(self):
+    print("Anda memilih Option 2!")
+    # Lakukan sesuatu untuk Option 2
+    QtWidgets.QMessageBox.information(self, "Option 2", "Anda memilih Option 2!")
+
+def do_something_option3(self):
+    print("Anda memilih Option 3!")
+    # Lakukan sesuatu untuk Option 3
+    QtWidgets.QMessageBox.information(self, "Option 3", "Anda memilih Option 3!")
 
 # Menambahkan layout ke jendela utama
 window.setLayout(layout)
