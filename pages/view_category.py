@@ -37,11 +37,6 @@ class CategoryView(QWidget):
         self.table.setHorizontalHeaderLabels(["Name", "Type", "D"])
         layout.addWidget(self.table)
 
-        # === TOMBOL BACK ===
-        self.btn_back = QPushButton("Back to Dashboard")
-        self.btn_back.clicked.connect(self.back_to_dashboard)
-        layout.addWidget(self.btn_back)
-
         self.setLayout(layout)
 
         self.load_categories()
@@ -85,7 +80,3 @@ class CategoryView(QWidget):
         if reply == QMessageBox.Yes:
             self.category_controller.delete_category(name, category_type)
             self.load_categories()
-
-    def back_to_dashboard(self):
-        """Kembali ke Dashboard"""
-        self.stack.setCurrentIndex(0)  # Asumsikan dashboard ada di index 0

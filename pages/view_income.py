@@ -12,14 +12,20 @@ from controller.Popup import PopupWarning, PopupSuccess
 class IncomeView(QWidget):
     def __init__(self, parent=None):
         super().__init__(parent)
+        self.setStyleSheet("background-color: #98c379;")
         self.income_controller = Income(Wallet())
         self.category_controller = Category()
         self.wallet_controller = Wallet()
         self.init_ui()
 
+    def init_income(self):
+        self.setGeometry(340, 0, 1263, 900)
+
     def init_ui(self):
+        self.setGeometry(340, 0, 1263, 900)
+
         layout = QVBoxLayout()
-        form_layout = QFormLayout()  # Gunakan Form Layout
+        form_layout = QFormLayout()
 
         # Input jumlah pemasukan
         self.input_amount = QSpinBox()

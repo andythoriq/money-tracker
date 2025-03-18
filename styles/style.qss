@@ -1,7 +1,7 @@
-QLabel {
-    font-size: 14px;
-    color: #333;
+#main_menu {
+    background-color: #252931;
 }
+#252931
 
 QPushButton {
     background-color: #4CAF50;
@@ -27,4 +27,84 @@ QLineEdit {
     border: 1px solid #ccc;
     padding: 3px;
     border-radius: 4px;
+}
+
+#container {
+    background: #252931;
+    border: none;
+}
+
+#Layout {
+    background: #98C379;
+    border: none;
+    border-radius: 15px
+}
+
+#groupBox {
+    position: absolute;
+    background-color: #98C379;
+    border-radius: 25%;
+}
+
+#HomeSection {
+    background: #121D2C;
+    border: none;
+    padding: 5px;;
+}
+
+#Label_1 {
+    font: 24pt;
+    color: white;
+    padding-left: 20px;
+}
+
+#logoApp {
+    background: #7A9F60; 
+    border-radius: 15px;
+}
+
+#btn_aboutUs {
+    text-align: left;
+}
+
+#btn_homeSection {
+    background-color: #7A9F60;
+    border-radius: 15px;
+    text-align: left;
+    padding-left: 20px;
+    font-family: Inter;
+    font: 24pt;
+    color: white;
+}
+
+#btn_homeSection:hover {
+    background-color: #6A8B52;
+}
+
+#btn_homeSection:focus {
+    background-color: #5C7A46;
+}
+
+#label {
+    font-family: Inter;
+    font: 24pt;
+    color: white;
+    text-align: right;
+    padding-right: 20px;
+}
+
+#btn_home {
+    background-color: #7A9F60;
+    border-radius: 15px;
+    font-family: Inter;
+    font: 24pt;
+    color: white;
+}
+
+#btn_home:hover {
+    background-color: #6A8B52;
+}
+
+#btn_home:focus {
+    background-color: #5C7A46;
 }

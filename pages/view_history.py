@@ -13,6 +13,7 @@ from controller.category import Category
 class HistoryView(QWidget):
     def __init__(self, parent=None):
         super().__init__(parent)
+        self.setStyleSheet("background-color: #98c379;")
         self.wallet_controller = Wallet()
         self.category_controller = Category()
         self.income_controller = Income(self.wallet_controller)
@@ -22,11 +23,6 @@ class HistoryView(QWidget):
     def init_ui(self):
         """Inisialisasi UI"""
         layout = QVBoxLayout()
-
-        # Tombol kembali ke dashboard
-        self.btn_back = QPushButton("Kembali ke Dashboard")
-        self.btn_back.clicked.connect(self.go_back)
-        layout.addWidget(self.btn_back)
 
         # Radio Button Filter
         btn_layout = QHBoxLayout()
@@ -194,8 +190,4 @@ class HistoryView(QWidget):
                 self.outcome_controller.delete_outcome(transaction["id"])
 
             self.load_data(transaction["type"])
-
-    def go_back(self):
-        """Kembali ke Dashboard"""
-        if self.parent():
-            self.parent().setCurrentIndex(0)
+            QMessageBox.information(self, "Informasi", "Transaksi berhasil dihapus")

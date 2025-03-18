@@ -7,7 +7,7 @@ class SplashScreen(QSplashScreen):
         super().__init__()
 
         # Set background image for splash screen
-        pixmap = QPixmap("img/splashscreenNew.png") 
+        pixmap = QPixmap("img/splashscreenLatest.png") 
         self.setPixmap(pixmap)
         self.setWindowFlag(Qt.FramelessWindowHint) 
 

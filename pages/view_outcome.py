@@ -12,6 +12,7 @@ from controller.Popup import PopupWarning, PopupSuccess
 class OutcomeView(QWidget):
     def __init__(self, parent=None):
         super().__init__(parent)
+        self.setStyleSheet("background-color: #98c379;")
         self.outcome_controller = Outcome(Wallet())
         self.category_controller = Category()
         self.wallet_controller = Wallet()
