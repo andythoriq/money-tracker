@@ -82,3 +82,6 @@ class Wallet:
         wallets = self.load_wallets()
         name = [line[0] for line in wallets]  # Ambil hanya nama wallet
         return name
+
+    def is_wallet_file_empty(file_path):
+        return not os.path.exists(file_path) or os.stat(file_path).st_size == 0

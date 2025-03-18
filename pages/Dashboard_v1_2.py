@@ -168,14 +168,20 @@ class Dashboard(QWidget):
         self.update_button_geometry()
 
     def layout_1_ui(self):
+        wallet_names = self.wallet_controller.get_wallet_name()
         layout = QVBoxLayout()
-        self.wallet_name = self.wallet_controller.get_wallet_name()
-        self.wallet_balance = self.wallet_controller.get_balance_by_name(self.wallet_name[0])
-        self.wallet_label = QLabel(self.wallet_name[0])
-        self.wallet_label.setObjectName("Label_1")
-        self.balance_label = QLabel(f"Rp. {str(self.wallet_balance)}")
-        self.balance_label.setObjectName("Label_1")
-
+        if wallet_names:
+            self.wallet_name = self.wallet_controller.get_wallet_name()
+            self.wallet_balance = self.wallet_controller.get_balance_by_name(self.wallet_name[0])
+            self.wallet_label = QLabel(self.wallet_name[0])
+            self.wallet_label.setObjectName("Label_1")
+            self.balance_label = QLabel(f"Rp. {str(self.wallet_balance)}")
+            self.balance_label.setObjectName("Label_1")
+        else:
+            print("No Wallet")
+            self.wallet_label = QLabel("No Wallet")
+            self.wallet_label.setObjectName("Label_1")
+            self.balance_label = QLabel("")
         layout.addWidget(self.wallet_label)
         layout.addWidget(self.balance_label)
 
