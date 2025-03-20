@@ -348,7 +348,7 @@ class Dashboard(QWidget):
 
     def retranslateUi(self):
         _translate = QtCore.QCoreApplication.translate
-        self.setWindowTitle(_translate("Form", "Form"))
+        self.setWindowTitle(_translate("Form", "Money Tracker"))
         self.btn_income.setText(_translate("Form", " Edit Income"))
         self.btn_outcome.setText(_translate("Form", " Edit Outcome"))
         self.btn_wallet.setText(_translate("Form", " Wallet"))
