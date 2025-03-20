@@ -8,6 +8,7 @@ from pages.view_history import HistoryView
 from pages.view_category import CategoryView
 from pages.view_wishlist import WishlistView
 from controller.Popup import PopupAboutUs
+from controller.wallet import Wallet
 
 def load_stylesheet(app, filename="styles/styleQWidget.qss"):
     if os.path.exists(filename):
@@ -27,11 +28,14 @@ class Dashboard(QWidget):
         """Inisialisasi tampilan UI utama"""
         self.setWindowTitle("Money Tracker")
 
+        self.wallet_controller = Wallet()
+
         # Stack untuk menyimpan berbagai halaman
         self.stack = QStackedWidget()
 
         # Halaman utama (Dashboard)
         self.main_menu = QWidget()
+        self.main_menu.setObjectName("main_menu")
 
         # Inisialisasi view-view lainnya
         self.wallet_view = WalletView(self.stack)
@@ -61,19 +65,20 @@ class Dashboard(QWidget):
 
     def init_main_menu(self):
         """Inisialisasi tampilan sidebar dan konten utama"""
-        self.container = QGroupBox()
+        self.container = QGroupBox(self.main_menu)
         self.container.setObjectName("container")
-        self.container.setSizePolicy(QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Expanding)
-        self.container.setMaximumWidth(1253)  # Batasi lebar konten utama
+        self.container.setSizePolicy(QtWidgets.QSizePolicy.Fixed, QtWidgets.QSizePolicy.Expanding)
 
         self.layout_1 = QGroupBox(self.container)
+        self.layout_1.setObjectName("Layout")
+        self.layout_1_ui()
 
         self.layout_2 = QGroupBox(self.container)
-
+        self.layout_2.setObjectName("Layout")
         self.layout_3 = QGroupBox(self.container)
-
+        self.layout_3.setObjectName("Layout")
         self.layout_4 = QGroupBox(self.container)
-
+        self.layout_4.setObjectName("Layout")
 
         self.HomeSection = QGroupBox()
         self.HomeSection.setObjectName("HomeSection")
@@ -86,6 +91,7 @@ class Dashboard(QWidget):
         self.btn_home.setIconSize(QtCore.QSize(80, 80))
         self.btn_home.clicked.connect(lambda: self.stack.setCurrentWidget(self.main_menu))
         self.btn_home.setObjectName("btn_home")
+        self.btn_home.clicked.connect(lambda: self.stack.setCurrentWidget(self.main_menu))
 
         self.btn_income = QPushButton(self.HomeSection)
         self.btn_income.setIcon(QtGui.QIcon("../money-tracker/img/icon/add-income.png"))
@@ -158,9 +164,44 @@ class Dashboard(QWidget):
 
         self.retranslateUi()
 
-
         # Atur ulang posisi dan ukuran tombol saat pertama kali dijalankan
         self.update_button_geometry()
+
+    def layout_1_ui(self):
+        wallet_names = self.wallet_controller.get_wallet_name()
+        layout = QVBoxLayout()
+        if wallet_names:
+            self.wallet_name = self.wallet_controller.get_wallet_name()
+            self.wallet_balance = self.wallet_controller.get_balance_by_name(self.wallet_name[0])
+            self.wallet_label = QLabel(self.wallet_name[0])
+            self.wallet_label.setObjectName("Label_1")
+            self.balance_label = QLabel(f"Rp. {str(self.wallet_balance)}")
+            self.balance_label.setObjectName("Label_1")
+        else:
+            print("No Wallet")
+            self.wallet_label = QLabel("No Wallet")
+            self.wallet_label.setObjectName("Label_1")
+            self.balance_label = QLabel("")
+        layout.addWidget(self.wallet_label)
+        layout.addWidget(self.balance_label)
+
+        self.layout_1.setLayout(layout)
+
+    def layout_2_ui(self):
+        layout = QVBoxLayout()
+
+        self.layout_2.setLayout(layout)
+
+
+
+    def switch_page(self, page):
+        if page == "dashboard":
+            self.stack.setCurrentWidget(self.main_menu)
+            self.container.setVisible(True)  # Tampilkan Container
+        else:
+            self.stack.setCurrentWidget(page)
+            self.container.setVisible(False)  # Sembunyikan Container
+
 
     def resizeEvent(self, event):
         """Override resizeEvent untuk menyesuaikan ukuran dan posisi tombol"""
@@ -173,6 +214,11 @@ class Dashboard(QWidget):
         home_section_width = self.HomeSection.width()
         home_section_height = self.HomeSection.height()
 
+        container_section_width = self.container.width()
+        container_section_height = self.container.height()
+        button_layout_width = int(498)
+        button_layout_height = int(218)
+
         # Atur ukuran dan posisi tombol
         button_width = int(290)
         button_height = int(76)
@@ -180,7 +226,8 @@ class Dashboard(QWidget):
         margin = 12  # Jarak antar tombol
 
         # Posisi awal tombol
-        y_position = 20
+        y_position = 10
+        x_position = 30
 
         # Atur ulang posisi dan ukuran tombol
         self.btn_home.setGeometry(
@@ -260,10 +307,48 @@ class Dashboard(QWidget):
             button_width,
             button_height
         )
+        y_position = 40
+        margin = 22
+        
+        self.layout_1.setGeometry(
+            x_position,
+            y_position,
+            button_layout_width,
+            button_layout_height
+        )
+        y_position += button_layout_height + margin
+        button_layout_height += 343
+
+        self.layout_2.setGeometry(
+            x_position,
+            y_position,
+            button_layout_width,
+            button_layout_height
+        )
+        y_position = 40
+        x_position += int(button_layout_width + margin)
+        button_layout_width = 638
+        button_layout_height = 502
+
+        self.layout_3.setGeometry(
+            x_position,
+            y_position,
+            button_layout_width,
+            button_layout_height
+        )
+        y_position += int(button_layout_height + margin)
+        button_layout_height -= 222
+
+        self.layout_4.setGeometry(
+            x_position,
+            y_position,
+            button_layout_width,
+            button_layout_height
+        )
 
     def retranslateUi(self):
         _translate = QtCore.QCoreApplication.translate
-        self.setWindowTitle(_translate("Form", "Form"))
+        self.setWindowTitle(_translate("Form", "Money Tracker"))
         self.btn_income.setText(_translate("Form", " Edit Income"))
         self.btn_outcome.setText(_translate("Form", " Edit Outcome"))
         self.btn_wallet.setText(_translate("Form", " Wallet"))

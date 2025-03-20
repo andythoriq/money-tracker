@@ -23,11 +23,6 @@ class HistoryView(QWidget):
         """Inisialisasi UI"""
         layout = QVBoxLayout()
 
-        # Tombol kembali ke dashboard
-        self.btn_back = QPushButton("Kembali ke Dashboard")
-        self.btn_back.clicked.connect(self.go_back)
-        layout.addWidget(self.btn_back)
-
         # Radio Button Filter
         btn_layout = QHBoxLayout()
         self.radio_group = QButtonGroup(self)
@@ -194,8 +189,4 @@ class HistoryView(QWidget):
                 self.outcome_controller.delete_outcome(transaction["id"])
 
             self.load_data(transaction["type"])
-
-    def go_back(self):
-        """Kembali ke Dashboard"""
-        if self.parent():
-            self.parent().setCurrentIndex(0)
+            QMessageBox.information(self, "Informasi", "Transaksi berhasil dihapus")

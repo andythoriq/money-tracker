@@ -1,4 +1,4 @@
-QWidgeta {
+#main_menu {
     background-color: #252931;
 }
 #252931
@@ -29,9 +29,15 @@ QLineEdit {
     border-radius: 4px;
 }
 
-#Container {
+#container {
     background: #252931;
     border: none;
+}
+
+#Layout {
+    background: #98C379;
+    border: none;
+    border-radius: 15px
 }
 
 #groupBox {
@@ -44,6 +50,12 @@ QLineEdit {
     background: #121D2C;
     border: none;
     padding: 5px;;
+}
+
+#Label_1 {
+    font: 24pt;
+    color: white;
+    padding-left: 20px;
 }
 
 #logoApp {
