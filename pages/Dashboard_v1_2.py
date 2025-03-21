@@ -1,5 +1,8 @@
 import os
-from PyQt5.QtWidgets import QWidget, QPushButton, QVBoxLayout, QLabel, QStackedWidget, QGroupBox, QHBoxLayout
+from PyQt5.QtWidgets import (
+    QWidget, QPushButton, QVBoxLayout, QLabel, QStackedWidget, 
+    QGroupBox, QHBoxLayout, QScrollArea
+)
 from PyQt5 import QtGui, QtCore, QtWidgets
 from pages.view_wallet import WalletView
 from pages.view_income import IncomeView
@@ -22,7 +25,7 @@ class Dashboard(QWidget):
     def __init__(self):
         super().__init__()
         self.init_ui()
-        self.resize(1600, 900)  # Ukuran awal jendela
+        self.resize(1366, 768)  # Ukuran awal jendela
 
     def init_ui(self):
         """Inisialisasi tampilan UI utama"""
@@ -57,9 +60,46 @@ class Dashboard(QWidget):
         # Inisialisasi tampilan utama
         self.init_main_menu()
 
+        # Create scroll area for HomeSection
+        scroll = QScrollArea()
+        scroll.setWidget(self.HomeSection)
+        scroll.setWidgetResizable(True)
+        scroll.setHorizontalScrollBarPolicy(QtCore.Qt.ScrollBarAlwaysOff)
+        scroll.setStyleSheet("""
+            QScrollArea {
+                border: none;
+                background-color: #121D2C;
+            }
+            QScrollBar:vertical {
+                border: none;
+                background: #121D2C;
+                width: 10px;
+                margin: 0px;
+            }
+            QScrollBar::handle:vertical {
+                background: #98C379;
+                min-height: 20px;
+                border-radius: 5px;
+            }
+            QScrollBar::add-line:vertical {
+                border: none;
+                background: none;
+                height: 0px;
+            }
+            QScrollBar::sub-line:vertical {
+                border: none;
+                background: none;
+                height: 0px;
+            }
+            QScrollBar::add-page:vertical, QScrollBar::sub-page:vertical {
+                background: none;
+            }
+        """)
+        scroll.setMaximumWidth(100)  # Same width as HomeSection
+
         # Layout utama
         main_layout = QHBoxLayout()
-        main_layout.addWidget(self.HomeSection, 1)  # Sidebar kiri (20%)
+        main_layout.addWidget(scroll, 1)  # Sidebar kiri (20%)
         main_layout.addWidget(self.stack, 3)  # Konten utama (80%)
         self.setLayout(main_layout)
 
@@ -189,10 +229,7 @@ class Dashboard(QWidget):
 
     def layout_2_ui(self):
         layout = QVBoxLayout()
-
         self.layout_2.setLayout(layout)
-
-
 
     def switch_page(self, page):
         if page == "dashboard":
@@ -201,7 +238,6 @@ class Dashboard(QWidget):
         else:
             self.stack.setCurrentWidget(page)
             self.container.setVisible(False)  # Sembunyikan Container
-
 
     def resizeEvent(self, event):
         """Override resizeEvent untuk menyesuaikan ukuran dan posisi tombol"""

@@ -108,3 +108,7 @@ QLineEdit {
 #btn_home:focus {
     background-color: #5C7A46;
 }
+
+QWidget {
+    background-color: #121D2C;
+}
