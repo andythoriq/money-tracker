@@ -72,7 +72,7 @@ class StatsApp(QWidget):
         # Load data awal (semua transaksi)
         self.generate_statistics()
 
-    def generate_data(self, offset = 0):
+    def generate_data(self, offset = 0, jenis = "mingguan"):
         # Ambil dan konversi data dari Outcome
         outcome_amount = []
         outcome_date = []
@@ -101,64 +101,127 @@ class StatsApp(QWidget):
         sorted_amountI = list(sorted_amountI)
         sorted_tanggalO = list(sorted_tanggalO)
         sorted_amountO = list(sorted_amountO)
+    
 
         yI = []
         yO = []
+        incomeSum = 0
+        outcomeSum = 0
         temp = 0
-        for x in self.MingguSkrng(offset):
-            try:
-                indeks = sorted_tanggalI.index(x)
-                temp += sorted_amountI[indeks]
-                while True:
-                    if indeks + 1 < len(sorted_tanggalI) and sorted_tanggalI[indeks + 1] == x:
-                        indeks += 1
-                        if sorted_tanggalI[indeks] == x:
-                            temp += sorted_amountI[indeks]
-                    else:
-                        yI.append(temp)
-                        temp = 0
-                        break
-            except ValueError:
-                yI.append(0)
 
-        for x in self.MingguSkrng(offset):
-            try:
-                indeks = sorted_tanggalO.index(x)
-                temp += sorted_amountO[indeks]
-                while True:
-                    if indeks + 1 < len(sorted_tanggalO) and sorted_tanggalO[indeks + 1] == x:
-                        indeks += 1
-                        if sorted_tanggalO[indeks] == x:
-                            temp += sorted_amountO[indeks]
-                    else:
-                        yO.append(temp)
-                        temp = 0
-                        break
-            except ValueError:
-                yO.append(0)
+        if (jenis == "harian"):
+            for x in self.MingguSkrng(self.offset):
+                try:
+                    indeks = sorted_tanggalI.index(x)
+                    temp += sorted_amountI[indeks]
+                    while True:
+                        if indeks + 1 < len(sorted_tanggalI) and sorted_tanggalI[indeks + 1] == x:
+                            indeks += 1
+                            if sorted_tanggalI[indeks] == x:
+                                temp += sorted_amountI[indeks]
+                        else:
+                            yI.append(temp)
+                            incomeSum += temp
+                            temp = 0
+                            break
+                except ValueError:
+                    yI.append(0)
 
-        # Data untuk x axis harian
-        tag = self.MingguSkrng(self.offset) # nama hari
-        hari = self.NamaHariDariTanggal(tag) # tanggal hari
+            for x in self.MingguSkrng(self.offset):
+                try:
+                    indeks = sorted_tanggalO.index(x)
+                    temp += sorted_amountO[indeks]
+                    while True:
+                        if indeks + 1 < len(sorted_tanggalO) and sorted_tanggalO[indeks + 1] == x:
+                            indeks += 1
+                            if sorted_tanggalO[indeks] == x:
+                                temp += sorted_amountO[indeks]
+                        else:
+                            yO.append(temp)
+                            outcomeSum += temp
+                            temp = 0
+                            break
+                except ValueError:
+                    yO.append(0)
 
-        # Data untuk x axis mingguan
-        # tag = self.BulanSkrngMingguan() # urutan mingguan
+            # Data untuk x axis harian
+            time = self.MingguSkrng(self.offset) # nama hari
+            description = self.NamaHariDariTanggal(time) # tanggal hari
+
+        if (jenis == "mingguan"):
+            BSM = self.BulanSkrngMingguan(self.offset)
+            for itemsList in range(len(BSM)):
+                for item in range(len(BSM[itemsList])):
+                    if BSM[itemsList][item][0] == '0':
+                        BSM[itemsList][item] = BSM[itemsList][item][1:]
+                    if BSM[itemsList][item][2] == '0':
+                        BSM[itemsList][item] = BSM[itemsList][item][0:2] + BSM[itemsList][item][3:]
+                    if BSM[itemsList][item][3] == '0':
+                        BSM[itemsList][item] = BSM[itemsList][item][0:3] + BSM[itemsList][item][4:]
+                        
+            for x1 in BSM:
+                for x2 in x1:
+                    try:
+                        indeks = sorted_tanggalI.index(x2)
+                        temp += sorted_amountI[indeks]
+                        while True:
+                            if indeks + 1 < len(sorted_tanggalI) and sorted_tanggalI[indeks + 1] == x2:
+                                indeks += 1
+                                if sorted_tanggalI[indeks] == x2:
+                                    temp += sorted_amountI[indeks]
+                            else:
+                                incomeSum += temp
+                                break
+                        if not (indeks + 1 < len(sorted_tanggalI) and sorted_tanggalI[indeks + 1] == x2):
+                            continue                    
+                    except ValueError:
+                        continue
+                yI.append(temp)
+                temp = 0
+                print(yI)
+
+            for x1 in BSM:
+                for x2 in x1:
+                    try:
+                        indeks = sorted_tanggalO.index(x2)
+                        temp += sorted_amountO[indeks]
+                        while True:
+                            if indeks + 1 < len(sorted_tanggalO) and sorted_tanggalO[indeks + 1] == x2:
+                                indeks += 1
+                                if sorted_tanggalO[indeks] == x2:
+                                    temp += sorted_amountO[indeks]
+                            else:
+                                outcomeSum += temp
+                                break
+                        if not(indeks + 1 < len(sorted_tanggalO) and sorted_tanggalO[indeks + 1] == x2):
+                            continue
+                    except ValueError:
+                        continue
+                yO.append(temp)
+                temp = 0
+            
+            # Data untuk x axis harian
+            time = BSM # nama hari
+            for x in range(len(time)):
+                time[x] = time[x][0]
+            description = ["1st Week", "2nd Week", "3rd Week", "4th Week"] # tanggal hari
+            if len(time) == 5:
+                description.append("5th Week")
+            # Membuat label yang mencakup hari dan tanggal
+            labels = [f"{description[i]}\n({time[i]})" for i in range(len(time))]
 
         # Data untuk x axis bulanan
-        # tag = self.TahunSkrngBulanan() # urutan bulanan
+        # time = self.TahunSkrngBulanan() # urutan bulanan
 
         # Data untuk x axis tahunan
-        # tag = self.TahunSkrng() # urutan tahunan
+        # time = self.TahunSkrng() # urutan tahunan
 
         income_barItem = yI  # Data untuk sumbu y
         outcome_barItem = yO  # Data untuk sumbu y2
 
         # Menggunakan np.arange untuk membuat sumbu x
-        x = np.arange(len(hari))  # Akan menghasilkan 7 hari
+        x = np.arange(len(time))  # Akan menghasilkan 7 hari
 
-        # Membuat label yang mencakup hari dan tanggal
-        labels = [f"{hari[i]}\n({tag[i]})" for i in range(len(hari))]
-        
         return x, yI, yO, labels
 
     def generate_statistics(self):
@@ -170,9 +233,6 @@ class StatsApp(QWidget):
         income_barItem = data[1]
         outcome_barItem = data[2]
         infoLabels = data[3]
-
-        for pp in data[2]:
-            print(pp)
 
         # Membuat grafik batang untuk pendapatan (warna hijau) dan pengeluaran (warna merah)
         income_graph = pg.BarGraphItem(x=x-0.15, height=income_barItem, width=0.3, brush='g', name="Pendapatan")
@@ -209,7 +269,6 @@ class StatsApp(QWidget):
     # Fungsi untuk menghapus plot
     def delete_plot(self):
         self.plot_widget.clear()
-
         # Menghapus label dan ticks pada sumbu X dan Y
         self.plot_widget.getAxis('bottom').setTicks([])  # Hapus ticks pada sumbu X
         # plot_widget.getAxis('left').setTicks([])    # Hapus ticks pada sumbu Y
@@ -225,19 +284,35 @@ class StatsApp(QWidget):
         start_of_week = today - timedelta(days=today.weekday(), weeks=-offset)  # Start of the week, adjusted by the offset
         return [f"{(start_of_week + timedelta(days=i)).day}/{(start_of_week + timedelta(days=i)).month}/{(start_of_week + timedelta(days=i)).year}" for i in range(7)]
     
-    def BulanSkrngMingguan(self):
-        today = datetime.today()
-        first_day = datetime(today.year, today.month, 1)  # Hari pertama bulan ini
-        next_month = datetime(today.year, today.month + 1, 1) if today.month < 12 else datetime(today.year + 1, 1, 1)
-        last_day = next_month - timedelta(days=1)  # Hari terakhir bulan ini
+    def BulanSkrngMingguan(self, offset=0):  # Menambahkan parameter offset (default 0)
+        today = datetime.today()  # Mendapatkan tanggal hari ini
         
-        minggu = []
+        # Menghitung bulan dan tahun baru berdasarkan offset
+        new_month = today.month + offset
+        new_year = today.year
+        
+        # Jika bulan baru melebihi Desember, sesuaikan tahun
+        if new_month > 12:
+            new_month -= 12
+            new_year += 1
+        elif new_month < 1:
+            new_month += 12
+            new_year -= 1
+        
+        # Menghitung hari pertama dari bulan baru
+        first_day = datetime(new_year, new_month, 1)
+        
+        next_month = datetime(new_year, new_month + 1, 1) if new_month < 12 else datetime(new_year + 1, 1, 1)
+        last_day = next_month - timedelta(days=1)  # Hari terakhir bulan tersebut
+        
+        minggu = []  # List untuk menyimpan minggu
         current_week_start = first_day
         
-        # Loop untuk membagi tanggal menjadi minggu
+        # Loop untuk membagi bulan menjadi minggu
         while current_week_start <= last_day:
             current_week_end = min(current_week_start + timedelta(days=6), last_day)
-            minggu.append([ (current_week_start + timedelta(days=i)).strftime("%Y-%m-%d") for i in range((current_week_end - current_week_start).days + 1)])
+            minggu.append([ (current_week_start + timedelta(days=i)).strftime("%d/%m/%Y") 
+                           for i in range((current_week_end - current_week_start).days + 1)])
             current_week_start = current_week_end + timedelta(days=1)
 
         return minggu
