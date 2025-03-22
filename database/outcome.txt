@@ -1,0 +1,40 @@
+1,200000,Makanan,Bank,Sate,3/3/2025
+2,150000,Transportasi,Bank,Taksi,4/3/2025
+3,80000,Pendidikan,Cash,Buku,5/3/2025
+4,220000,Makanan,Bank,Sate,6/3/2025
+5,120000,Makanan,Cash,Nasi Goreng,7/3/2025
+6,170000,Transportasi,Bank,Kereta,8/3/2025
+7,130000,Sate,Bank,Sate Ayam,9/3/2025
+8,90000,Pendidikan,Cash,Alat Tulis,10/3/2025
+9,180000,Makanan,Cash,Roti Bakar,11/3/2025
+10,200000,Transportasi,Bank,Bus,12/3/2025
+11,250000,Makanan,Cash,Sushi,13/3/2025
+12,140000,Pendidikan,Bank,Laptop,14/3/2025
+13,160000,Sate,Cash,Sate Kambing,15/3/2025
+14,130000,Makanan,Bank,Sate,16/3/2025
+15,180000,Transportasi,Cash,Mobil,17/3/2025
+16,200000,Makanan,Bank,Nasi Padang,18/3/2025
+17,110000,Sate,Cash,Sate Babi,19/3/2025
+18,220000,Pendidikan,Bank,Buku Tulis,20/3/2025
+19,150000,Makanan,Cash,Nasi Kuning,21/3/2025
+20,130000,Transportasi,Bank,Ojek,22/3/2025
+21,190000,Makanan,Cash,Pizza,23/3/2025
+22,210000,Transportasi,Bank,Taksi,24/3/2025
+23,160000,Sate,Cash,Sate Lilit,25/3/2025
+24,130000,Makanan,Bank,Nasi Lemak,26/3/2025
+25,220000,Pendidikan,Cash,Buku Referensi,27/3/2025
+26,240000,Makanan,Bank,Burger,28/3/2025
+27,180000,Transportasi,Bank,Sepeda,29/3/2025
+28,250000,Makanan,Cash,Sate Kebab,30/3/2025
+29,200000,Makanan,Bank,Mie Goreng,31/3/2025
+30,210000,Transportasi,Cash,Busway,1/4/2025
+31,170000,Pendidikan,Bank,Alat Praktikum,2/4/2025
+32,130000,Sate,Cash,Sate Kambing,3/4/2025
+33,220000,Makanan,Bank,Ikan Bakar,4/4/2025
+34,150000,Transportasi,Cash,Ojek Online,5/4/2025
+35,240000,Sate,Bank,Sate Madura,6/4/2025
+36,190000,Makanan,Cash,Sushi Roll,7/4/2025
+37,160000,Transportasi,Bank,Mobil Pribadi,8/4/2025
+38,210000,Pendidikan,Cash,Laptop Baru,9/4/2025
+39,200000,Makanan,Bank,Nasi Campur,10/4/2025
+40,220000,Transportasi,Cash,Mobil Sewa,11/4/2025

@@ -1,0 +1,27 @@
+1, 200000,Makanan,Bank,Sate,3/3/2025
+2, 150000, Makanan, Tunai, Nasi Goreng,6/3/2025
+3, 100000, Makanan, Bank, Burger,8/3/2025
+7, 180000, Makanan, Tunai, Sushi,7/3/2025
+8, 200000, Makanan, Bank, Sate,13/3/2025
+9, 150000, Makanan, Tunai, Nasi Goreng,15/3/2025
+10, 100000, Makanan, Bank, Burger,17/3/2025
+11, 250000, Makanan, Bank, Pizza,9/3/2025
+12, 120000, Minuman, Tunai, Teh Manis,18/3/2025
+13, 170000, Makanan, Bank, Mie Ayam,20/3/2025
+14, 220000, Makanan, Tunai, Steak,22/3/2025
+15, 130000, Minuman, Bank, Jus Apel,24/3/2025
+16, 160000, Makanan, Bank, Roti Bakar,25/3/2025
+17, 210000, Makanan, Tunai, Spaghetti,27/3/2025
+18, 140000, Minuman, Bank, Es Kelapa,28/3/2025
+19, 180000, Makanan, Tunai, Sate,2/3/2025
+20, 200000, Minuman, Bank, Kopi,29/3/2025
+21, 190000, Makanan, Bank, Nasi Uduk,5/3/2025
+22, 160000, Minuman, Tunai, Smoothie,10/3/2025
+23, 210000, Makanan, Bank, Ayam Penyet,12/3/2025
+24, 140000, Makanan, Tunai, Batagor,14/3/2025
+25, 180000, Minuman, Bank, Jus Mangga,18/3/2025
+26, 230000, Makanan, Tunai, Kwetiau,20/3/2025
+27, 200000, Makanan, Bank, Gado-Gado,22/3/2025
+28, 120000, Minuman, Tunai, Jus Jambu,24/3/2025
+29, 250000, Makanan, Bank, Nasi Goreng Kampung,26/3/2025
+30, 170000, Makanan, Tunai, Martabak,30/3/2025
