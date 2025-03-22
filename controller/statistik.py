@@ -5,7 +5,6 @@ import numpy as np
 import pyqtgraph as pg
 from pyqtgraph.Qt import QtWidgets
 from datetime import datetime, timedelta
-from PyQt5 import QtWidgets
 import sys
 from PyQt5.QtWidgets import QApplication, QWidget, QVBoxLayout
 
@@ -14,6 +13,8 @@ class StatsApp(QWidget):
         super().__init__()
         self.income_controller = Income(Wallet())
         self.outcome_controller = Outcome(Wallet())
+        self.offset = 0
+        self.cur_data = self.generate_data(self.offset)
         self.init_ui()
 
     def init_ui(self):
@@ -35,6 +36,16 @@ class StatsApp(QWidget):
         generate_button = QtWidgets.QPushButton('Generate Plot')
         generate_button.clicked.connect(self.generate_statistics)
         layout.addWidget(generate_button)
+
+        # Membuat tombol untuk menghasilkan plot
+        next_button = QtWidgets.QPushButton('Next Plot')
+        next_button.clicked.connect(lambda: self.change_offset('next'))
+        layout.addWidget(next_button)
+
+        # Membuat tombol untuk menghasilkan plot 
+        prev_button = QtWidgets.QPushButton('Prev Plot')
+        prev_button.clicked.connect(lambda: self.change_offset('prev'))
+        layout.addWidget(prev_button)
 
         # Membuat tombol untuk menyimpan plot
         save_button = QtWidgets.QPushButton("Save Graph")
@@ -61,18 +72,19 @@ class StatsApp(QWidget):
         # Load data awal (semua transaksi)
         self.generate_statistics()
 
-    def generate_data(self):
+    def generate_data(self, offset = 0):
         # Ambil dan konversi data dari Outcome
         outcome_amount = []
         outcome_date = []
-        for outcome in Outcome(Wallet()).load_outcomes():
+        for outcome in self.outcome_controller.load_outcomes():
+
             outcome_amount.append(int(outcome[1]))
             outcome_date.append(outcome[5])
 
         # Ambil dan konversi data dari Income
         income_amount = []
         income_date = []
-        for income in Income(Wallet()).load_incomes():
+        for income in self.income_controller.load_incomes():
             income_amount.append(int(income[1]))
             income_date.append(income[5])
 
@@ -93,7 +105,7 @@ class StatsApp(QWidget):
         yI = []
         yO = []
         temp = 0
-        for x in self.MingguSkrng():
+        for x in self.MingguSkrng(offset):
             try:
                 indeks = sorted_tanggalI.index(x)
                 temp += sorted_amountI[indeks]
@@ -109,7 +121,7 @@ class StatsApp(QWidget):
             except ValueError:
                 yI.append(0)
 
-        for x in self.MingguSkrng():
+        for x in self.MingguSkrng(offset):
             try:
                 indeks = sorted_tanggalO.index(x)
                 temp += sorted_amountO[indeks]
@@ -124,9 +136,19 @@ class StatsApp(QWidget):
                         break
             except ValueError:
                 yO.append(0)
-        # Data untuk x dan y
-        tanggal = self.MingguSkrng() # nama hari
-        hari = self.NamaHariDariTanggal(tanggal) # tanggal hari
+
+        # Data untuk x axis harian
+        tag = self.MingguSkrng(self.offset) # nama hari
+        hari = self.NamaHariDariTanggal(tag) # tanggal hari
+
+        # Data untuk x axis mingguan
+        # tag = self.BulanSkrngMingguan() # urutan mingguan
+
+        # Data untuk x axis bulanan
+        # tag = self.TahunSkrngBulanan() # urutan bulanan
+
+        # Data untuk x axis tahunan
+        # tag = self.TahunSkrng() # urutan tahunan
 
         income_barItem = yI  # Data untuk sumbu y
         outcome_barItem = yO  # Data untuk sumbu y2
@@ -135,20 +157,26 @@ class StatsApp(QWidget):
         x = np.arange(len(hari))  # Akan menghasilkan 7 hari
 
         # Membuat label yang mencakup hari dan tanggal
-        labels = [f"{hari[i]}\n({tanggal[i]})" for i in range(len(hari))]
+        labels = [f"{hari[i]}\n({tag[i]})" for i in range(len(hari))]
         
         return x, yI, yO, labels
 
-    def generate_statistics(self, rentang="bulanan", waktu=datetime.now().date()):
-        data = self.generate_data()
+    def generate_statistics(self):
+        self.plot_widget.clear()
+
+        data = self.cur_data
 
         x = data[0]
         income_barItem = data[1]
         outcome_barItem = data[2]
         infoLabels = data[3]
 
-        income_graph = pg.BarGraphItem(x=x-0.15, height=income_barItem, width=0.3, brush='g')
-        outcome_graph = pg.BarGraphItem(x=x+0.15, height=outcome_barItem, width=0.3, brush='r')
+        for pp in data[2]:
+            print(pp)
+
+        # Membuat grafik batang untuk pendapatan (warna hijau) dan pengeluaran (warna merah)
+        income_graph = pg.BarGraphItem(x=x-0.15, height=income_barItem, width=0.3, brush='g', name="Pendapatan")
+        outcome_graph = pg.BarGraphItem(x=x+0.15, height=outcome_barItem, width=0.3, brush='r', name="Pengeluaran")
 
         # Menambahkan grafik batang ke plot
         self.plot_widget.addItem(income_graph)
@@ -161,13 +189,19 @@ class StatsApp(QWidget):
         self.plot_widget.setLabel('left', 'Nilai')
         self.plot_widget.setLabel('bottom', 'Hari dan Tanggal')
 
+        # Menambahkan grid pada plot untuk mempermudah pembacaan
+        self.plot_widget.showGrid(x=True, y=True, alpha=0.3)  # Alpha untuk transparansi grid
+
+        # Menambahkan legenda ke plot
+        self.plot_widget.addLegend()  # Ini adalah cara yang benar untuk menambahkan legenda
+
     # Fungsi untuk menyimpan grafik
     def save_graph(self):
         # Mendapatkan path file untuk menyimpan gambar
         file_path, _ = QtWidgets.QFileDialog.getSaveFileName(self, "Save Graph", "", "PNG Files (*.png);;JPEG Files (*.jpg);;All Files (*)")
         if file_path:
             # Mengambil snapshot dari widget plot
-            pixmap = plot_widget.grab()  # Mengambil screenshot dari plot_widget
+            pixmap = self.plot_widget.grab()  # Mengambil screenshot dari plot_widget
 
             # Menyimpan snapshot sebagai file
             pixmap.save(file_path)  # Menyimpan gambar
@@ -207,6 +241,14 @@ class StatsApp(QWidget):
             current_week_start = current_week_end + timedelta(days=1)
 
         return minggu
+
+    def change_offset(self, direction):
+        if direction == 'next':
+            self.offset += 1
+        elif direction == 'prev':
+            self.offset -= 1
+        self.cur_data = self.generate_data(self.offset)
+        self.generate_statistics()
 
     def go_back(self):
         """Kembali ke Dashboard"""
