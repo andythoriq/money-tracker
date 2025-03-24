@@ -74,7 +74,7 @@ class HistoryView(QWidget):
         # Ambil dan konversi data dari Outcome
         for outcome in self.outcome_controller.load_outcomes():
             transactions.append({
-                "date": datetime.strptime(outcome[5], "%d/%m/%y"),  # Ubah string tanggal ke datetime
+                "date": datetime.strptime(outcome[5], "%d/%m/%Y"),  # Ubah string tanggal ke datetime
                 "type": "Outcome",
                 "amount": outcome[1],
                 "category": outcome[2],

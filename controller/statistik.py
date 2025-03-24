@@ -14,6 +14,7 @@ class StatsApp(QWidget):
         self.income_controller = Income(Wallet())
         self.outcome_controller = Outcome(Wallet())
         self.offset = 0
+        self.jenis = 0
         self.cur_data = self.generate_data(self.offset)
         self.init_ui()
 
@@ -72,7 +73,7 @@ class StatsApp(QWidget):
         # Load data awal (semua transaksi)
         self.generate_statistics()
 
-    def generate_data(self, offset = 0, jenis = "mingguan"):
+    def generate_data(self, offset = 0, jenis = "harian"):
         # Ambil dan konversi data dari Outcome
         outcome_amount = []
         outcome_date = []
@@ -110,7 +111,7 @@ class StatsApp(QWidget):
         temp = 0
 
         if (jenis == "harian"):
-            for x in self.MingguSkrng(self.offset):
+            for x in self.ubahHari(self.offset):
                 try:
                     indeks = sorted_tanggalI.index(x)
                     temp += sorted_amountI[indeks]
@@ -127,7 +128,7 @@ class StatsApp(QWidget):
                 except ValueError:
                     yI.append(0)
 
-            for x in self.MingguSkrng(self.offset):
+            for x in self.ubahHari(self.offset):
                 try:
                     indeks = sorted_tanggalO.index(x)
                     temp += sorted_amountO[indeks]
@@ -145,8 +146,9 @@ class StatsApp(QWidget):
                     yO.append(0)
 
             # Data untuk x axis harian
-            time = self.MingguSkrng(self.offset) # nama hari
+            time = self.ubahHari(self.offset) # nama hari
             description = self.NamaHariDariTanggal(time) # tanggal hari
+            labels = [f"{description[i]}\n({time[i]})" for i in range(len(time))]
 
         if (jenis == "mingguan"):
             BSM = self.BulanSkrngMingguan(self.offset)
@@ -178,7 +180,6 @@ class StatsApp(QWidget):
                         continue
                 yI.append(temp)
                 temp = 0
-                print(yI)
 
             for x1 in BSM:
                 for x2 in x1:
@@ -210,9 +211,46 @@ class StatsApp(QWidget):
             # Membuat label yang mencakup hari dan tanggal
             labels = [f"{description[i]}\n({time[i]})" for i in range(len(time))]
 
-        # Data untuk x axis bulanan
-        # time = self.TahunSkrngBulanan() # urutan bulanan
+        if (jenis == "bulanan"):
+            for x in self.ubahHari(self.offset):
+                try:
+                    indeks = sorted_tanggalI.index(x)
+                    temp += sorted_amountI[indeks]
+                    while True:
+                        if indeks + 1 < len(sorted_tanggalI) and sorted_tanggalI[indeks + 1] == x:
+                            indeks += 1
+                            if sorted_tanggalI[indeks] == x:
+                                temp += sorted_amountI[indeks]
+                        else:
+                            yI.append(temp)
+                            incomeSum += temp
+                            temp = 0
+                            break
+                except ValueError:
+                    yI.append(0)
 
+            for x in self.ubahHari(self.offset):
+                try:
+                    indeks = sorted_tanggalO.index(x)
+                    temp += sorted_amountO[indeks]
+                    while True:
+                        if indeks + 1 < len(sorted_tanggalO) and sorted_tanggalO[indeks + 1] == x:
+                            indeks += 1
+                            if sorted_tanggalO[indeks] == x:
+                                temp += sorted_amountO[indeks]
+                        else:
+                            yO.append(temp)
+                            outcomeSum += temp
+                            temp = 0
+                            break
+                except ValueError:
+                    yO.append(0)
+
+            # Data untuk x axis harian
+            time = self.ubahHari(self.offset) # nama hari
+            description = self.NamaHariDariTanggal(time) # tanggal hari
+            labels = [f"{description[i]}\n({time[i]})" for i in range(len(time))]
+        
         # Data untuk x axis tahunan
         # time = self.TahunSkrng() # urutan tahunan
 
@@ -221,7 +259,7 @@ class StatsApp(QWidget):
 
         # Menggunakan np.arange untuk membuat sumbu x
         x = np.arange(len(time))  # Akan menghasilkan 7 hari
-
+        
         return x, yI, yO, labels
 
     def generate_statistics(self):
@@ -279,11 +317,19 @@ class StatsApp(QWidget):
         # Mengonversi tanggal dalam format "day/month/year" menjadi objek datetime dan mengambil nama hari
         return [datetime.strptime(tanggal, "%d/%m/%Y").strftime("%A") for tanggal in tanggal_list]
 
+    def NamaBulanDariTanggal(self, tanggal_list):
+        return [datetime.strptime(tanggal, "%d/%m/%Y").strftime("%B") for tanggal in tanggal_list]
+    
+    def ubahHari(self, offset=0):
+        today = datetime.today()
+        start_of_week = today + timedelta(days=offset)
+        return [f"{(start_of_week + timedelta(days=i)).day}/{(start_of_week + timedelta(days=i)).month}/{(start_of_week + timedelta(days=i)).year}" for i in range(7)]
+
     def MingguSkrng(self, offset=0):
         today = datetime.today()
         start_of_week = today - timedelta(days=today.weekday(), weeks=-offset)  # Start of the week, adjusted by the offset
         return [f"{(start_of_week + timedelta(days=i)).day}/{(start_of_week + timedelta(days=i)).month}/{(start_of_week + timedelta(days=i)).year}" for i in range(7)]
-    
+
     def BulanSkrngMingguan(self, offset=0):  # Menambahkan parameter offset (default 0)
         today = datetime.today()  # Mendapatkan tanggal hari ini
         
@@ -316,6 +362,19 @@ class StatsApp(QWidget):
             current_week_start = current_week_end + timedelta(days=1)
 
         return minggu
+
+    from datetime import datetime
+
+    def BulanSkrng(self, offset=0):
+        # Mendapatkan bulan dan tahun saat ini
+        today = datetime.today()
+        current_month = today.month + offset  # Menghitung bulan baru dengan offset
+                
+        # Mengembalikan list bulan yang sesuai dengan bulan saat ini
+        if current_month <= 6:
+            return [1, 2, 3, 4, 5, 6], today.year
+        else:
+            return [7, 8, 9, 10, 11, 12], today.year
 
     def change_offset(self, direction):
         if direction == 'next':
