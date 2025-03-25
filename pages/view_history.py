@@ -74,7 +74,7 @@ class HistoryView(QWidget):
         # Ambil dan konversi data dari Outcome
         for outcome in self.outcome_controller.load_outcomes():
             transactions.append({
-                "date": datetime.strptime(outcome[5], "%d/%m/%Y"),  # Ubah string tanggal ke datetime
+                "date": outcome[5],  # Ubah string tanggal ke datetime
                 "type": "Outcome",
                 "amount": outcome[1],
                 "category": outcome[2],
@@ -88,7 +88,7 @@ class HistoryView(QWidget):
             transactions = [t for t in transactions if t["type"] == "Outcome"]
 
         # Urutkan berdasarkan tanggal
-        transactions.sort(key=lambda x: x["date"], reverse=True)
+        transactions.sort(key=lambda x: datetime.strptime(x["date"], "%d/%m/%Y"), reverse=True)
 
         # Tampilkan data di tabel
         self.table.setRowCount(len(transactions))
