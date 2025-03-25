@@ -6,6 +6,7 @@ import pyqtgraph as pg
 from pyqtgraph.Qt import QtWidgets
 from datetime import datetime, timedelta
 import sys
+import calendar
 from PyQt5.QtWidgets import QApplication, QWidget, QVBoxLayout
 
 class StatsApp(QWidget):
@@ -212,50 +213,69 @@ class StatsApp(QWidget):
             labels = [f"{description[i]}\n({time[i]})" for i in range(len(time))]
 
         if (jenis == "bulanan"):
-            for x in self.ubahHari(self.offset):
-                try:
-                    indeks = sorted_tanggalI.index(x)
-                    temp += sorted_amountI[indeks]
-                    while True:
-                        if indeks + 1 < len(sorted_tanggalI) and sorted_tanggalI[indeks + 1] == x:
-                            indeks += 1
-                            if sorted_tanggalI[indeks] == x:
-                                temp += sorted_amountI[indeks]
-                        else:
-                            yI.append(temp)
-                            incomeSum += temp
-                            temp = 0
-                            break
-                except ValueError:
-                    yI.append(0)
+            for x in self.BulanSkrng(self.offset):
+				    # Konversi sorted_tanggalI menjadi (bulan, tahun)
+				    tanggal_list = [(int(t.split('/')[1]), int(t.split('/')[2])) for t in sorted_tanggalI]
+				    # Iterasi melalui bulan dan tahun dari BulanSkrng
+				    for bulan, tahun in zip(*self.BulanSkrng(self.offset)):
+				        temp = 0  # Menyimpan total income per bulan
+				
+				        # Iterasi semua tanggal dan mencari yang sesuai
+				        for i, (b, t) in enumerate(tanggal_list):
+				            if (b, t) == (bulan, tahun):  # Jika bulan & tahun cocok
+				                temp += sorted_amountI[i]
+				
+				        # Simpan hasil per bulan dan tambahkan ke total
+				        yI.append(temp)
+				        incomeSum += temp
 
-            for x in self.ubahHari(self.offset):
-                try:
-                    indeks = sorted_tanggalO.index(x)
-                    temp += sorted_amountO[indeks]
-                    while True:
-                        if indeks + 1 < len(sorted_tanggalO) and sorted_tanggalO[indeks + 1] == x:
-                            indeks += 1
-                            if sorted_tanggalO[indeks] == x:
-                                temp += sorted_amountO[indeks]
-                        else:
-                            yO.append(temp)
-                            outcomeSum += temp
-                            temp = 0
-                            break
-                except ValueError:
-                    yO.append(0)
+            for x in self.BulanSkrng(self.offset):
+				    # Konversi sorted_tanggalI menjadi (bulan, tahun)
+				    tanggal_list = [(int(t.split('/')[1]), int(t.split('/')[2])) for t in sorted_tanggalO]
+				    # Iterasi melalui bulan dan tahun dari BulanSkrng
+				    for bulan, tahun in zip(*self.BulanSkrng(self.offset)):
+				        temp = 0  # Menyimpan total income per bulan
+				
+				        # Iterasi semua tanggal dan mencari yang sesuai
+				        for i, (b, t) in enumerate(tanggal_list):
+				            if (b, t) == (bulan, tahun):  # Jika bulan & tahun cocok
+				                temp += sorted_amountO[i]
+				
+				        # Simpan hasil per bulan dan tambahkan ke total
+				        yI.append(temp)
+				        outcomeSum += temp
 
             # Data untuk x axis harian
-            time = self.ubahHari(self.offset) # nama hari
-            description = self.NamaHariDariTanggal(time) # tanggal hari
-            labels = [f"{description[i]}\n({time[i]})" for i in range(len(time))]
+            blnThn = self.BulanSkrng(self.offset) # nama hari
+            time = blnThn[0]
+            description = self.NamaBulanDariAngka(time) # tanggal hari
+            labels = [f"{description[i]}\n({time[1][i]})" for i in range(len(time[1]))]
         
         # Data untuk x axis tahunan
-        # time = self.TahunSkrng() # urutan tahunan
-
-        income_barItem = yI  # Data untuk sumbu y
-        outcome_barItem = yO  # Data untuk sumbu y2
+        if jenis == "tahunan":
+			tanggal_list = [int(t.split('/')[2]) for t in sorted_tanggalI]
+			
+			for tahun in self.TahunSkrng(self.offset):
+						    temp = 0  
+						    
+						    for i, t in enumerate(tanggal_list):
+						        if t == tahun:  # Jika tahunnya cocok
+						            temp += sorted_amountO[i]
+						
+						    # Simpan hasil per tahun dan tambahkan ke total
+						    yI.append(temp)
+						    incomeSum += temp
+			tanggal_list = [int(t.split('/')[2]) for t in sorted_tanggalI]
+			for tahun in self.TahunSkrng(self.offset):
+			    temp = 0  
+			    
+			    for i, t in enumerate(tanggal_list):
+			        if t == tahun:  # Jika tahunnya cocok
+			            temp += sorted_amountO[i]
+			
+			    # Simpan hasil per tahun dan tambahkan ke total
+			    yO.append(temp)
+			    outcomeSum += temp
 
         # Menggunakan np.arange untuk membuat sumbu x
         x = np.arange(len(time))  # Akan menghasilkan 7 hari
@@ -362,19 +382,62 @@ class StatsApp(QWidget):
             current_week_start = current_week_end + timedelta(days=1)
 
         return minggu
-
-    from datetime import datetime
-
+    
     def BulanSkrng(self, offset=0):
-        # Mendapatkan bulan dan tahun saat ini
-        today = datetime.today()
-        current_month = today.month + offset  # Menghitung bulan baru dengan offset
-                
-        # Mengembalikan list bulan yang sesuai dengan bulan saat ini
-        if current_month <= 6:
-            return [1, 2, 3, 4, 5, 6], today.year
-        else:
-            return [7, 8, 9, 10, 11, 12], today.year
+	    # Mendapatkan bulan dan tahun saat ini
+	    today = datetime.today()
+	    current_month = today.month
+	    current_year = today.year
+	    months = []
+	    years = []
+	
+	    # Menentukan bulan awal
+	    if current_month > 6:
+	        current_month = 12
+	    else:
+	        current_month = 6
+	        current_year -= 1  # Jika kembali ke Juni, tahunnya dikurangi
+	
+	    # Menyesuaikan dengan offset
+	    current_month += offset  
+	
+	    # Koreksi jika bulan keluar dari rentang 1-12
+	    while current_month > 12:
+	        current_month -= 12
+	        current_year += 1
+	    while current_month < 1:
+	        current_month += 12
+	        current_year -= 1
+	
+	    # Mengisi daftar bulan dan tahun
+	    for i in range(6):
+	        months.append(current_month)
+	        years.append(current_year)
+	        current_month -= 1
+	        if current_month == 0:
+	            current_month = 12
+	            current_year -= 1
+	
+	    # Membalik urutan agar dari yang lama ke baru
+	    return months[::-1], years[::-1]
+
+	def TahunSkrng(offset=0):
+	    # Mendapatkan tahun saat ini dan menyesuaikan offset
+	    today = datetime.today()
+	    current_year = today.year
+	    years= []
+	
+	    # Menentukan awal periode 5 tahunan yang benar
+	    if current_year % 5 == 0:
+	        start_year = current_year - 4
+	    else:
+	        start_year = current_year // 5 * 5 + 1
+	
+	    # Menghasilkan daftar 5 tahun dari start_year
+	    for i in range(5):
+	    	years.append(start_year + i + offset)
+	
+	    return years
 
     def change_offset(self, direction):
         if direction == 'next':
