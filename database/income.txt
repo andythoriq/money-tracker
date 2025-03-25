@@ -1,0 +1,2 @@
+1,3000000,Gaji Perbulan,BCA,Gaji Maret,31/03/2025
+2,100000,Freelance,BCA,Menggambar Asset Game,28/03/2025

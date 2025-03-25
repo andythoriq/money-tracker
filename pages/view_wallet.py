@@ -12,8 +12,7 @@ class WalletView(QWidget):
 
     def init_ui(self):
         layout = QVBoxLayout()
-        self.setStyleSheet("background-color: #98c379;")
-        
+
         # Tombol kembali ke Dashboard
         self.btn_back = QPushButton("Kembali")
         self.btn_back.clicked.connect(self.go_back)

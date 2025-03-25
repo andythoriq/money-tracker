@@ -13,7 +13,6 @@ from controller.category import Category
 class HistoryView(QWidget):
     def __init__(self, parent=None):
         super().__init__(parent)
-        self.setStyleSheet("background-color: #98c379;")
         self.wallet_controller = Wallet()
         self.category_controller = Category()
         self.income_controller = Income(self.wallet_controller)

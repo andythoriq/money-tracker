@@ -153,7 +153,7 @@ class Dashboard(QWidget):
 
         self.aboutUs = QPushButton(self.HomeSection)
         self.aboutUs.setIcon(QtGui.QIcon("../money-tracker/img/icon/aboutUs.png"))
-        self.aboutUs.setIconSize(QtCore.QSize(20, 31))
+        self.aboutUs.setIconSize(QtCore.QSize(55, 61))
         self.aboutUs.setStyleSheet("background-color: #121D2C;")
         self.aboutUs.setObjectName("btn_aboutUs")
         self.aboutUs.clicked.connect(lambda: PopupAboutUs(self.aboutUs))
@@ -216,14 +216,14 @@ class Dashboard(QWidget):
 
         container_section_width = self.container.width()
         container_section_height = self.container.height()
-        button_layout_width = int(300)
-        button_layout_height = int(150)
+        button_layout_width = int(498)
+        button_layout_height = int(218)
 
         # Atur ukuran dan posisi tombol
         button_width = int(290)
-        button_height = int(58)
+        button_height = int(76)
         button_logo_height = int(150) # Khusus untuk tombol logo app
-        margin = 4  # Jarak antar tombol
+        margin = 12  # Jarak antar tombol
 
         # Posisi awal tombol
         y_position = 10
@@ -348,7 +348,7 @@ class Dashboard(QWidget):
 
     def retranslateUi(self):
         _translate = QtCore.QCoreApplication.translate
-        self.setWindowTitle(_translate("Form", "Dashboard"))
+        self.setWindowTitle(_translate("Form", "Money Tracker"))
         self.btn_income.setText(_translate("Form", " Edit Income"))
         self.btn_outcome.setText(_translate("Form", " Edit Outcome"))
         self.btn_wallet.setText(_translate("Form", " Wallet"))
