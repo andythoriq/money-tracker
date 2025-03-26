@@ -74,7 +74,7 @@ class StatsApp(QWidget):
         # Load data awal (semua transaksi)
         self.generate_statistics()
 
-    def generate_data(self, offset = 0, jenis = "harian"):
+    def generate_data(self, offset = 0, jenis = "tahunan"):
         # Ambil dan konversi data dari Outcome
         outcome_amount = []
         outcome_date = []
@@ -212,70 +212,73 @@ class StatsApp(QWidget):
             # Membuat label yang mencakup hari dan tanggal
             labels = [f"{description[i]}\n({time[i]})" for i in range(len(time))]
 
-        if (jenis == "bulanan"):
-            for x in self.BulanSkrng(self.offset):
-				    # Konversi sorted_tanggalI menjadi (bulan, tahun)
-				    tanggal_list = [(int(t.split('/')[1]), int(t.split('/')[2])) for t in sorted_tanggalI]
-				    # Iterasi melalui bulan dan tahun dari BulanSkrng
-				    for bulan, tahun in zip(*self.BulanSkrng(self.offset)):
-				        temp = 0  # Menyimpan total income per bulan
-				
-				        # Iterasi semua tanggal dan mencari yang sesuai
-				        for i, (b, t) in enumerate(tanggal_list):
-				            if (b, t) == (bulan, tahun):  # Jika bulan & tahun cocok
-				                temp += sorted_amountI[i]
-				
-				        # Simpan hasil per bulan dan tambahkan ke total
-				        yI.append(temp)
-				        incomeSum += temp
+        if jenis == "bulanan":
+            # Konversi sorted_tanggalI menjadi (bulan, tahun)
+            tanggal_list = [(int(t.split('/')[1]), int(t.split('/')[2])) for t in sorted_tanggalI]
+            # Iterasi melalui bulan dan tahun dari BulanSkrng
+            for bulan, tahun in zip(*self.BulanSkrng(self.offset)):
+                temp = 0  # Menyimpan total income per bulan
 
-            for x in self.BulanSkrng(self.offset):
-				    # Konversi sorted_tanggalI menjadi (bulan, tahun)
-				    tanggal_list = [(int(t.split('/')[1]), int(t.split('/')[2])) for t in sorted_tanggalO]
-				    # Iterasi melalui bulan dan tahun dari BulanSkrng
-				    for bulan, tahun in zip(*self.BulanSkrng(self.offset)):
-				        temp = 0  # Menyimpan total income per bulan
+		        # Iterasi semua tanggal dan mencari yang sesuai
+                for i, (b, t) in enumerate(tanggal_list):
+                    print(self.BulanSkrng(self.offset))
+                    if (b, t) == (bulan, tahun):  # Jika bulan & tahun cocok
+                        temp += sorted_amountI[i]
 				
-				        # Iterasi semua tanggal dan mencari yang sesuai
-				        for i, (b, t) in enumerate(tanggal_list):
-				            if (b, t) == (bulan, tahun):  # Jika bulan & tahun cocok
-				                temp += sorted_amountO[i]
-				
-				        # Simpan hasil per bulan dan tambahkan ke total
-				        yI.append(temp)
-				        outcomeSum += temp
+                # Simpan hasil per bulan dan tambahkan ke total
+                yI.append(temp)
+                incomeSum += temp
+
+            tanggal_list = [(int(t.split('/')[1]), int(t.split('/')[2])) for t in sorted_tanggalO]
+            # Iterasi melalui bulan dan tahun dari BulanSkrng
+            for bulan, tahun in zip(*self.BulanSkrng(self.offset)):
+                temp = 0  # Menyimpan total income per bulan
+        
+                # Iterasi semua tanggal dan mencari yang sesuai
+                for i, (b, t) in enumerate(tanggal_list):
+                    if (b, t) == (bulan, tahun):  # Jika bulan & tahun cocok
+                        temp += sorted_amountO[i]
+        
+                # Simpan hasil per bulan dan tambahkan ke total
+                yO.append(temp)
+                outcomeSum += temp
 
             # Data untuk x axis harian
             blnThn = self.BulanSkrng(self.offset) # nama hari
             time = blnThn[0]
             description = self.NamaBulanDariAngka(time) # tanggal hari
-            labels = [f"{description[i]}\n({time[1][i]})" for i in range(len(time[1]))]
+            labels = [f"{description[i]}\n({blnThn[1][i]})" for i in range(len(time))]
+            print(yI)
+            print(yO)
         
         # Data untuk x axis tahunan
         if jenis == "tahunan":
-			tanggal_list = [int(t.split('/')[2]) for t in sorted_tanggalI]
+            tanggal_list = [int(t.split('/')[2]) for t in sorted_tanggalI]
 			
-			for tahun in self.TahunSkrng(self.offset):
-						    temp = 0  
-						    
-						    for i, t in enumerate(tanggal_list):
-						        if t == tahun:  # Jika tahunnya cocok
-						            temp += sorted_amountO[i]
-						
+            for tahun in self.TahunSkrng(self.offset):
+                temp = 0  
+            
+                for i, t in enumerate(tanggal_list):
+                    if t == tahun:  # Jika tahunnya cocok
+                        temp += sorted_amountO[i]
 						    # Simpan hasil per tahun dan tambahkan ke total
-						    yI.append(temp)
-						    incomeSum += temp
-			tanggal_list = [int(t.split('/')[2]) for t in sorted_tanggalI]
-			for tahun in self.TahunSkrng(self.offset):
-			    temp = 0  
+                yI.append(temp)
+                incomeSum += temp
+			
+            tanggal_list = [int(t.split('/')[2]) for t in sorted_tanggalO]
+			
+            for tahun in self.TahunSkrng(self.offset):
+                temp = 0  
 			    
-			    for i, t in enumerate(tanggal_list):
-			        if t == tahun:  # Jika tahunnya cocok
-			            temp += sorted_amountO[i]
+                for i, t in enumerate(tanggal_list):
+                    if t == tahun:  # Jika tahunnya cocok
+                        temp += sorted_amountO[i]
 			
 			    # Simpan hasil per tahun dan tambahkan ke total
-			    yO.append(temp)
-			    outcomeSum += temp
+                yO.append(temp)
+                outcomeSum += temp
+            time = self.TahunSkrng(self.offset)
+            labels = [f"{time[i]}" for i in range(len(time))]
 
         # Menggunakan np.arange untuk membuat sumbu x
         x = np.arange(len(time))  # Akan menghasilkan 7 hari
@@ -382,7 +385,11 @@ class StatsApp(QWidget):
             current_week_start = current_week_end + timedelta(days=1)
 
         return minggu
-    
+
+    def NamaBulanDariAngka(self, angka_bulan):
+        # Mengambil nama bulan dalam bahasa Inggris berdasarkan nomor bulan
+        return [calendar.month_name[bulan] for bulan in angka_bulan if 1 <= bulan <= 12]
+
     def BulanSkrng(self, offset=0):
 	    # Mendapatkan bulan dan tahun saat ini
 	    today = datetime.today()
@@ -392,11 +399,10 @@ class StatsApp(QWidget):
 	    years = []
 	
 	    # Menentukan bulan awal
-	    if current_month > 6:
+	    if 6 > current_month >= 12:
 	        current_month = 12
-	    else:
+	    elif 1 <= current_month <= 6:
 	        current_month = 6
-	        current_year -= 1  # Jika kembali ke Juni, tahunnya dikurangi
 	
 	    # Menyesuaikan dengan offset
 	    current_month += offset  
@@ -421,7 +427,7 @@ class StatsApp(QWidget):
 	    # Membalik urutan agar dari yang lama ke baru
 	    return months[::-1], years[::-1]
 
-	def TahunSkrng(offset=0):
+    def TahunSkrng(self, offset=0):
 	    # Mendapatkan tahun saat ini dan menyesuaikan offset
 	    today = datetime.today()
 	    current_year = today.year
