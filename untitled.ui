@@ -1,159 +1,421 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
- <class>MainWindow</class>
- <widget class="QMainWindow" name="MainWindow">
+ <class>Statistik</class>
+ <widget class="QMainWindow" name="Statistik">
   <property name="geometry">
    <rect>
     <x>0</x>
     <y>0</y>
     <width>800</width>
-    <height>600</height>
+    <height>450</height>
    </rect>
   </property>
   <property name="windowTitle">
    <string>MainWindow</string>
   </property>
-  <widget class="QWidget" name="centralwidget">
+  <widget class="QWidget" name="menuOption">
    <widget class="QWidget" name="verticalLayoutWidget">
     <property name="geometry">
      <rect>
       <x>10</x>
       <y>10</y>
       <width>171</width>
-      <height>581</height>
+      <height>431</height>
      </rect>
     </property>
     <layout class="QVBoxLayout" name="verticalLayout"/>
    </widget>
-   <widget class="QWidget" name="verticalLayoutWidget_2">
+   <widget class="QFrame" name="Income">
     <property name="geometry">
      <rect>
       <x>190</x>
       <y>10</y>
-      <width>361</width>
-      <height>581</height>
+      <width>171</width>
+      <height>111</height>
      </rect>
     </property>
-    <layout class="QVBoxLayout" name="verticalLayout_2">
-     <item>
-      <layout class="QHBoxLayout" name="horizontalLayout"/>
-     </item>
-     <item>
-      <widget class="QFrame" name="frame_2">
-       <property name="frameShape">
-        <enum>QFrame::StyledPanel</enum>
-       </property>
-       <property name="frameShadow">
-        <enum>QFrame::Raised</enum>
-       </property>
-       <widget class="QWidget" name="widget" native="true">
-        <property name="geometry">
-         <rect>
-          <x>0</x>
-          <y>-10</y>
-          <width>357</width>
-          <height>284</height>
-         </rect>
-        </property>
-        <widget class="QComboBox" name="comboBox">
-         <property name="geometry">
-          <rect>
-           <x>330</x>
-           <y>10</y>
-           <width>20</width>
-           <height>22</height>
-          </rect>
-         </property>
-        </widget>
-        <widget class="QWidget" name="widget_3" native="true">
-         <property name="geometry">
-          <rect>
-           <x>120</x>
-           <y>20</y>
-           <width>120</width>
-           <height>21</height>
-          </rect>
-         </property>
-         <widget class="QPushButton" name="pushButton">
-          <property name="geometry">
-           <rect>
-            <x>0</x>
-            <y>0</y>
-            <width>21</width>
-            <height>23</height>
-           </rect>
-          </property>
-          <property name="text">
-           <string>&lt;</string>
-          </property>
-         </widget>
-         <widget class="QPushButton" name="pushButton_2">
-          <property name="geometry">
-           <rect>
-            <x>100</x>
-            <y>0</y>
-            <width>20</width>
-            <height>23</height>
-           </rect>
-          </property>
-          <property name="text">
-           <string>&gt;</string>
-          </property>
-         </widget>
-         <widget class="QFontComboBox" name="fontComboBox">
-          <property name="geometry">
-           <rect>
-            <x>20</x>
-            <y>0</y>
-            <width>81</width>
-            <height>22</height>
-           </rect>
-          </property>
-          <property name="currentText">
-           <string>Weekly</string>
-          </property>
-         </widget>
-        </widget>
-       </widget>
-      </widget>
-     </item>
-    </layout>
+    <property name="frameShape">
+     <enum>QFrame::StyledPanel</enum>
+    </property>
+    <property name="frameShadow">
+     <enum>QFrame::Raised</enum>
+    </property>
+    <widget class="QLabel" name="incomeInfo">
+     <property name="geometry">
+      <rect>
+       <x>20</x>
+       <y>20</y>
+       <width>71</width>
+       <height>16</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>Jumlah Income</string>
+     </property>
+    </widget>
+    <widget class="QLabel" name="IncomeValue">
+     <property name="geometry">
+      <rect>
+       <x>30</x>
+       <y>50</y>
+       <width>81</width>
+       <height>16</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>Rp. X00.000</string>
+     </property>
+    </widget>
    </widget>
-   <widget class="QWidget" name="verticalLayoutWidget_4">
+   <widget class="QFrame" name="Outcome">
     <property name="geometry">
      <rect>
-      <x>559</x>
-      <y>9</y>
-      <width>231</width>
-      <height>581</height>
+      <x>374</x>
+      <y>10</y>
+      <width>181</width>
+      <height>111</height>
      </rect>
     </property>
-    <layout class="QVBoxLayout" name="verticalLayout_4">
+    <property name="frameShape">
+     <enum>QFrame::StyledPanel</enum>
+    </property>
+    <property name="frameShadow">
+     <enum>QFrame::Raised</enum>
+    </property>
+    <widget class="QLabel" name="outcomeInfo">
+     <property name="geometry">
+      <rect>
+       <x>20</x>
+       <y>20</y>
+       <width>81</width>
+       <height>16</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>Jumlah Outcome</string>
+     </property>
+    </widget>
+    <widget class="QLabel" name="outcomeValue">
+     <property name="geometry">
+      <rect>
+       <x>40</x>
+       <y>50</y>
+       <width>81</width>
+       <height>16</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>Rp. X00.000</string>
+     </property>
+    </widget>
+   </widget>
+   <widget class="QWidget" name="Statistic" native="true">
+    <property name="geometry">
+     <rect>
+      <x>190</x>
+      <y>140</y>
+      <width>361</width>
+      <height>301</height>
+     </rect>
+    </property>
+    <widget class="QComboBox" name="statisticOption">
+     <property name="geometry">
+      <rect>
+       <x>330</x>
+       <y>10</y>
+       <width>20</width>
+       <height>22</height>
+      </rect>
+     </property>
      <item>
-      <widget class="QWidget" name="widget_4" native="true">
-       <widget class="QComboBox" name="comboBox_2">
-        <property name="geometry">
-         <rect>
-          <x>200</x>
-          <y>10</y>
-          <width>20</width>
-          <height>22</height>
-         </rect>
-        </property>
-       </widget>
-      </widget>
+      <property name="text">
+       <string>by day</string>
+      </property>
      </item>
      <item>
-      <widget class="QFrame" name="frame">
-       <property name="frameShape">
-        <enum>QFrame::StyledPanel</enum>
-       </property>
-       <property name="frameShadow">
-        <enum>QFrame::Raised</enum>
-       </property>
-      </widget>
+      <property name="text">
+       <string>by week</string>
+      </property>
      </item>
-    </layout>
+     <item>
+      <property name="text">
+       <string>by month</string>
+      </property>
+     </item>
+     <item>
+      <property name="text">
+       <string>by year</string>
+      </property>
+     </item>
+     <item>
+      <property name="text">
+       <string>~~~~~~~</string>
+      </property>
+     </item>
+     <item>
+      <property name="text">
+       <string>Save Graphic</string>
+      </property>
+     </item>
+    </widget>
+    <widget class="QWidget" name="SliderButton" native="true">
+     <property name="geometry">
+      <rect>
+       <x>210</x>
+       <y>10</y>
+       <width>111</width>
+       <height>21</height>
+      </rect>
+     </property>
+     <widget class="QPushButton" name="prevButton">
+      <property name="geometry">
+       <rect>
+        <x>0</x>
+        <y>0</y>
+        <width>21</width>
+        <height>23</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>&lt;</string>
+      </property>
+     </widget>
+     <widget class="QPushButton" name="nextButton">
+      <property name="geometry">
+       <rect>
+        <x>90</x>
+        <y>0</y>
+        <width>20</width>
+        <height>23</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>&gt;</string>
+      </property>
+     </widget>
+     <widget class="QComboBox" name="sliderType">
+      <property name="geometry">
+       <rect>
+        <x>20</x>
+        <y>0</y>
+        <width>69</width>
+        <height>22</height>
+       </rect>
+      </property>
+      <item>
+       <property name="text">
+        <string>Daily</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>Weekly</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>Monthly</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>Yearly</string>
+       </property>
+      </item>
+     </widget>
+    </widget>
+    <widget class="QLabel" name="statisticInfo">
+     <property name="geometry">
+      <rect>
+       <x>20</x>
+       <y>10</y>
+       <width>47</width>
+       <height>13</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>Statistic</string>
+     </property>
+     <property name="textFormat">
+      <enum>Qt::RichText</enum>
+     </property>
+    </widget>
+    <widget class="QGraphicsView" name="barChart">
+     <property name="geometry">
+      <rect>
+       <x>10</x>
+       <y>40</y>
+       <width>341</width>
+       <height>251</height>
+      </rect>
+     </property>
+    </widget>
+    <widget class="QLabel" name="timeInfo">
+     <property name="geometry">
+      <rect>
+       <x>150</x>
+       <y>50</y>
+       <width>47</width>
+       <height>13</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>Statistic</string>
+     </property>
+     <property name="textFormat">
+      <enum>Qt::RichText</enum>
+     </property>
+    </widget>
+   </widget>
+   <widget class="QFrame" name="Summary">
+    <property name="geometry">
+     <rect>
+      <x>560</x>
+      <y>230</y>
+      <width>229</width>
+      <height>206</height>
+     </rect>
+    </property>
+    <property name="frameShape">
+     <enum>QFrame::StyledPanel</enum>
+    </property>
+    <property name="frameShadow">
+     <enum>QFrame::Raised</enum>
+    </property>
+    <widget class="QLabel" name="summaryInfo">
+     <property name="geometry">
+      <rect>
+       <x>10</x>
+       <y>10</y>
+       <width>101</width>
+       <height>16</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>QuickView Summary</string>
+     </property>
+    </widget>
+    <widget class="QLabel" name="newBalance">
+     <property name="geometry">
+      <rect>
+       <x>20</x>
+       <y>120</y>
+       <width>91</width>
+       <height>16</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>New Balance</string>
+     </property>
+    </widget>
+    <widget class="QLabel" name="prevBalance">
+     <property name="geometry">
+      <rect>
+       <x>20</x>
+       <y>60</y>
+       <width>91</width>
+       <height>16</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>Previous Balance</string>
+     </property>
+    </widget>
+    <widget class="QLabel" name="prevValue">
+     <property name="geometry">
+      <rect>
+       <x>70</x>
+       <y>90</y>
+       <width>121</width>
+       <height>16</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>Rp. X00.000</string>
+     </property>
+    </widget>
+    <widget class="QLabel" name="newValue">
+     <property name="geometry">
+      <rect>
+       <x>70</x>
+       <y>150</y>
+       <width>121</width>
+       <height>16</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>Rp. X00.000</string>
+     </property>
+    </widget>
+    <widget class="QLabel" name="changeValue">
+     <property name="geometry">
+      <rect>
+       <x>90</x>
+       <y>180</y>
+       <width>71</width>
+       <height>16</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>+Rp. X0.000</string>
+     </property>
+    </widget>
+   </widget>
+   <widget class="QGraphicsView" name="pieChart">
+    <property name="geometry">
+     <rect>
+      <x>560</x>
+      <y>10</y>
+      <width>231</width>
+      <height>211</height>
+     </rect>
+    </property>
+   </widget>
+   <widget class="QComboBox" name="pieChartOption">
+    <property name="geometry">
+     <rect>
+      <x>760</x>
+      <y>20</y>
+      <width>20</width>
+      <height>22</height>
+     </rect>
+    </property>
+    <item>
+     <property name="text">
+      <string>by total</string>
+     </property>
+    </item>
+    <item>
+     <property name="text">
+      <string>by category</string>
+     </property>
+    </item>
+    <item>
+     <property name="text">
+      <string>~~~~~~~~</string>
+     </property>
+    </item>
+    <item>
+     <property name="text">
+      <string>Save Graphic</string>
+     </property>
+    </item>
+   </widget>
+   <widget class="QLabel" name="chartInfo">
+    <property name="geometry">
+     <rect>
+      <x>650</x>
+      <y>20</y>
+      <width>47</width>
+      <height>13</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Pie Chart</string>
+    </property>
+    <property name="textFormat">
+     <enum>Qt::RichText</enum>
+    </property>
    </widget>
   </widget>
  </widget>
