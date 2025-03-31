@@ -22,7 +22,7 @@ class Dashboard(QWidget):
     def __init__(self):
         super().__init__()
         self.init_ui()
-        self.resize(1600, 900)  # Ukuran awal jendela
+        self.resize(1366, 768)  # Ukuran awal jendela
 
     def init_ui(self):
         """Inisialisasi tampilan UI utama"""

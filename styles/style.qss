@@ -32,12 +32,15 @@ QLineEdit {
 #container {
     background: #252931;
     border: none;
+    padding: 20px;
 }
 
 #Layout {
     background: #98C379;
     border: none;
-    border-radius: 15px
+    border-radius: 15px;
+    padding: 20px;
+    margin: 10px;
 }
 
 #groupBox {
@@ -107,4 +110,324 @@ QLineEdit {
 
 #btn_home:focus {
     background-color: #5C7A46;
+}
+
+
+
+/* Styling Income View */
+#form_label {
+    color: white;
+    font-family: Inter;
+    font-size: 14px;
+    font-weight: bold;
+    margin-bottom: 5px;
+}
+
+#form_input {
+    background-color: white;
+    border: 1px solid #7A9F60;
+    border-radius: 5px;
+    padding: 8px;
+    font-size: 14px;
+    min-width: 300px;
+}
+
+/* Styling untuk input deskripsi */
+#input_desc {
+    background-color: white;
+    border: 1px solid #7A9F60;
+    border-radius: 5px;
+    padding: 8px;
+    font-size: 14px;
+    max-width: 1000px;
+}
+
+#calendar {
+    background-color: #252931;
+    border: 1px solid #7A9F60;
+    padding: 5px;
+    color: white;
+    selection-background-color: #98C379;
+    min-width: 300px;
+    max-width: 1000px;
+}
+
+#calendar QToolButton {
+    color: white;
+    background-color: #7A9F60;
+    border-radius: 5px;
+    padding: 5px;
+    margin: 2px;
+}
+
+#calendar QToolButton:hover {
+    background-color: #6A8B52;
+}
+
+#calendar QToolButton:pressed {
+    background-color: #5C7A46;
+}
+
+#calendar QMenu {
+    background-color: #252931;
+    color: white;
+    border: 1px solid #7A9F60;
+}
+
+#calendar QMenu::item:selected {
+    background-color: #98C379;
+}
+
+#calendar QSpinBox {
+    background-color: #252931;
+    color: white;
+    border: 1px solid #7A9F60;
+    border-radius: 3px;
+    padding: 2px;
+}
+
+#calendar QTableView {
+    background-color: #252931;
+    alternate-background-color: #2C3039;
+    color: white;
+    selection-background-color: #98C379;
+    selection-color: white;
+    border: none;
+}
+
+#calendar QAbstractItemView:enabled {
+    color: white;
+    background-color: #252931;
+    selection-background-color: #98C379;
+    selection-color: white;
+}
+
+#calendar QAbstractItemView:disabled {
+    color: #666666;
+}
+
+#calendar QWidget {
+    alternate-background-color: #2C3039;
+}
+
+#calendar QWidget#qt_calendar_navigationbar {
+    background-color: #252931;
+    border-bottom: 1px solid #7A9F60;
+    padding: 5px;
+}
+
+#calendar QWidget#qt_calendar_prevmonth, 
+#calendar QWidget#qt_calendar_nextmonth {
+    background-color: #7A9F60;
+    border-radius: 3px;
+    padding: 5px;
+    color: white;
+}
+
+#calendar QWidget#qt_calendar_prevmonth:hover, 
+#calendar QWidget#qt_calendar_nextmonth:hover {
+    background-color: #6A8B52;
+}
+
+#calendar QWidget#qt_calendar_prevmonth:pressed, 
+#calendar QWidget#qt_calendar_nextmonth:pressed {
+    background-color: #5C7A46;
+}
+
+#btn_save, #btn_back {
+    background-color: #7A9F60;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    padding: 10px 20px;
+    font-size: 14px;
+    min-width: 100px;
+    margin: 10px;
+}
+
+#btn_save:hover, #btn_back:hover {
+    background-color: #6A8B52;
+}
+
+#btn_save:pressed, #btn_back:pressed {
+    background-color: #5C7A46;
+}
+
+QSpinBox::up-button, QSpinBox::down-button {
+    background-color: #7A9F60;
+    border: none;
+    border-radius: 3px;
+    width: 20px;
+}
+
+QSpinBox::up-button:hover, QSpinBox::down-button:hover {
+    background-color: #6A8B52;
+}
+
+QSpinBox::up-arrow {
+    image: url(resources/up-arrow.png);
+    width: 10px;
+    height: 10px;
+}
+
+QSpinBox::down-arrow {
+    image: url(resources/down-arrow.png);
+    width: 10px;
+    height: 10px;
+}
+/* akhir dari income styling */
+
+/* Outcome styling */
+#Layout[class="OutcomeView"] {
+    background: #E06C75;
+    border: none;
+    border-radius: 15px;
+    padding: 20px;
+    margin: 10px;
+}
+
+#form_input[class="OutcomeView"] {
+    background-color: white;
+    border: 1px solid #E06C75;
+    border-radius: 5px;
+    padding: 8px;
+    font-size: 14px;
+    min-width: 300px;
+}
+
+#input_desc[class="OutcomeView"] {
+    background-color: white;
+    border: 1px solid #E06C75;
+    border-radius: 5px;
+    padding: 8px;
+    font-size: 14px;
+    max-width: 1000px;
+}
+
+#calendar[class="OutcomeView"] {
+    background-color: #252931;
+    border: 1px solid #E06C75;
+    padding: 5px;
+    color: white;
+    selection-background-color: #E06C75;
+    min-width: 300px;
+    max-width: 1000px;
+}
+
+#calendar[class="OutcomeView"] QToolButton {
+    color: white;
+    background-color: #E06C75;
+    border-radius: 5px;
+    padding: 5px;
+    margin: 2px;
+}
+
+#calendar[class="OutcomeView"] QToolButton:hover {
+    background-color: #D65D66;
+}
+
+#calendar[class="OutcomeView"] QToolButton:pressed {
+    background-color: #C54E57;
+}
+
+#calendar[class="OutcomeView"] QMenu {
+    background-color: #252931;
+    color: white;
+    border: 1px solid #E06C75;
+}
+
+#calendar[class="OutcomeView"] QMenu::item:selected {
+    background-color: #E06C75;
+}
+
+#calendar[class="OutcomeView"] QSpinBox {
+    background-color: #252931;
+    color: white;
+    border: 1px solid #E06C75;
+    border-radius: 3px;
+    padding: 2px;
+}
+
+#calendar[class="OutcomeView"] QTableView {
+    background-color: #252931;
+    alternate-background-color: #2C3039;
+    color: white;
+    selection-background-color: #E06C75;
+    selection-color: white;
+    border: none;
+}
+
+#calendar[class="OutcomeView"] QAbstractItemView:enabled {
+    color: white;
+    background-color: #252931;
+    selection-background-color: #E06C75;
+    selection-color: white;
+}
+
+#calendar[class="OutcomeView"] QAbstractItemView:disabled {
+    color: #666666;
+}
+
+#calendar[class="OutcomeView"] QWidget {
+    alternate-background-color: #2C3039;
+}
+
+#calendar[class="OutcomeView"] QWidget#qt_calendar_navigationbar {
+    background-color: #252931;
+    border-bottom: 1px solid #E06C75;
+    padding: 5px;
+}
+
+#calendar[class="OutcomeView"] QWidget#qt_calendar_prevmonth, 
+#calendar[class="OutcomeView"] QWidget#qt_calendar_nextmonth {
+    background-color: #E06C75;
+    border-radius: 3px;
+    padding: 5px;
+    color: white;
+}
+
+#calendar[class="OutcomeView"] QWidget#qt_calendar_prevmonth:hover, 
+#calendar[class="OutcomeView"] QWidget#qt_calendar_nextmonth:hover {
+    background-color: #D65D66;
+}
+
+#calendar[class="OutcomeView"] QWidget#qt_calendar_prevmonth:pressed, 
+#calendar[class="OutcomeView"] QWidget#qt_calendar_nextmonth:pressed {
+    background-color: #C54E57;
+}
+
+#btn_save[class="OutcomeView"], #btn_back[class="OutcomeView"] {
+    background-color: #E06C75;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    padding: 10px 20px;
+    font-size: 14px;
+    min-width: 100px;
+    margin: 10px;
+}
+
+#btn_save[class="OutcomeView"]:hover, #btn_back[class="OutcomeView"]:hover {
+    background-color: #D65D66;
+}
+
+#btn_save[class="OutcomeView"]:pressed, #btn_back[class="OutcomeView"]:pressed {
+    background-color: #C54E57;
+}
+
+QSpinBox[class="OutcomeView"]::up-button, 
+QSpinBox[class="OutcomeView"]::down-button {
+    background-color: #E06C75;
+    border: none;
+    border-radius: 3px;
+    width: 20px;
+}
+
+QSpinBox[class="OutcomeView"]::up-button:hover, 
+QSpinBox[class="OutcomeView"]::down-button:hover {
+    background-color: #D65D66;
+}
+
+QStackedWidget {
+    background-color: #252931;
 }
