@@ -18,31 +18,11 @@ class IncomeView(QWidget):
         self.wallet_controller = Wallet()
         self.init_ui()
 
-    def init_income(self):
-        self.setGeometry(340, 0, 1263, 900)
-
     def init_ui(self):
-        self.setGeometry(340, 0, 1263, 900)
-        
-        # Main container
-        main_container = QWidget()
-        main_container.setObjectName("container")
-        main_layout = QVBoxLayout()
-        
-        # Header
-        header_label = QLabel("Income Baru")
-        header_label.setObjectName("Label_1")
-        
-        # Form container
-        form_container = QWidget()
-        form_container.setObjectName("Layout")
-        form_layout = QFormLayout()
-        
-        # Input jumlah pemasukan container
-        amount_container = QWidget()
-        amount_layout = QHBoxLayout()
-        amount_label = QLabel("Jumlah Pemasukan:")
-        amount_label.setObjectName("form_label")
+        layout = QVBoxLayout()
+        form_layout = QFormLayout()  # Gunakan Form Layout
+
+        # Input jumlah pemasukan
         self.input_amount = QSpinBox()
         self.input_amount.setObjectName("form_input")
         self.input_amount.setMinimum(0)
