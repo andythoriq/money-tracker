@@ -1,0 +1,3 @@
+Gaji Perbulan,income
+Pajak,outcome
+Freelance,income

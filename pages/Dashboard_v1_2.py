@@ -10,7 +10,7 @@ from pages.view_wishlist import WishlistView
 from controller.Popup import PopupAboutUs
 from controller.wallet import Wallet
 
-def load_stylesheet(app, filename="styles/styleQWidget.qss"):
+def load_stylesheet(app, filename="styles/style.qss"):
     if os.path.exists(filename):
         with open(filename, "r") as file:
             qss = file.read()

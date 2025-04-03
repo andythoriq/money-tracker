@@ -1,9 +1,9 @@
 from PyQt5.QtWidgets import (
     QWidget, QVBoxLayout, QLineEdit, QPushButton, 
-    QComboBox, QSpinBox, QFormLayout, QCalendarWidget
+    QComboBox, QSpinBox, QFormLayout, QCalendarWidget, QLabel, QHBoxLayout
 )
 from PyQt5.QtGui import QRegExpValidator
-from PyQt5.QtCore import QRegExp, QDate
+from PyQt5.QtCore import QRegExp, QDate, Qt
 from controller.outcome import Outcome
 from controller.category import Category
 from controller.wallet import Wallet
@@ -18,49 +18,128 @@ class OutcomeView(QWidget):
         self.init_ui()
 
     def init_ui(self):
-        layout = QVBoxLayout()
-        form_layout = QFormLayout()  # Gunakan Form Layout
-
-        # Input jumlah pengeluaran
+        # Main container
+        main_container = QWidget()
+        main_container.setObjectName("container")
+        main_container.setProperty("class", "OutcomeView")
+        main_layout = QVBoxLayout()
+        
+        # Header
+        header_label = QLabel("Outcome Baru")
+        header_label.setObjectName("Label_1")
+        
+        # Form container
+        form_container = QWidget()
+        form_container.setObjectName("Layout")
+        form_container.setProperty("class", "OutcomeView")
+        form_layout = QFormLayout()
+        
+        # Input jumlah pengeluaran container
+        amount_container = QWidget()
+        amount_layout = QHBoxLayout()
+        amount_label = QLabel("Jumlah Pengeluaran:")
+        amount_label.setObjectName("form_label")
         self.input_amount = QSpinBox()
+        self.input_amount.setObjectName("form_input")
+        self.input_amount.setProperty("class", "OutcomeView")
         self.input_amount.setMinimum(0)
         self.input_amount.setMaximum(1000000000)
         self.input_amount.setPrefix("Rp ")
         self.input_amount.setSingleStep(50000)
+        amount_layout.addWidget(amount_label)
+        amount_layout.addWidget(self.input_amount)
+        amount_container.setLayout(amount_layout)
 
-        # Input kategori & dompet (dropdown)
+        # Category and Wallet container
+        category_wallet_container = QWidget()
+        category_wallet_layout = QHBoxLayout()
+        
+        # Category
+        category_container = QWidget()
+        category_layout = QVBoxLayout()
+        category_label = QLabel("Kategori:")
+        category_label.setObjectName("form_label")
         self.input_category = QComboBox()
+        self.input_category.setObjectName("form_input")
+        self.input_category.setProperty("class", "OutcomeView")
+        category_layout.addWidget(category_label)
+        category_layout.addWidget(self.input_category)
+        category_container.setLayout(category_layout)
+        
+        # Wallet
+        wallet_container = QWidget()
+        wallet_layout = QVBoxLayout()
+        wallet_label = QLabel("Sumber Pengeluaran:")
+        wallet_label.setObjectName("form_label")
         self.input_wallet = QComboBox()
+        self.input_wallet.setObjectName("form_input")
+        self.input_wallet.setProperty("class", "OutcomeView")
+        wallet_layout.addWidget(wallet_label)
+        wallet_layout.addWidget(self.input_wallet)
+        wallet_container.setLayout(wallet_layout)
+        
+        category_wallet_layout.addWidget(category_container)
+        category_wallet_layout.addWidget(wallet_container)
+        category_wallet_container.setLayout(category_wallet_layout)
 
-        # Input deskripsi (validasi hanya huruf & angka)
+        # Description container
+        desc_container = QWidget()
+        desc_layout = QVBoxLayout()
+        desc_label = QLabel("Deskripsi:")
+        desc_label.setObjectName("form_label")
         self.input_desc = QLineEdit()
+        self.input_desc.setObjectName("input_desc")
+        self.input_desc.setProperty("class", "OutcomeView")
         self.input_desc.setValidator(QRegExpValidator(QRegExp("[a-zA-Z0-9 ]+")))
+        self.input_desc.setAlignment(Qt.AlignCenter)
+        desc_layout.addWidget(desc_label)
+        desc_layout.addWidget(self.input_desc)
+        desc_container.setLayout(desc_layout)
 
-        # Input tanggal menggunakan QCalendarWidget
+        # Calendar container
+        calendar_container = QWidget()
+        calendar_layout = QVBoxLayout()
+        calendar_label = QLabel("Masukan Tanggal:")
+        calendar_label.setObjectName("form_label")
         self.calendar = QCalendarWidget()
+        self.calendar.setObjectName("calendar")
+        self.calendar.setProperty("class", "OutcomeView")
         self.calendar.setGridVisible(True)
-        self.calendar.setSelectedDate(QDate.currentDate())  # Set default ke hari ini
+        self.calendar.setSelectedDate(QDate.currentDate())
+        calendar_layout.addWidget(calendar_label)
+        calendar_layout.addWidget(self.calendar)
+        calendar_container.setLayout(calendar_layout)
 
-        # Tambahkan ke Form Layout
-        form_layout.addRow("Jumlah Pengeluaran:", self.input_amount)
-        form_layout.addRow("Kategori:", self.input_category)
-        form_layout.addRow("Sumber Pengeluaran:", self.input_wallet)
-        form_layout.addRow("Deskripsi:", self.input_desc)
-        form_layout.addRow("Pilih Tanggal:", self.calendar)
-
-        layout.addLayout(form_layout)
-
-        # Tombol Simpan
+        # Add to form layout
+        form_layout.addRow(amount_container)
+        form_layout.addRow(category_wallet_container)
+        form_layout.addRow(desc_container)
+        form_layout.addRow(calendar_container)
+        
+        # Buttons container
+        buttons_container = QWidget()
+        buttons_layout = QHBoxLayout()
+        
         self.btn_save = QPushButton("Simpan")
+        self.btn_save.setObjectName("btn_save")
+        self.btn_save.setProperty("class", "OutcomeView")
         self.btn_save.clicked.connect(self.add_outcome)
-        layout.addWidget(self.btn_save)
-
-        # Tombol kembali ke Dashboard
+        
         self.btn_back = QPushButton("Kembali")
+        self.btn_back.setObjectName("btn_back")
+        self.btn_back.setProperty("class", "OutcomeView")
         self.btn_back.clicked.connect(self.go_back)
-        layout.addWidget(self.btn_back)
+        
+        buttons_layout.addWidget(self.btn_save)
+        buttons_layout.addWidget(self.btn_back)
+        buttons_container.setLayout(buttons_layout)
 
-        self.setLayout(layout)
+        form_container.setLayout(form_layout)
+        main_layout.addWidget(header_label)
+        main_layout.addWidget(form_container)
+        main_layout.addWidget(buttons_container)
+        main_container.setLayout(main_layout)
+        self.setLayout(main_layout)
 
     def refresh_inputs(self):
         """Menghapus input setelah menyimpan"""
