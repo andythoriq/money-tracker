@@ -3,6 +3,7 @@ from PyQt5.QtWidgets import (
     QWidget, QVBoxLayout, QHBoxLayout, QPushButton, QTableWidget, QTableWidgetItem, 
     QRadioButton, QLineEdit, QMessageBox, QSpinBox, QComboBox, QLabel, QDialog
 )
+from PyQt5.QtCore import Qt
 from controller.wishlist import Wishlist
 from controller.wallet import Wallet
 
@@ -14,76 +15,133 @@ class WishlistView(QWidget):
         self.initUI()
 
     def initUI(self):
-        layout = QVBoxLayout()
+        # Main container with dark background
+        main_container = QWidget()
+        main_container.setObjectName("wishlist_container")
+        main_layout = QVBoxLayout(main_container)
+        main_layout.setContentsMargins(20, 20, 20, 20)
+        main_layout.setSpacing(0)
 
-        # === Form Tambah Wishlist ===
+        # Title container
+        title_container = QHBoxLayout()
+        title_label = QLabel("Wishlist")
+        title_label.setObjectName("Label_1")
+        title_container.addWidget(title_label)
+        title_container.addStretch()
+        main_layout.addLayout(title_container)
+
+        # Content container with green background
+        content_container = QWidget()
+        content_container.setObjectName("wishlist_content")
+        content_layout = QVBoxLayout(content_container)
+        content_layout.setContentsMargins(30, 30, 30, 30)
+        content_layout.setSpacing(20)
+
+        # Form layout
         form_layout = QHBoxLayout()
+        form_layout.setSpacing(15)
 
-        form_layout.addWidget(QLabel("Nama:"))
+        # Name input
+        name_label = QLabel("Nama:")
+        name_label.setObjectName("wishlist_label")
+        form_layout.addWidget(name_label)
+        
         self.name_input = QLineEdit()
+        self.name_input.setObjectName("wishlist_input")
+        self.name_input.setFixedWidth(400)
         form_layout.addWidget(self.name_input)
 
-        form_layout.addWidget(QLabel("Harga:"))
+        # Price input
+        price_label = QLabel("Harga:")
+        price_label.setObjectName("wishlist_label")
+        form_layout.addWidget(price_label)
+        
         self.price_input = QSpinBox()
-        self.price_input.setRange(1, 10_000_000)  # Maksimum bisa disesuaikan
+        self.price_input.setObjectName("wishlist_input")
+        self.price_input.setRange(0, 100_000_000)
         self.price_input.setSingleStep(50_000)
+        self.price_input.setFixedWidth(400)
         form_layout.addWidget(self.price_input)
 
+        # Add button
         add_button = QPushButton("Tambah Wishlist")
+        add_button.setObjectName("wishlist_button")
+        add_button.setFixedWidth(175)
         add_button.clicked.connect(self.add_wishlist)
         form_layout.addWidget(add_button)
 
-        layout.addLayout(form_layout)
+        form_layout.addStretch()
+        content_layout.addLayout(form_layout)
 
-        # === Filter Berdasarkan Status ===
+        # Filter status layout
         status_layout = QHBoxLayout()
-        status_layout.addWidget(QLabel("Filter Status:"))
+        status_layout.setSpacing(15)
+        
+        filter_label = QLabel("Filter Status:")
+        filter_label.setObjectName("wishlist_label")
+        status_layout.addWidget(filter_label)
 
+        # Radio buttons
         self.all_status = QRadioButton("Semua")
         self.unfulfilled_status = QRadioButton("Belum Terpenuhi")
         self.fulfilled_status = QRadioButton("Sudah Terpenuhi")
 
+        for radio in [self.all_status, self.unfulfilled_status, self.fulfilled_status]:
+            radio.setObjectName("wishlist_radio")
+            status_layout.addWidget(radio)
+
         self.all_status.setChecked(True)
 
-        status_layout.addWidget(self.all_status)
-        status_layout.addWidget(self.unfulfilled_status)
-        status_layout.addWidget(self.fulfilled_status)
+        status_layout.addStretch()
 
         self.all_status.toggled.connect(self.load_wishlists)
         self.unfulfilled_status.toggled.connect(self.load_wishlists)
         self.fulfilled_status.toggled.connect(self.load_wishlists)
 
-        layout.addLayout(status_layout)
+        content_layout.addLayout(status_layout)
 
-        # === Filter Berdasarkan Wallet ===
-        # wallet_layout = QHBoxLayout()
-        # wallet_layout.addWidget(QLabel("Filter Wallet:"))
-
-        # self.wallet_buttons = []
-        # wallet_names = self.wallet_controller.load_wallet_names()
-
-        # for wallet_name in wallet_names:
-        #     btn = QRadioButton(wallet_name)
-        #     btn.toggled.connect(self.load_wishlists)
-        #     wallet_layout.addWidget(btn)
-        #     self.wallet_buttons.append(btn)
-
-        # layout.addLayout(wallet_layout)
-
-        # === Tabel Wishlist ===
+        # Table
         self.wishlist_table = QTableWidget()
-        self.wishlist_table.setColumnCount(6)  
-        self.wishlist_table.setHorizontalHeaderLabels(["ID", "Nama", "Harga", "Status", "E", "D"])
-        layout.addWidget(self.wishlist_table)
+        self.wishlist_table.setObjectName("wishlist_table")
+        self.wishlist_table.setColumnCount(6)
+        self.wishlist_table.setHorizontalHeaderLabels(["No.", "Nama", "Harga", "Status", "E", "D"])
+        
+        # Adjust column widths proportionally
+        total_width = self.wishlist_table.viewport().width()
+        self.wishlist_table.setColumnWidth(0, int(total_width * 0.05))  # 5% for No.
+        self.wishlist_table.setColumnWidth(1, int(total_width * 0.69))  # 35% for Nama
+        self.wishlist_table.setColumnWidth(2, int(total_width * 0.35))  # 20% for Harga
+        self.wishlist_table.setColumnWidth(3, int(total_width * 0.34))  # 20% for Status
+        self.wishlist_table.setColumnWidth(4, int(total_width * 0.15))  # 10% for Edit
+        self.wishlist_table.setColumnWidth(5, int(total_width * 0.153))  # 10% for Delete
+
+        self.wishlist_table.verticalHeader().setVisible(False)
+        self.wishlist_table.setMinimumHeight(300)  # Set minimum height for table
+        content_layout.addWidget(self.wishlist_table)
 
         self.load_wishlists()
 
-        # === Tombol Kembali ===
-        self.btn_back = QPushButton("Kembali ke Dashboard")
-        self.btn_back.clicked.connect(self.go_back)
-        layout.addWidget(self.btn_back)
+        # Add content container to main layout
+        main_layout.addWidget(content_container)
 
-        self.setLayout(layout)
+        # Back button container at bottom right
+        back_button_container = QHBoxLayout()
+        back_button_container.setContentsMargins(0, 10, 20, 20)
+        back_button_container.addStretch()
+        
+        self.btn_back = QPushButton("Kembali ke Dashboard")
+        self.btn_back.setObjectName("wishlist_button")
+        self.btn_back.setFixedWidth(200)
+        self.btn_back.clicked.connect(self.go_back)
+        back_button_container.addWidget(self.btn_back)
+        
+        main_layout.addLayout(back_button_container)
+
+        # Set the main container as the central widget
+        outer_layout = QVBoxLayout()
+        outer_layout.setContentsMargins(0, 0, 0, 0)
+        outer_layout.addWidget(main_container)
+        self.setLayout(outer_layout)
 
     def load_wishlists(self):
         """Memuat data wishlist ke tabel berdasarkan filter"""
@@ -95,16 +153,6 @@ class WishlistView(QWidget):
         elif self.fulfilled_status.isChecked():
             wishlists = self.wishlist_controller.filter_wishlists(True)
 
-        # # Filter wallet
-        # selected_wallet = None
-        # for btn in self.wallet_buttons:
-        #     if btn.isChecked():
-        #         selected_wallet = btn.text()
-        #         break
-
-        # if selected_wallet:
-        #     wishlists = self.wishlist_controller.filter_by_wallet(selected_wallet)
-
         # Muat data ke tabel
         self.wishlist_table.setRowCount(len(wishlists))
         for row, wishlist in enumerate(wishlists):
@@ -114,14 +162,19 @@ class WishlistView(QWidget):
             self.wishlist_table.setItem(row, 0, QTableWidgetItem(wishlist[0]))  # ID
             self.wishlist_table.setItem(row, 1, QTableWidgetItem(wishlist[1]))  # Nama
             self.wishlist_table.setItem(row, 2, QTableWidgetItem(wishlist[2]))  # Harga
-            self.wishlist_table.setItem(row, 3, QTableWidgetItem(wishlist[3]))  # Status
+            
+            # Konversi status dari boolean ke text
+            status_text = "Sudah Terpenuhi" if wishlist[3] == "true" else "Belum Terpenuhi"
+            self.wishlist_table.setItem(row, 3, QTableWidgetItem(status_text))  # Status
 
             # Tombol Edit dan Hapus
             edit_button = QPushButton("Edit")
+            edit_button.setObjectName("wishlist_button")
             edit_button.clicked.connect(lambda _, id=wishlist[0]: self.show_edit_dialog(id))
             self.wishlist_table.setCellWidget(row, 4, edit_button)
 
             delete_button = QPushButton("Hapus")
+            delete_button.setObjectName("wishlist_button")
             delete_button.clicked.connect(lambda _, id=wishlist[0], name=wishlist[1], price=wishlist[2]: self.delete_wishlist(id, name, price))
             self.wishlist_table.setCellWidget(row, 5, delete_button)
 
@@ -171,14 +224,16 @@ class WishlistView(QWidget):
         # Status
         status_label = QLabel("Status:")
         status_input = QComboBox()
-        status_input.addItems(["false", "true"])
-        status_input.setCurrentText(wishlist[3])
+        status_input.addItems(["Belum Terpenuhi", "Sudah Terpenuhi"])
+        current_status = "Sudah Terpenuhi" if wishlist[3] == "true" else "Belum Terpenuhi"
+        status_input.setCurrentText(current_status)
         layout.addWidget(status_label)
         layout.addWidget(status_input)
 
         # Tombol Simpan
         save_button = QPushButton("Simpan")
-        save_button.clicked.connect(lambda: self.save_edit(dialog, wishlist_id, name_input.text(), price_input.value(), status_input.currentText()))
+        save_button.clicked.connect(lambda: self.save_edit(dialog, wishlist_id, name_input.text(), price_input.value(), 
+                                                         "true" if status_input.currentText() == "Sudah Terpenuhi" else "false"))
         layout.addWidget(save_button)
 
         dialog.setLayout(layout)

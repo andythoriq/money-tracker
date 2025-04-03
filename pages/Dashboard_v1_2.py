@@ -1,5 +1,5 @@
 import os
-from PyQt5.QtWidgets import QWidget, QPushButton, QVBoxLayout, QLabel, QStackedWidget, QGroupBox, QHBoxLayout
+from PyQt5.QtWidgets import QWidget, QPushButton, QVBoxLayout, QLabel, QStackedWidget, QGroupBox, QHBoxLayout, QTableWidget, QTableWidgetItem
 from PyQt5 import QtGui, QtCore, QtWidgets
 from pages.view_wallet import WalletView
 from pages.view_income import IncomeView
@@ -75,10 +75,14 @@ class Dashboard(QWidget):
 
         self.layout_2 = QGroupBox(self.container)
         self.layout_2.setObjectName("Layout")
+        self.layout_2_ui()
+        
         self.layout_3 = QGroupBox(self.container)
         self.layout_3.setObjectName("Layout")
+        
         self.layout_4 = QGroupBox(self.container)
         self.layout_4.setObjectName("Layout")
+        self.layout_4_ui()
 
         self.HomeSection = QGroupBox()
         self.HomeSection.setObjectName("HomeSection")
@@ -178,8 +182,8 @@ class Dashboard(QWidget):
             self.balance_label = QLabel(f"Rp. {str(self.wallet_balance)}")
             self.balance_label.setObjectName("Label_1")
         else:
-            print("No Wallet")
-            self.wallet_label = QLabel("No Wallet")
+            print("Anda tidak memiliki wallet!")
+            self.wallet_label = QLabel("Anda tidak memiliki wallet!")
             self.wallet_label.setObjectName("Label_1")
             self.balance_label = QLabel("")
         layout.addWidget(self.wallet_label)
@@ -189,10 +193,48 @@ class Dashboard(QWidget):
 
     def layout_2_ui(self):
         layout = QVBoxLayout()
-
         self.layout_2.setLayout(layout)
 
-
+    def layout_4_ui(self):
+        layout = QVBoxLayout()
+        title = QLabel("Wishlist")
+        title.setObjectName("Label_1")
+        layout.addWidget(title)
+        
+        wishlist_table = QTableWidget()
+        wishlist_table.setObjectName("wishlist_table")
+        wishlist_table.setColumnCount(4)
+        wishlist_table.setHorizontalHeaderLabels(["No.", "Nama", "Harga", "Status"])
+        
+        wishlist_table.setColumnWidth(0, 50)   # No.
+        wishlist_table.setColumnWidth(1, 264)  # Nama
+        wishlist_table.setColumnWidth(2, 150)  # Harga
+        wishlist_table.setColumnWidth(3, 150)  # Status
+        
+        # Sembunyikan header vertikal
+        wishlist_table.verticalHeader().setVisible(False)
+        
+        # Muat data wishlist
+        wishlists = self.wishlist_view.wishlist_controller.wishlists
+        
+        # Set jumlah baris maksimal 4
+        wishlist_table.setRowCount(min(len(wishlists), 4))
+        
+        # Hanya tampilkan 4 data pertama
+        for row, wishlist in enumerate(wishlists[:4]):
+            if len(wishlist) < 4:  # Periksa apakah data lengkap
+                continue
+                
+            wishlist_table.setItem(row, 0, QTableWidgetItem(wishlist[0]))  # No.
+            wishlist_table.setItem(row, 1, QTableWidgetItem(wishlist[1]))  # Nama
+            wishlist_table.setItem(row, 2, QTableWidgetItem(wishlist[2]))  # Harga
+            
+            # Konversi status dari boolean ke text
+            status_text = "Sudah Terpenuhi" if wishlist[3] == "true" else "Belum Terpenuhi"
+            wishlist_table.setItem(row, 3, QTableWidgetItem(status_text))  # Status
+        
+        layout.addWidget(wishlist_table)
+        self.layout_4.setLayout(layout)
 
     def switch_page(self, page):
         if page == "dashboard":
