@@ -1,6 +1,6 @@
 import os
-
-class Wallet:
+from PyQt5.QtWidgets import QWidget, QLabel, QVBoxLayout
+class Wallet():
     FILE_PATH = "database/wallet.txt"
 
     def __init__(self):
@@ -12,7 +12,7 @@ class Wallet:
         """Memuat data wallet dari file"""
         if not os.path.exists(self.FILE_PATH):
             return []
-        with open(self.FILE_PATH, "r") as file:
+        with open(self.FILE_PATH, "r") as file:   
             return [line.strip().split(",") for line in file.readlines()]
         
     def load_wallet_names(self):
@@ -26,6 +26,7 @@ class Wallet:
             for wallet in wallets:
                 file.write(",".join(wallet) + "\n")
 
+    # Menambah data wallet ke database
     def add_wallet(self, name, amount):
         """Menambah wallet baru"""
         wallets = self.load_wallets()
@@ -41,7 +42,8 @@ class Wallet:
                 self.save_wallets(wallets)
                 return True
         return False
-
+    
+    # Menghapus data wallet ke database
     def delete_wallet(self, name):
         """Menghapus wallet"""
         wallets = self.load_wallets()

@@ -20,10 +20,9 @@ class SplashScreen(QSplashScreen):
         layout.addWidget(self.message)
 
     def set_loading_message(self, text):
-        """Update the loading message dynamically."""
+        # Update the loading message dynamically.
         self.message.setText(text)
 
     def mousePressEvent(self, event):
-        """Override mousePressEvent to prevent closing on click."""
+        # Override mousePressEvent to prevent closing on click.
         pass  
-

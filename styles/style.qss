@@ -1,7 +1,10 @@
 #main_menu {
     background-color: #252931;
 }
-#252931
+
+QWidget {
+  background-color: #252931;
+}
 
 QPushButton {
     background-color: #4CAF50;
@@ -53,6 +56,7 @@ QLineEdit {
 }
 
 #Label_1 {
+    background-color: #98C379;
     font: 24pt;
     color: white;
     padding-left: 20px;
@@ -73,7 +77,7 @@ QLineEdit {
     text-align: left;
     padding-left: 20px;
     font-family: Inter;
-    font: 24pt;
+    font: font_sizept;
     color: white;
 }
 
@@ -81,7 +85,7 @@ QLineEdit {
     background-color: #6A8B52;
 }
 
-#btn_homeSection:focus {
+#btn_homeSection:clicked {
     background-color: #5C7A46;
 }
 
