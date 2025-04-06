@@ -4,9 +4,7 @@ from controller.wallet import Wallet
 import numpy as np
 from datetime import datetime, timedelta
 from pyqtgraph.Qt import QtWidgets
-import sys
 import calendar
-from PyQt5.QtWidgets import QApplication, QWidget, QVBoxLayout
 
 class Statistic:
     def __init__(self):
@@ -104,17 +102,7 @@ class Statistic:
             labels = [f"{description[i]}\n({time[i]})" for i in range(len(time))]
 
         if (jenis == "mingguan"):
-            BSM = self.BulanSkrngMingguan(self.offset)
-            for itemsList in range(len(BSM)):
-                for item in range(len(BSM[itemsList])):
-                    if BSM[itemsList][item][0] == '0':
-                        BSM[itemsList][item] = BSM[itemsList][item][1:]
-                    if BSM[itemsList][item][2] == '0':
-                        BSM[itemsList][item] = BSM[itemsList][item][0:2] + BSM[itemsList][item][3:]
-                    if BSM[itemsList][item][3] == '0':
-                        BSM[itemsList][item] = BSM[itemsList][item][0:3] + BSM[itemsList][item][4:]
-                        
-            for x1 in BSM:
+            for x1 in self.BulanSkrngMingguan(self.offset):
                 for x2 in x1:
                     try:
                         indeks = sorted_tanggalI.index(x2)
@@ -134,7 +122,7 @@ class Statistic:
                 yI.append(temp)
                 temp = 0
 
-            for x1 in BSM:
+            for x1 in self.BulanSkrngMingguan(self.offset):
                 for x2 in x1:
                     try:
                         indeks = sorted_tanggalO.index(x2)
@@ -155,7 +143,7 @@ class Statistic:
                 temp = 0
             
             # Data untuk x axis harian
-            time = BSM # nama hari
+            time = self.BulanSkrngMingguan(self.offset) # nama hari
             for x in range(len(time)):
                 time[x] = time[x][0]
             description = ["1st Week", "2nd Week", "3rd Week", "4th Week"] # tanggal hari
@@ -212,7 +200,7 @@ class Statistic:
             
                 for i, t in enumerate(tanggal_list):
                     if t == tahun:  # Jika tahunnya cocok
-                        temp += sorted_amountO[i]
+                        temp += sorted_amountI[i]
 						    # Simpan hasil per tahun dan tambahkan ke total
                 yI.append(temp)
                 incomeSum += temp
@@ -267,12 +255,10 @@ class Statistic:
     def ubahHari(self, offset=0):
         today = datetime.today()
         start_of_week = today + timedelta(days=offset)
-        return [f"{(start_of_week + timedelta(days=i)).day}/{(start_of_week + timedelta(days=i)).month}/{(start_of_week + timedelta(days=i)).year}" for i in range(7)]
-
-    def MingguSkrng(self, offset=0):
-        today = datetime.today()
-        start_of_week = today - timedelta(days=today.weekday(), weeks=-offset)  # Start of the week, adjusted by the offset
-        return [f"{(start_of_week + timedelta(days=i)).day}/{(start_of_week + timedelta(days=i)).month}/{(start_of_week + timedelta(days=i)).year}" for i in range(7)]
+        return [
+            (start_of_week + timedelta(days=i)).strftime("%d/%m/%Y") 
+            for i in range(7)
+        ]
 
     def BulanSkrngMingguan(self, offset=0):  # Menambahkan parameter offset (default 0)
         today = datetime.today()  # Mendapatkan tanggal hari ini
