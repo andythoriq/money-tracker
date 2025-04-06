@@ -1,63 +1,76 @@
-import sys  # Import sys untuk mengelola parameter baris perintah dan menjalankan aplikasi
-import numpy as np  # Import numpy untuk operasi matematika dan pembuatan data acak
-import pandas as pd  # Import pandas untuk manipulasi data (meskipun belum digunakan langsung dalam contoh ini)
-from PyQt5.QtWidgets import QApplication, QMainWindow, QVBoxLayout, QWidget, QPushButton  # Import widget PyQt5
-from matplotlib.backends.backend_qt5agg import FigureCanvasQTAgg as FigureCanvas  # Import FigureCanvas untuk menampilkan grafik di PyQt5
-from matplotlib.figure import Figure  # Import Figure untuk membuat grafik dengan Matplotlib
+import pyqtgraph as pg
+from pyqtgraph.Qt import QtWidgets
+import sys
+from PyQt5.QtWidgets import QWidget, QVBoxLayout
+from controller.statistic import Statistic
 
-class StatsApp(QMainWindow):
-    def __init__(self):
-        super().__init__()  # Memanggil konstruktor kelas induk (QMainWindow)
-        self.setWindowTitle("Statistik dengan PyQt dan Matplotlib")  # Menetapkan judul window
-        
-        # Membuat layout utama untuk menampung elemen-elemen GUI
-        layout = QVBoxLayout()
-        
-        # Membuat Figure untuk grafik Matplotlib
-        self.figure = Figure()  # Membuat figure kosong untuk grafik
-        self.canvas = FigureCanvas(self.figure)  # Membuat canvas yang dapat menampilkan figure
-        layout.addWidget(self.canvas)  # Menambahkan canvas ke layout
-        
-        # Membuat tombol yang ketika diklik akan menghasilkan data statistik
-        self.button = QPushButton("Generate Statistik")  # Membuat tombol
-        self.button.clicked.connect(self.generate_statistics)  # Menghubungkan tombol dengan metode untuk menghasilkan statistik
-        layout.addWidget(self.button)  # Menambahkan tombol ke layout
-        
-        # Membuat widget utama untuk menampung layout
-        container = QWidget()  # Membuat container widget
-        container.setLayout(layout)  # Menetapkan layout pada container
-        self.setCentralWidget(container)  # Menetapkan container sebagai widget utama dari window
-        
-    def generate_statistics(self):
-        # Contoh data acak: menghasilkan 1000 data yang terdistribusi normal
-        data = np.random.normal(0, 1, 1000)  # Distribusi normal dengan mean 0 dan std dev 1
-        
-        # Menghitung statistik dasar
-        mean = np.mean(data)  # Rata-rata dari data
-        median = np.median(data)  # Median dari data
-        std_dev = np.std(data)  # Deviasi standar dari data
-        
-        # Mencetak statistik ke konsol
-        print(f"Mean: {mean}")
-        print(f"Median: {median}")
-        print(f"Standard Deviation: {std_dev}")
-        
-        # Membersihkan figure (hapus grafik sebelumnya)
-        self.figure.clf()  # Menghapus figure sebelumnya agar tidak ada tumpang tindih
 
-        # Membuat plot histogram menggunakan Matplotlib
-        ax = self.figure.add_subplot(111)  # Menambahkan subplot (grafik) ke figure
-        ax.hist(data, bins=30, color='blue', alpha=0.7)  # Membuat histogram dari data dengan 30 bin
-        ax.set_title("Histogram Data Normal")  # Menambahkan judul ke grafik
-        ax.set_xlabel("Nilai")  # Menambahkan label untuk sumbu X
-        ax.set_ylabel("Frekuensi")  # Menambahkan label untuk sumbu Y
-        
-        # Menyegarkan canvas untuk menampilkan grafik terbaru
+class StatisticView(QWidget):
+    def __init__(self, parent=None):
+        super().__init__(parent)
+        self.statistic_controller = Statistic()
+        self.init_ui()
+
+    def init_ui(self):
+        layout = QtWidgets.QVBoxLayout()
+
+        # Membuat plot
+        self.plot_widget = pg.PlotWidget()
+        # Mengubah latar belakang plot menjadi putih
+        self.plot_widget.setBackground('w')
+        # Menonaktifkan kemampuan untuk menggeser dan zoom plot
+        self.plot_widget.setMouseEnabled(x=False, y=False)
+        # Menambahkan plot ke layout
+        layout.addWidget(self.plot_widget)
+        self.setLayout(layout)
+
+        # Plot the graph
+        self.generate_statistics()
+
+    def plot_graph(self):
+        ax = self.figure.add_subplot(111)
+        ax.plot([1, 2, 3, 4, 5], [1, 4, 9, 16, 25])  # Sample data
+        ax.set_title("Sample Graph")
         self.canvas.draw()
 
-# Mengeksekusi aplikasi PyQt jika file ini dijalankan secara langsung
-if __name__ == "__main__":
-    app = QApplication(sys.argv)  # Membuat instance QApplication yang mengelola event loop
-    window = StatsApp()  # Membuat window aplikasi
-    window.show()  # Menampilkan window aplikasi
-    sys.exit(app.exec_())  # Memulai event loop dan keluar ketika aplikasi selesai
+    def generate_statistics(self):
+        self.plot_widget.clear()
+
+        data = self.statistic_controller.cur_data
+
+        x = data[0]
+        income_barItem = data[1]
+        outcome_barItem = data[2]
+        infoLabels = data[3]
+        maxNilai = max(data[1] + data[2])
+
+        # Membuat grafik batang untuk pendapatan (warna hijau) dan pengeluaran (warna merah)
+        income_graph = pg.BarGraphItem(x=x-0.15, height=income_barItem, width=0.3, brush='#FF9F40', name="Pendapatan")
+        outcome_graph = pg.BarGraphItem(x=x+0.15, height=outcome_barItem, width=0.3, brush='#F4BE37', name="Pengeluaran")
+
+        # Menambahkan grafik batang ke plot
+        self.plot_widget.addItem(income_graph)
+        self.plot_widget.addItem(outcome_graph)
+
+        # Mengubah ticks sumbu X untuk menampilkan dua informasi: hari dan tanggal
+        self.plot_widget.getAxis('bottom').setTicks([list(zip(x, infoLabels))])
+
+        # Mengubah sumbu Y untuk lebih baik menampilkan data
+        self.plot_widget.setLabel('left', 'Nilai')
+        self.plot_widget.setLabel('bottom', 'Hari dan Tanggal')
+
+        # Menyesuaikan format label sumbu Y untuk menghindari notasi ilmiah
+        axis = self.plot_widget.getAxis('left')
+        axis.setTicks([[(i, str(int(i))) for i in range(0, maxNilai, 50000)]])  # Set custom ticks format
+
+        # Tombol untuk mengubah view range setelah beberapa detik
+        self.plot_widget.getPlotItem().vb.setRange(yRange=(0, int(maxNilai * 1.2)), padding=0)
+
+        # Menghilangkan toolbar atau elemen lainnya
+        self.plot_widget.getPlotItem().hideButtons()  # Menghilangkan tombol atau kontrol lainnya
+
+        # Menambahkan grid pada plot untuk mempermudah pembacaan
+        self.plot_widget.showGrid(x=True, y=True, alpha=0.3)  # Alpha untuk transparansi grid
+
+        # Menambahkan legenda ke plot
+        self.plot_widget.addLegend()  # Ini adalah cara yang benar untuk menambahkan legenda
