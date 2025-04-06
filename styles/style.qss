@@ -55,6 +55,10 @@ QLineEdit {
     padding: 5px;;
 }
 
+#stackedWidget {
+    background-color: #7A9F60;
+}
+
 #Label_1 {
     background-color: #98C379;
     font: 24pt;
@@ -85,11 +89,12 @@ QLineEdit {
     background-color: #6A8B52;
 }
 
-#btn_homeSection:clicked {
+#btn_homeSection:focus {
     background-color: #5C7A46;
 }
 
 #label {
+    background-color: #7A9F60;
     font-family: Inter;
     font: 24pt;
     color: white;
@@ -111,4 +116,57 @@ QLineEdit {
 
 #btn_home:focus {
     background-color: #5C7A46;
+}
+
+#tittleLabel {
+    background-color: #98C379;
+    font: 24pt;
+    color: white;
+    padding: 15px;
+    border-radius: 10px;
+}
+
+#editWallet {
+    QInputDialog {
+        background-color: #98C379;
+    }
+    QLabel {
+        color: white;
+        font-size: 14px;
+    }
+    QLineEdit {
+        background-color: white;
+        border: 1px solid #7A9F60;
+        border-radius: 5px;
+        padding: 5px;
+    }
+    QPushButton {
+        background-color: #4CAF50;
+        color: white;
+        border-radius: 5px;
+        padding: 5px;
+        min-width: 70px;
+    }
+    QPushButton:hover {
+        background-color: #45a049;
+    }
+}
+
+#deleteWallet {
+    QMessageBox {
+        background-color: #98C379;
+    }
+    QLabel {
+        color: white;
+    }
+    QPushButton {
+        background-color: #4CAF50;
+        color: white;
+        border-radius: 5px;
+        padding: 5px;
+        min-width: 70px;
+    }
+    QPushButton:hover {
+        background-color: #45a049;
+    }
 }

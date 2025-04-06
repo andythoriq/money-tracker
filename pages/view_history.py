@@ -29,7 +29,7 @@ class HistoryView(QWidget):
 
         # Title Section
         title_label = QLabel("History")
-        title_label.setObjectName("Label_1")
+        title_label.setObjectName("tittleLabel")
         main_layout.addWidget(title_label)
 
         # Content Container
@@ -47,8 +47,11 @@ class HistoryView(QWidget):
         self.radio_group = QButtonGroup(self)
 
         self.radio_all = QRadioButton("Semua")
+        self.radio_all.setObjectName("btn_home")
         self.radio_income = QRadioButton("Income")
+        self.radio_income.setObjectName("btn_home")
         self.radio_outcome = QRadioButton("Outcome")
+        self.radio_outcome.setObjectName("btn_home")
 
         for radio in [self.radio_all, self.radio_income, self.radio_outcome]:
             radio.setStyleSheet("""

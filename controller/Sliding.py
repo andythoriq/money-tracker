@@ -19,6 +19,7 @@ class SlidingWalletWidget(QWidget):
 
         # Create stacked widget for sliding
         self.stacked_widget = QStackedWidget()
+        self.stacked_widget.setObjectName("stackedWidget")
         self.layout.addWidget(self.stacked_widget)
 
         # Populate wallet pages

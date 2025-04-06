@@ -1,6 +1,6 @@
 from PyQt5.QtWidgets import (
     QWidget, QVBoxLayout, QHBoxLayout, QPushButton,
-    QTableWidget, QTableWidgetItem, QLineEdit, QLabel, QGroupBox, QSpinBox, QMessageBox, QInputDialog
+    QTableWidget, QTableWidgetItem, QLineEdit, QLabel, QGroupBox, QSpinBox, QMessageBox, QInputDialog, QSizePolicy
 )
 from PyQt5.QtCore import Qt
 from controller.wallet import Wallet
@@ -13,13 +13,15 @@ class WalletView(QWidget):
         self.setObjectName("HomeSection")
 
     def init_ui(self):
+        # Main layout
+        self.setMinimumSize(700, 600)
         main_layout = QVBoxLayout()
         main_layout.setContentsMargins(20, 20, 20, 20)
         main_layout.setSpacing(20)
 
         # Title Section
         title_label = QLabel("Wallet")
-        title_label.setObjectName("Label_1")
+        title_label.setObjectName("tittleLabel")
         main_layout.addWidget(title_label)
 
         # Content Container
@@ -28,12 +30,6 @@ class WalletView(QWidget):
         content_layout = QVBoxLayout(content_widget)
         content_layout.setContentsMargins(20, 20, 20, 20)
         content_layout.setSpacing(15)
-
-        # Back Button
-        self.btn_back = QPushButton("Kembali")
-        self.btn_back.setObjectName("btn_home")
-        self.btn_back.clicked.connect(self.go_back)
-        content_layout.addWidget(self.btn_back)
 
         # === BOX TAMBAH WALLET ===
         self.group_add_wallet = QGroupBox("Tambah Wallet")
@@ -51,9 +47,9 @@ class WalletView(QWidget):
 
         # Labels
         name_label = QLabel("Nama:")
-        name_label.setStyleSheet("color: white; font-size: 14px;")
+        name_label.setStyleSheet("background-color:  #7A9F60; color: white; font-size: 14px; padding: 5px; border-radius: 5px;")
         saldo_label = QLabel("Saldo:")
-        saldo_label.setStyleSheet("color: white; font-size: 14px;")
+        saldo_label.setStyleSheet("background-color: #7A9F60; color: white; font-size: 14px; padding: 5px; border-radius: 5px;")
 
         # Input fields
         self.input_name = QLineEdit()
@@ -109,8 +105,9 @@ class WalletView(QWidget):
 
         # === TABEL WALLET ===
         self.table_wallet = QTableWidget()
-        self.table_wallet.setObjectName("table")
+        self.table_wallet.setObjectName("tableWallet")
         self.table_wallet.setColumnCount(4)
+        self.table_wallet.setSizePolicy(QSizePolicy.Expanding, QSizePolicy.Expanding)
         self.table_wallet.setHorizontalHeaderLabels(["Nama", "Saldo", "Edit", "Delete"])
         self.table_wallet.setStyleSheet("""
             QTableWidget {
@@ -149,11 +146,8 @@ class WalletView(QWidget):
         main_layout.addWidget(content_widget)
         self.setLayout(main_layout)
         self.load_wallets()
-
-    def go_back(self):
-        """Kembali ke Dashboard"""
-        if self.parent():
-            self.parent().setCurrentIndex(0)  # Indeks 0 adalah Dashboard
+        # Set stylesheet for the main widget
+        self.setStyleSheet("background-color: #98C379;")
 
     def load_wallets(self):
         """Memuat data wallet ke tabel"""
@@ -213,7 +207,7 @@ class WalletView(QWidget):
             msg = QMessageBox()
             msg.setStyleSheet("""
                 QMessageBox {
-                    background-color: #98C379;
+                    background-color: #7A9F60;
                 }
                 QLabel {
                     color: white;
@@ -236,31 +230,7 @@ class WalletView(QWidget):
     def edit_wallet(self, name):
         """Mengedit saldo wallet"""
         dialog = QInputDialog(self)
-        dialog.setStyleSheet("""
-            QInputDialog {
-                background-color: #98C379;
-            }
-            QLabel {
-                color: white;
-                font-size: 14px;
-            }
-            QLineEdit {
-                background-color: white;
-                border: 1px solid #7A9F60;
-                border-radius: 5px;
-                padding: 5px;
-            }
-            QPushButton {
-                background-color: #4CAF50;
-                color: white;
-                border-radius: 5px;
-                padding: 5px;
-                min-width: 70px;
-            }
-            QPushButton:hover {
-                background-color: #45a049;
-            }
-        """)
+        dialog.setObjectName("label")
         new_amount, ok = dialog.getInt(self, "Edit Wallet", f"Saldo baru untuk {name}:", min=0)
         if ok:
             self.wallet_controller.edit_wallet(name, new_amount)
@@ -269,11 +239,21 @@ class WalletView(QWidget):
     def delete_wallet(self, name):
         """Menghapus wallet"""
         msg = QMessageBox()
+        msg.setObjectName("deleteWallet")
+        msg.setWindowTitle("Konfirmasi")
+        msg.setText(f"Apakah Anda yakin ingin menghapus wallet '{name}'?")
+        msg.setIcon(QMessageBox.Warning)
+        msg.setStandardButtons(QMessageBox.Yes | QMessageBox.No)
+        msg.setDefaultButton(QMessageBox.No)
         msg.setStyleSheet("""
             QMessageBox {
                 background-color: #98C379;
+                padding: 5px;
             }
             QLabel {
+                background-color: #7A9F60;
+                padding: 8px;
+                border-radius: 5px;
                 color: white;
             }
             QPushButton {
@@ -287,10 +267,6 @@ class WalletView(QWidget):
                 background-color: #45a049;
             }
         """)
-        msg.setWindowTitle("Konfirmasi")
-        msg.setText(f"Apakah Anda yakin ingin menghapus wallet '{name}'?")
-        msg.setStandardButtons(QMessageBox.Yes | QMessageBox.No)
-        msg.setDefaultButton(QMessageBox.No)
         
         result = msg.exec_()
         if result == QMessageBox.Yes:

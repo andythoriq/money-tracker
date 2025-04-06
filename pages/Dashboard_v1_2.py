@@ -12,14 +12,6 @@ from controller.Popup import PopupAboutUs
 from controller.wallet import Wallet
 from controller.Sliding import SlidingWalletWidget
 
-def load_stylesheet(app, filename="styles/styleQWidget.qss"):
-    if os.path.exists(filename):
-        with open(filename, "r") as file:
-            qss = file.read()
-            app.setStyleSheet(qss)
-    else:
-        print(f"Warning: Stylesheet {filename} not found!")
-
 class Dashboard(QWidget):
     def __init__(self):
         super().__init__()

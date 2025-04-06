@@ -22,7 +22,7 @@ class WishlistView(QWidget):
 
         # Title Section
         title_label = QLabel("Wishlist")
-        title_label.setObjectName("Label_1")
+        title_label.setObjectName("tittleLabel")
         main_layout.addWidget(title_label)
 
         # Content Container
