@@ -1,6 +1,7 @@
 import os
 from PyQt5.QtWidgets import QWidget, QPushButton, QVBoxLayout, QLabel, QStackedWidget, QGroupBox, QHBoxLayout, QTableWidget, QTableWidgetItem
 from PyQt5 import QtGui, QtCore, QtWidgets
+from pyqtgraph import PlotWidget
 from pages.view_wallet import WalletView
 from pages.view_income import IncomeView
 from pages.view_outcome import OutcomeView
@@ -10,6 +11,7 @@ from pages.view_category import CategoryView
 from pages.view_wishlist import WishlistView
 from controller.Popup import PopupAboutUs
 from controller.wallet import Wallet
+from controller.statistic import Statistic
 
 def load_stylesheet(app, filename="styles/style.qss"):
     if os.path.exists(filename):
@@ -30,6 +32,7 @@ class Dashboard(QWidget):
         self.setWindowTitle("Money Tracker")
 
         self.wallet_controller = Wallet()
+        self.statistic_controller = Statistic()
 
         # Stack untuk menyimpan berbagai halaman
         self.stack = QStackedWidget()
@@ -83,7 +86,7 @@ class Dashboard(QWidget):
         self.layout_3 = QGroupBox(self.container)
         self.layout_3.setObjectName("Layout")
         self.layout_3_ui()
-
+        
         self.layout_4 = QGroupBox(self.container)
         self.layout_4.setObjectName("Layout")
         self.layout_4_ui()
@@ -141,7 +144,9 @@ class Dashboard(QWidget):
         self.btn_statistic = QPushButton(self.HomeSection)
         self.btn_statistic.setIcon(QtGui.QIcon("../money-tracker/img/icon/statistic.png"))
         self.btn_statistic.setIconSize(QtCore.QSize(55, 61))
-        self.btn_statistic.clicked.connect(lambda: self.stack.setCurrentWidget(self.statistic_view))
+        self.btn_statistic.clicked.connect(lambda: (
+            self.stack.setCurrentWidget(self.statistic_view)
+        ))
         self.btn_statistic.setObjectName("btn_homeSection")
 
         self.btn_category = QPushButton(self.HomeSection)
@@ -199,16 +204,21 @@ class Dashboard(QWidget):
     def layout_2_ui(self):
         layout = QVBoxLayout()
         self.layout_2.setLayout(layout)
-        
+
     def layout_3_ui(self):
         layout = QVBoxLayout()
         self.statistic_label = QLabel("Informasi keuanganmu untuk minggu ini")
         self.statistic_label.setObjectName("Label_1")
 
+        self.graph_widget = PlotWidget()
+        self.graph_widget.setBackground('w')
+        self.graph_widget.setMouseEnabled(x=False, y=False)
+        self.statistic_controller.generate_statistics(self.graph_widget)
+
         layout.addWidget(self.statistic_label)
-        layout.addWidget(StatisticView())
+        layout.addWidget(self.graph_widget)
         self.layout_3.setLayout(layout)
-    
+
     def layout_4_ui(self):
         layout = QVBoxLayout()
         title = QLabel("Wishlist")
