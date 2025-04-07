@@ -2,6 +2,7 @@ from controller.outcome import Outcome
 from controller.income import Income
 from controller.wallet import Wallet
 import numpy as np
+from pyqtgraph import TextItem, BarGraphItem
 from datetime import datetime, timedelta
 from pyqtgraph.Qt import QtWidgets
 import calendar
@@ -353,8 +354,8 @@ class Statistic:
         
         return years
 
-    def generate_statistics(self):
-        self.plot_widget.clear()
+    def generate_statistics(self, plot_widget):
+        plot_widget.clear()
 
         data = self.cur_data
 
@@ -365,33 +366,33 @@ class Statistic:
         maxNilai = max(data[1] + data[2])
 
         # Membuat grafik batang untuk pendapatan (warna hijau) dan pengeluaran (warna merah)
-        income_graph = BarGraphItem(x=x-0.15, height=income_barItem, width=0.3, brush='#FF9F40', name="Pendapatan")
-        outcome_graph = BarGraphItem(x=x+0.15, height=outcome_barItem, width=0.3, brush='#F4BE37', name="Pengeluaran")
+        income_graph = BarGraphItem(x=x-0.15, height=income_barItem, width=0.3, brush='g', name="Pendapatan")
+        outcome_graph = BarGraphItem(x=x+0.15, height=outcome_barItem, width=0.3, brush='r', name="Pengeluaran")
 
         # Menambahkan grafik batang ke plot
-        self.plot_widget.addItem(income_graph)
-        self.plot_widget.addItem(outcome_graph)
+        plot_widget.addItem(income_graph)
+        plot_widget.addItem(outcome_graph)
         # Mengubah ticks sumbu X untuk menampilkan dua informasi: hari dan tanggal
-        self.plot_widget.getAxis('bottom').setTicks([list(zip(x, infoLabels))])
+        plot_widget.getAxis('bottom').setTicks([list(zip(x, infoLabels))])
 
         # Mengubah sumbu Y untuk lebih baik menampilkan data
-        self.plot_widget.setLabel('left', 'Nilai', units="")
-        self.plot_widget.setLabel('bottom', 'Hari dan Tanggal')
+        plot_widget.setLabel('left', 'Nilai', units="")
+        plot_widget.setLabel('bottom', 'Hari dan Tanggal')
 
         # Display values on top of bars (income bars)
         for i, val in enumerate(income_barItem):
             text = TextItem(str(val), color='green')
             text.setPos(x[i] - 0.25, val + 3)  # Position above the bar
-            self.plot_widget.addItem(text)
+            plot_widget.addItem(text)
 
         # Display values on top of bars (outcome bars)
         for i, val in enumerate(outcome_barItem):
             text = TextItem(str(val), color='red')
             text.setPos(x[i], val + 3)  # Position above the bar
-            self.plot_widget.addItem(text)
+            plot_widget.addItem(text)
 
         # Menyesuaikan format label sumbu Y untuk menghindari notasi ilmiah
-        axis = self.plot_widget.getAxis('left')
+        axis = plot_widget.getAxis('left')
 
         # Periksa apakah maxNilai kurang dari 5 dan tentukan langkah minimal
         step = max(1, int(maxNilai / 5))  # Pastikan langkah tidak menjadi 0
@@ -403,13 +404,13 @@ class Statistic:
         axis.setTicks([ticks])
 
         # Tombol untuk mengubah view range setelah beberapa detik
-        self.plot_widget.getPlotItem().vb.setRange(yRange=(0, int(maxNilai * 1.3)), padding=0)
+        plot_widget.getPlotItem().vb.setRange(yRange=(0, int(maxNilai * 1.3)), padding=0)
 
         # Menghilangkan toolbar atau elemen lainnya
-        self.plot_widget.getPlotItem().hideButtons()  # Menghilangkan tombol atau kontrol lainnya
+        plot_widget.getPlotItem().hideButtons()  # Menghilangkan tombol atau kontrol lainnya
 
         # Menambahkan grid pada plot untuk mempermudah pembacaan
-        self.plot_widget.showGrid(x=True, y=True, alpha=0.3)  # Alpha untuk transparansi grid
+        plot_widget.showGrid(x=True, y=True, alpha=0.3)  # Alpha untuk transparansi grid
 
         # Menambahkan legenda ke plot
-        self.plot_widget.addLegend()  # Ini adalah cara yang benar untuk menambahkan legenda
+        plot_widget.addLegend()  # Ini adalah cara yang benar untuk menambahkan legenda
