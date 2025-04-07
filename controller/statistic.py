@@ -395,7 +395,7 @@ class Statistic:
         axis = plot_widget.getAxis('left')
 
         # Periksa apakah maxNilai kurang dari 5 dan tentukan langkah minimal
-        step = max(1, int(maxNilai / 5))  # Pastikan langkah tidak menjadi 0
+        step = max(1, int(maxNilai / 5))  
 
         # Membuat ticks dengan langkah yang aman
         ticks = [(i, "{:,.0f}".format(i)) for i in range(0, maxNilai + 1, step)]
@@ -413,4 +413,4 @@ class Statistic:
         plot_widget.showGrid(x=True, y=True, alpha=0.3)  # Alpha untuk transparansi grid
 
         # Menambahkan legenda ke plot
-        plot_widget.addLegend()  # Ini adalah cara yang benar untuk menambahkan legenda
+        plot_widget.addLegend()

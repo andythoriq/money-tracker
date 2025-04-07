@@ -4,6 +4,7 @@ from PyQt5.QtWidgets import (
     QButtonGroup, QDialog, QFormLayout, QSpinBox, 
     QComboBox, QLineEdit, QCalendarWidget, QMessageBox
 )
+from PyQt5.QtCore import Qt
 from datetime import datetime
 from controller.income import Income
 from controller.outcome import Outcome
@@ -18,47 +19,110 @@ class HistoryView(QWidget):
         self.income_controller = Income(self.wallet_controller)
         self.outcome_controller = Outcome(self.wallet_controller)
         self.init_ui()
+        self.setObjectName("HomeSection")
 
     def init_ui(self):
         """Inisialisasi UI"""
-        layout = QVBoxLayout()
+        main_layout = QVBoxLayout()
+        main_layout.setContentsMargins(20, 20, 20, 20)
+        main_layout.setSpacing(20)
+
+        # Title Section
+        title_label = QLabel("History")
+        title_label.setObjectName("tittleLabel")
+        main_layout.addWidget(title_label)
+
+        # Content Container
+        content_widget = QWidget()
+        content_widget.setObjectName("Layout")
+        content_layout = QVBoxLayout(content_widget)
+        content_layout.setContentsMargins(20, 20, 20, 20)
+        content_layout.setSpacing(15)
 
         # Radio Button Filter
-        btn_layout = QHBoxLayout()
+        filter_widget = QWidget()
+        filter_widget.setObjectName("groupBox")
+        btn_layout = QHBoxLayout(filter_widget)
+        btn_layout.setSpacing(10)
         self.radio_group = QButtonGroup(self)
 
-        self.radio_income = QRadioButton("Income")
-        self.radio_outcome = QRadioButton("Outcome")
         self.radio_all = QRadioButton("Semua")
+        self.radio_all.setObjectName("btn_home")
+        self.radio_income = QRadioButton("Income")
+        self.radio_income.setObjectName("btn_home")
+        self.radio_outcome = QRadioButton("Outcome")
+        self.radio_outcome.setObjectName("btn_home")
 
+        for radio in [self.radio_all, self.radio_income, self.radio_outcome]:
+            radio.setStyleSheet("""
+                QRadioButton {
+                    color: white;
+                    font-size: 14px;
+                    padding: 5px;
+                }
+                QRadioButton::indicator {
+                    width: 15px;
+                    height: 15px;
+                }
+            """)
+
+        self.radio_group.addButton(self.radio_all)
         self.radio_group.addButton(self.radio_income)
         self.radio_group.addButton(self.radio_outcome)
-        self.radio_group.addButton(self.radio_all)
 
         self.radio_all.setChecked(True)
         self.radio_income.toggled.connect(lambda: self.load_data("income"))
         self.radio_outcome.toggled.connect(lambda: self.load_data("outcome"))
         self.radio_all.toggled.connect(lambda: self.load_data("all"))
 
+        btn_layout.addWidget(self.radio_all)
         btn_layout.addWidget(self.radio_income)
         btn_layout.addWidget(self.radio_outcome)
-        btn_layout.addWidget(self.radio_all)
-        layout.addLayout(btn_layout)
+        btn_layout.addStretch()
+        content_layout.addWidget(filter_widget)
 
         # Tabel Transaksi
         self.table = QTableWidget()
+        self.table.setObjectName("table")
         self.table.setColumnCount(8)
         self.table.setHorizontalHeaderLabels(["Tanggal", "Jenis", "Jumlah", "Kategori", "Dompet", "Deskripsi", "Edit", "Delete"])
         self.table.setSortingEnabled(True)
         self.table.setEditTriggers(QTableWidget.NoEditTriggers)
-
-        layout.addWidget(self.table)
+        self.table.setStyleSheet("""
+            QTableWidget {
+                background-color: #7A9F60;
+                border-radius: 10px;
+                color: white;
+                gridline-color: #98C379;
+            }
+            QTableWidget::item {
+                padding: 5px;
+            }
+            QTableWidget::item:selected {
+                background-color: #6A8B52;
+            }
+            QHeaderView::section {
+                background-color: #7A9F60;
+                color: white;
+                padding: 5px;
+                border: none;
+            }
+            QScrollBar {
+                background-color: #7A9F60;
+            }
+        """)
+        self.table.horizontalHeader().setStretchLastSection(True)
+        self.table.verticalHeader().setVisible(False)
+        content_layout.addWidget(self.table)
 
         # Label Total
-        self.label = QLabel(f"Total : Rp 0")
-        layout.addWidget(self.label)
+        self.label = QLabel("Total : Rp 0")
+        self.label.setObjectName("label")
+        self.label.setAlignment(Qt.AlignRight)
+        content_layout.addWidget(self.label)
 
-        self.setLayout(layout)
+        main_layout.addWidget(content_widget)
+        self.setLayout(main_layout)
         self.load_data("all")
 
     def load_data(self, filter_type):
@@ -116,11 +180,33 @@ class HistoryView(QWidget):
 
             # Tombol Edit
             btn_edit = QPushButton("Edit")
+            btn_edit.setStyleSheet("""
+                QPushButton {
+                    background-color: #4CAF50;
+                    color: white;
+                    border-radius: 5px;
+                    padding: 5px;
+                }
+                QPushButton:hover {
+                    background-color: #45a049;
+                }
+            """)
             btn_edit.clicked.connect(lambda _, t=transaction: self.open_edit_popup(t))
             self.table.setCellWidget(row, 6, btn_edit)
 
             # Tombol Delete
             btn_delete = QPushButton("Delete")
+            btn_delete.setStyleSheet("""
+                QPushButton {
+                    background-color: #f44336;
+                    color: white;
+                    border-radius: 5px;
+                    padding: 5px;
+                }
+                QPushButton:hover {
+                    background-color: #da190b;
+                }
+            """)
             btn_delete.clicked.connect(lambda _, t=transaction: self.confirm_delete(t))
             self.table.setCellWidget(row, 7, btn_delete)
 
@@ -130,7 +216,28 @@ class HistoryView(QWidget):
         """Popup Edit Data"""
         dialog = QDialog(self)
         dialog.setWindowTitle("Edit Transaksi")
+        dialog.setStyleSheet("""
+            QDialog {
+                background-color: #98C379;
+            }
+            QLabel {
+                color: white;
+                font-size: 14px;
+            }
+            QSpinBox, QComboBox, QLineEdit {
+                background-color: white;
+                border: 1px solid #7A9F60;
+                border-radius: 5px;
+                padding: 5px;
+            }
+            QCalendarWidget {
+                background-color: white;
+                border-radius: 5px;
+            }
+        """)
         layout = QFormLayout(dialog)
+        layout.setSpacing(10)
+        layout.setContentsMargins(20, 20, 20, 20)
 
         # Widget Form
         amount_input = QSpinBox()
@@ -158,6 +265,18 @@ class HistoryView(QWidget):
 
         # Tombol Simpan
         btn_save = QPushButton("Simpan")
+        btn_save.setStyleSheet("""
+            QPushButton {
+                background-color: #4CAF50;
+                color: white;
+                border-radius: 5px;
+                padding: 8px;
+                font-size: 14px;
+            }
+            QPushButton:hover {
+                background-color: #45a049;
+            }
+        """)
         btn_save.clicked.connect(lambda: self.save_edit(transaction, amount_input, category_input, wallet_input, desc_input, date_input, dialog))
         layout.addRow(btn_save)
 
@@ -178,15 +297,40 @@ class HistoryView(QWidget):
 
     def confirm_delete(self, transaction):
         """Konfirmasi Delete"""
-        msg = QMessageBox.question(self, "Konfirmasi Hapus",
-            f"Apakah Anda yakin ingin menghapus transaksi {transaction['type']} dengan jumlah Rp {transaction['amount']}?",
-            QMessageBox.Yes | QMessageBox.No)
-
-        if msg == QMessageBox.Yes:
+        msg = QMessageBox()
+        msg.setStyleSheet("""
+            QMessageBox {
+                background-color: #98C379;
+            }
+            QLabel {
+                color: white;
+            }
+            QPushButton {
+                background-color: #4CAF50;
+                color: white;
+                border-radius: 5px;
+                padding: 5px;
+                min-width: 70px;
+            }
+            QPushButton:hover {
+                background-color: #45a049;
+            }
+        """)
+        msg.setWindowTitle("Konfirmasi Hapus")
+        msg.setText(f"Apakah Anda yakin ingin menghapus transaksi {transaction['type']} dengan jumlah Rp {transaction['amount']}?")
+        msg.setStandardButtons(QMessageBox.Yes | QMessageBox.No)
+        
+        result = msg.exec_()
+        if result == QMessageBox.Yes:
             if transaction["type"] == "income":
                 self.income_controller.delete_income(transaction["id"])
             else:
                 self.outcome_controller.delete_outcome(transaction["id"])
 
             self.load_data(transaction["type"])
-            QMessageBox.information(self, "Informasi", "Transaksi berhasil dihapus")
+            
+            info_msg = QMessageBox()
+            info_msg.setStyleSheet(msg.styleSheet())
+            info_msg.setWindowTitle("Informasi")
+            info_msg.setText("Transaksi berhasil dihapus")
+            info_msg.exec_()

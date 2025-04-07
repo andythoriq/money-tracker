@@ -11,21 +11,14 @@ from pages.view_category import CategoryView
 from pages.view_wishlist import WishlistView
 from controller.Popup import PopupAboutUs
 from controller.wallet import Wallet
+from controller.Sliding import SlidingWalletWidget
 from controller.statistic import Statistic
-
-def load_stylesheet(app, filename="styles/style.qss"):
-    if os.path.exists(filename):
-        with open(filename, "r") as file:
-            qss = file.read()
-            app.setStyleSheet(qss)
-    else:
-        print(f"Warning: Stylesheet {filename} not found!")
 
 class Dashboard(QWidget):
     def __init__(self):
         super().__init__()
         self.init_ui()
-        self.resize(1600, 900)  # Ukuran awal jendela
+        self.resize(1366, 768)  # Ukuran awal jendela
 
     def init_ui(self):
         """Inisialisasi tampilan UI utama"""
@@ -37,9 +30,13 @@ class Dashboard(QWidget):
         # Stack untuk menyimpan berbagai halaman
         self.stack = QStackedWidget()
 
-        # Halaman utama (Dashboard)
-        self.main_menu = QWidget()
-        self.main_menu.setObjectName("main_menu")
+        self.container = QGroupBox()
+        self.container.setObjectName("container")
+        self.container.setSizePolicy(QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Expanding)
+        self.container.setMinimumSize(0, 0)
+
+        # Sidebar kiri (HomeSection)
+        self.HomeSection = QGroupBox()
 
         # Inisialisasi view-view lainnya
         self.wallet_view = WalletView(self.stack)
@@ -51,7 +48,7 @@ class Dashboard(QWidget):
         self.wishlist_view = WishlistView(self.stack)
 
         # Menambahkan halaman ke stack
-        self.stack.addWidget(self.main_menu)
+        self.stack.addWidget(self.container)
         self.stack.addWidget(self.wallet_view)
         self.stack.addWidget(self.income_view)
         self.stack.addWidget(self.outcome_view)
@@ -65,15 +62,16 @@ class Dashboard(QWidget):
 
         # Layout utama
         main_layout = QHBoxLayout()
-        main_layout.addWidget(self.HomeSection, 1)  # Sidebar kiri (20%)
-        main_layout.addWidget(self.stack, 3)  # Konten utama (80%)
+        main_layout.addWidget(self.HomeSection, 10)  # Sidebar kiri (22%)
+        main_layout.addWidget(self.stack, 36)  # Konten utama (78%)
         self.setLayout(main_layout)
-
+        
     def init_main_menu(self):
         """Inisialisasi tampilan sidebar dan konten utama"""
-        self.container = QGroupBox(self.main_menu)
-        self.container.setObjectName("container")
-        self.container.setSizePolicy(QtWidgets.QSizePolicy.Fixed, QtWidgets.QSizePolicy.Expanding)
+
+        self.HomeSection.setObjectName("HomeSection")
+        self.HomeSection.setSizePolicy(QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Expanding)
+        self.HomeSection.setMinimumSize(296, 768)
 
         self.layout_1 = QGroupBox(self.container)
         self.layout_1.setObjectName("Layout")
@@ -82,27 +80,21 @@ class Dashboard(QWidget):
         self.layout_2 = QGroupBox(self.container)
         self.layout_2.setObjectName("Layout")
         self.layout_2_ui()
-        
+
         self.layout_3 = QGroupBox(self.container)
         self.layout_3.setObjectName("Layout")
         self.layout_3_ui()
-        
+
         self.layout_4 = QGroupBox(self.container)
         self.layout_4.setObjectName("Layout")
         self.layout_4_ui()
-
-        self.HomeSection = QGroupBox()
-        self.HomeSection.setObjectName("HomeSection")
-        self.HomeSection.setSizePolicy(QtWidgets.QSizePolicy.Fixed, QtWidgets.QSizePolicy.Expanding)
-        self.HomeSection.setMaximumWidth(347)  # Batasi lebar sidebar
 
         # Tombol-tombol Sidebar (HomeSection)
         self.btn_home = QPushButton(self.HomeSection)
         self.btn_home.setIcon(QtGui.QIcon("../money-tracker/img/icon/logo-app.png"))
         self.btn_home.setIconSize(QtCore.QSize(80, 80))
-        self.btn_home.clicked.connect(lambda: self.stack.setCurrentWidget(self.main_menu))
+        self.btn_home.clicked.connect(lambda: self.stack.setCurrentWidget(self.container))
         self.btn_home.setObjectName("btn_home")
-        self.btn_home.clicked.connect(lambda: self.stack.setCurrentWidget(self.main_menu))
 
         self.btn_income = QPushButton(self.HomeSection)
         self.btn_income.setIcon(QtGui.QIcon("../money-tracker/img/icon/add-income.png"))
@@ -144,9 +136,7 @@ class Dashboard(QWidget):
         self.btn_statistic = QPushButton(self.HomeSection)
         self.btn_statistic.setIcon(QtGui.QIcon("../money-tracker/img/icon/statistic.png"))
         self.btn_statistic.setIconSize(QtCore.QSize(55, 61))
-        self.btn_statistic.clicked.connect(lambda: (
-            self.stack.setCurrentWidget(self.statistic_view)
-        ))
+        self.btn_statistic.clicked.connect(lambda: self.stack.setCurrentWidget(self.statistic_view))
         self.btn_statistic.setObjectName("btn_homeSection")
 
         self.btn_category = QPushButton(self.HomeSection)
@@ -182,28 +172,128 @@ class Dashboard(QWidget):
         self.update_button_geometry()
 
     def layout_1_ui(self):
-        wallet_names = self.wallet_controller.get_wallet_name()
-        layout = QVBoxLayout()
-        if wallet_names:
-            self.wallet_name = self.wallet_controller.get_wallet_name()
-            self.wallet_balance = self.wallet_controller.get_balance_by_name(self.wallet_name[0])
-            self.wallet_label = QLabel(self.wallet_name[0])
-            self.wallet_label.setObjectName("Label_1")
-            self.balance_label = QLabel(f"Rp. {str(self.wallet_balance)}")
-            self.balance_label.setObjectName("Label_1")
-        else:
-            print("Anda tidak memiliki wallet!")
-            self.wallet_label = QLabel("Anda tidak memiliki wallet!")
-            self.wallet_label.setObjectName("Label_1")
-            self.balance_label = QLabel("")
-        layout.addWidget(self.wallet_label)
-        layout.addWidget(self.balance_label)
 
+        # Create the sliding wallet widget
+        self.sliding_wallet_widget = SlidingWalletWidget(self.container)
+
+        # Create a layout for the widget
+        layout = QVBoxLayout()
+        layout.addWidget(self.sliding_wallet_widget)
+        
+        # Set the layout for layout_1
         self.layout_1.setLayout(layout)
 
     def layout_2_ui(self):
         layout = QVBoxLayout()
+        self.history_label = QLabel("Riwayat Transaksi Minggu Ini")
+        self.history_label.setObjectName("Label_1")
+
+        history_table = QTableWidget()
+        history_table.setObjectName("history_table")
+        history_table.setColumnCount(5)
+        history_table.setHorizontalHeaderLabels(["Tanggal", "Jenis", "Jumlah", "Kategori", "Dompet"])
+
+        history_table.setColumnWidth(0, 100)  # Tanggal
+        history_table.setColumnWidth(1, 100)  # Jenis
+        history_table.setColumnWidth(2, 100)  # Jumlah
+        history_table.setColumnWidth(3, 100)  # Kategori
+        history_table.setColumnWidth(4, 100)  # Dompet
+
+        # Table style, untuk kasus ini tidak dapat digunakan pada file style.qss
+        history_table.setStyleSheet("""
+            QTableWidget {
+                background-color: #7A9F60;
+                border-radius: 10px;
+                color: white;
+                gridline-color: #98C379;
+            }
+            QTableWidget::item {
+                padding: 5px;
+            }
+            QTableWidget::item:selected {
+                background-color: #6A8B52;
+            }
+            QHeaderView::section {
+                background-color: #7A9F60;
+                color: white;
+                padding: 5px;
+                border: none;
+            }
+        """)
+
+        # Sembunyikan header vertikal
+        history_table.verticalHeader().setVisible(False)
+
+        # Muat data transaksi dari HistoryView
+        transactions = []
+        
+        # mengambil data dari income dan outcome controller dan menggunakannya dalam satu list
+        for income in self.history_view.income_controller.load_incomes():
+            transactions.append({
+                "date": income[5],  # Assuming date is at index 5
+                "type": "income",
+                "amount": income[1],
+                "category": income[2],
+                "wallet": income[3]
+            })
+
+        for outcome in self.history_view.outcome_controller.load_outcomes():
+            transactions.append({
+                "date": outcome[5],  # Assuming date is at index 5
+                "type": "outcome",
+                "amount": outcome[1],
+                "category": outcome[2],
+                "wallet": outcome[3]
+            })
+
+        # menyortir transaksi berdasarkan tanggal
+        from datetime import datetime
+        transactions.sort(key=lambda x: datetime.strptime(x["date"], "%d/%m/%Y"), reverse=True)
+        
+        # filter transaksi yang terjadi dalam seminggu terakhir
+        from datetime import datetime, timedelta
+        today = datetime.now()
+        one_week_ago = today - timedelta(days=7)
+        
+        this_week_transactions = []
+        for t in transactions:
+            try:
+                transaction_date = datetime.strptime(t["date"], "%d/%m/%Y")
+                if transaction_date >= one_week_ago:
+                    this_week_transactions.append(t)
+            except ValueError:
+                # Skip transaksi ketika tidak sesuai format
+                print(f"Invalid date format: {t['date']}")
+                continue
+        
+        # Hanya ambil 10 transaksi terbaru
+        recent_transactions = this_week_transactions[:10]
+        
+        # Update table
+        history_table.setRowCount(len(recent_transactions))
+        
+        for row, transaction in enumerate(recent_transactions):
+            history_table.setItem(row, 0, QTableWidgetItem(transaction["date"]))  # Tanggal
+            history_table.setItem(row, 1, QTableWidgetItem(transaction["type"]))  # Jenis
+            history_table.setItem(row, 2, QTableWidgetItem(f"Rp {transaction['amount']}"))  # Jumlah
+            history_table.setItem(row, 3, QTableWidgetItem(transaction["category"]))  # Kategori
+            history_table.setItem(row, 4, QTableWidgetItem(transaction["wallet"]))  # Dompet
+
+        # Menambahkan tombol "View All" di bawah tabel
+        view_all_btn = QPushButton("View All")
+        view_all_btn.setObjectName("btn_slidenext")
+        view_all_btn.clicked.connect(lambda: (
+            self.history_view.load_data("all"),
+            self.history_view.radio_all.setChecked(True),
+            self.stack.setCurrentWidget(self.history_view)
+        ))
+
+        layout.addWidget(self.history_label)
+        layout.addWidget(history_table)
+        layout.addWidget(view_all_btn, alignment=QtCore.Qt.AlignRight)
         self.layout_2.setLayout(layout)
+        self.layout_2.setContentsMargins(0, 0, 0, 0)  # Menghilangkan margin di sekitar layout_2
+        self.layout_2.setSizePolicy(QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Expanding)
 
     def layout_3_ui(self):
         layout = QVBoxLayout()
@@ -218,7 +308,7 @@ class Dashboard(QWidget):
         layout.addWidget(self.statistic_label)
         layout.addWidget(self.graph_widget)
         self.layout_3.setLayout(layout)
-
+    
     def layout_4_ui(self):
         layout = QVBoxLayout()
         title = QLabel("Wishlist")
@@ -260,44 +350,100 @@ class Dashboard(QWidget):
         layout.addWidget(wishlist_table)
         self.layout_4.setLayout(layout)
 
-    def switch_page(self, page):
-        if page == "dashboard":
-            self.stack.setCurrentWidget(self.main_menu)
-            self.container.setVisible(True)  # Tampilkan Container
-        else:
-            self.stack.setCurrentWidget(page)
-            self.container.setVisible(False)  # Sembunyikan Container
-
 
     def resizeEvent(self, event):
         """Override resizeEvent untuk menyesuaikan ukuran dan posisi tombol"""
         super().resizeEvent(event)
         self.update_button_geometry()
 
+    def showEvent(self, event):
+        super().showEvent(event)
+        self.update_button_geometry()  # container sudah dihitung ukurannya
+
     def update_button_geometry(self):
         """Menghitung ulang posisi dan ukuran tombol berdasarkan ukuran jendela"""
         # Dapatkan ukuran HomeSection
         home_section_width = self.HomeSection.width()
         home_section_height = self.HomeSection.height()
-
         container_section_width = self.container.width()
         container_section_height = self.container.height()
-        button_layout_width = int(498)
-        button_layout_height = int(218)
 
         # Atur ukuran dan posisi tombol
-        button_width = int(290)
-        button_height = int(76)
-        button_logo_height = int(150) # Khusus untuk tombol logo app
-        margin = 12  # Jarak antar tombol
+        button_width = int(home_section_width / 1.15)  # Lebar tombol sesuai dengan lebar layout dari homesection
+        button_height = int(home_section_height / 12)  # Tinggi tombol sesuai dengan tinggi layout dari homesection
+        button_logo_height = int(home_section_height / 6) # Khusus untuk tombol logo app
+        margin = int(home_section_width * 0.0348)  # Jarak antar tombol
+        
+        # Atur ukuran dan posisi layout
+        button_layout1_width = int(container_section_width * (425/1070))
+        button_layout1_height = int(container_section_height * (186/768))
+        button_layout2_width = int(container_section_width * (425/1070))
+        button_layout2_height = int(container_section_height * (479/768))
+        button_layout3_width = int(container_section_width * (544/1070))
+        button_layout3_height = int(container_section_height * (428/768))
+        button_layout4_width = int(container_section_width * (544/1070))
+        button_layout4_height = int(container_section_height * (238/768))
 
         # Posisi awal tombol
-        y_position = 10
-        x_position = 30
+        x_position =  int((home_section_width - button_width) / 2)
+        y_position = 23
+        aboutus_x_position = int((home_section_width - button_width) / 2)
+        x_position_layout = int(container_section_width * (32/1070))
+        y_position_layout = int(container_section_height * (43/768))
+
+        # Ukuran dari ikon tombol
+        icon_width = int(home_section_width / 6)
+        icon_height = int((home_section_height / 10) - 20)
+        icon_app_width = int(home_section_width / 4)
+        icon_app_height = int(home_section_height / 4)
+
+        # Atur ukuran ikon tombol agar sesuai dengan layout tombol tersebut
+        self.btn_home.setIconSize(QtCore.QSize(
+            icon_app_width, 
+            icon_app_height
+        ))
+
+        self.btn_income.setIconSize(QtCore.QSize(
+            icon_width,
+            icon_height
+        ))
+
+        self.btn_outcome.setIconSize(QtCore.QSize(
+            icon_width,
+            icon_height
+        ))
+
+        self.btn_wallet.setIconSize(QtCore.QSize(
+            icon_width,
+            icon_height
+        ))
+
+        self.btn_history.setIconSize(QtCore.QSize(
+            icon_width,
+            icon_height
+        ))
+
+        self.btn_statistic.setIconSize(QtCore.QSize(
+            icon_width,
+            icon_height
+        ))
+
+        self.btn_category.setIconSize(QtCore.QSize(
+            icon_width, 
+            icon_height
+        ))
+
+        self.btn_wishlist.setIconSize(QtCore.QSize(
+            icon_width,
+            icon_height
+        ))
+
+        # Atur font agar sesuai dengan size dari layout font tersebut
+        font_size = int(home_section_height / 10)
 
         # Atur ulang posisi dan ukuran tombol
         self.btn_home.setGeometry(
-            int((home_section_width - button_width) / 2),  # Tengah horizontal
+            x_position,  # Tengah horizontal
             y_position,
             button_width,
             button_logo_height
@@ -305,7 +451,7 @@ class Dashboard(QWidget):
         y_position += button_logo_height + margin
 
         self.btn_income.setGeometry(
-            int((home_section_width - button_width) / 2),
+            x_position,
             y_position,
             button_width,
             button_height
@@ -313,7 +459,7 @@ class Dashboard(QWidget):
         y_position += button_height + margin
 
         self.btn_outcome.setGeometry(
-            int((home_section_width - button_width) / 2),
+            x_position,
             y_position,
             button_width,
             button_height
@@ -321,7 +467,7 @@ class Dashboard(QWidget):
         y_position += button_height + margin
 
         self.btn_wallet.setGeometry(
-            int((home_section_width - button_width) / 2),
+            x_position,
             y_position,
             button_width,
             button_height
@@ -329,7 +475,7 @@ class Dashboard(QWidget):
         y_position += button_height + margin
 
         self.btn_history.setGeometry(
-            int((home_section_width - button_width) / 2),
+            x_position,
             y_position,
             button_width,
             button_height
@@ -337,7 +483,7 @@ class Dashboard(QWidget):
         y_position += button_height + margin
 
         self.btn_statistic.setGeometry(
-            int((home_section_width - button_width) / 2),
+            x_position,
             y_position,
             button_width,
             button_height
@@ -345,7 +491,7 @@ class Dashboard(QWidget):
         y_position += button_height + margin
 
         self.btn_category.setGeometry(
-            int((home_section_width - button_width) / 2),
+            x_position,
             y_position,
             button_width,
             button_height
@@ -353,63 +499,59 @@ class Dashboard(QWidget):
         y_position += button_height + margin
 
         self.btn_wishlist.setGeometry(
-            int((home_section_width - button_width) / 2),
+            x_position,
             y_position,
             button_width,
             button_height
         )
-        y_position += button_height + margin
+        y_position += button_height + margin + 20
 
         self.aboutUs.setGeometry(
-            int((home_section_width - button_width) / 2),
+            aboutus_x_position,
             y_position,
             button_width,
             button_height
         )
 
         self.label.setGeometry(
-            int((home_section_width - button_width) * 4), # Agar berada di bagian kanan
+            int(aboutus_x_position * 11), # Agar berada di bagian kanan
             y_position,
             button_width,
             button_height
         )
-        y_position = 40
+
         margin = 22
         
         self.layout_1.setGeometry(
-            x_position,
-            y_position,
-            button_layout_width,
-            button_layout_height
+            x_position_layout,
+            y_position_layout,
+            button_layout1_width,
+            button_layout1_height
         )
-        y_position += button_layout_height + margin
-        button_layout_height += 343
+        y_position_layout_2 = y_position_layout + button_layout1_height + margin
 
         self.layout_2.setGeometry(
-            x_position,
-            y_position,
-            button_layout_width,
-            button_layout_height
+            x_position_layout,
+            y_position_layout_2,
+            button_layout2_width,
+            button_layout2_height
         )
-        y_position = 40
-        x_position += int(button_layout_width + margin)
-        button_layout_width = 638
-        button_layout_height = 502
+
+        x_position_layout += int(button_layout1_width + margin)
 
         self.layout_3.setGeometry(
-            x_position,
-            y_position,
-            button_layout_width,
-            button_layout_height
+            x_position_layout,
+            y_position_layout,
+            button_layout3_width,
+            button_layout3_height
         )
-        y_position += int(button_layout_height + margin)
-        button_layout_height -= 222
+        y_position_layout += int(button_layout3_height + margin)
 
         self.layout_4.setGeometry(
-            x_position,
-            y_position,
-            button_layout_width,
-            button_layout_height
+            x_position_layout,
+            y_position_layout,
+            button_layout4_width,
+            button_layout4_height
         )
 
     def retranslateUi(self):

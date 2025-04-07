@@ -1,5 +1,7 @@
 from pyqtgraph import TextItem, PlotWidget, BarGraphItem
-from PyQt5.QtWidgets import QWidget, QVBoxLayout
+from PyQt5.QtWidgets import (QWidget, QVBoxLayout, QHBoxLayout, QGridLayout, 
+                             QFrame, QLabel, QComboBox, QPushButton, QSpacerItem, 
+                             QSizePolicy)
 from PyQt5 import QtCore, QtWidgets
 from controller.statistic import Statistic
 from PyQt5.QtCore import Qt
@@ -13,64 +15,87 @@ class StatisticView(QWidget):
         self.jenis = ""
         self.setupUi()
 
-    def init_ui(self):
-        self.statistic_controller = Statistic()
-        layout = QVBoxLayout()
-        # Membuat plot
-        self.plot_widget = PlotWidget()
-        # Mengubah latar belakang plot menjadi putih
-        self.plot_widget.setBackground('w')
-        # Menonaktifkan kemampuan untuk menggeser dan zoom plot
-        self.plot_widget.setMouseEnabled(x=False, y=False)
-        # Menambahkan plot ke layout
-        layout.addWidget(self.plot_widget)
-        self.setLayout(layout)
-
-        # Plot the graph
-        self.generate_statistics()
-
     def setupUi(self):
-        self.plot_widget = PlotWidget()
-        self.plot_widget.setBackground('w')
-        self.plot_widget.setMouseEnabled(x=False, y=False)
-
+        # Main vertical layout
+        self.mainLayout = QVBoxLayout(self)
+        self.setLayout(self.mainLayout)
+        
+        # Create menu option widget
         self.menuOption = QtWidgets.QWidget(self)
         self.menuOption.setObjectName("menuOption")
         
-        self.Income = QtWidgets.QFrame(self.menuOption)
-        self.Income.setGeometry(QtCore.QRect(30, 20, 342, 222))
+        # Use grid layout for menu option
+        self.menuLayout = QGridLayout(self.menuOption)
+        self.menuOption.setLayout(self.menuLayout)
+        
+        # Add menu option to main layout
+        self.mainLayout.addWidget(self.menuOption)
+        
+        # Setup plot widget
+        self.plot_widget = PlotWidget()
+        self.plot_widget.setBackground('w')
+        self.plot_widget.setMouseEnabled(x=False, y=False)
+        
+        # Create top row with Income and Outcome frames
+        self.topRowLayout = QHBoxLayout()
+        
+        # Income frame
+        self.Income = QFrame()
+        self.Income.setObjectName("Income")
         self.Income.setFrameShape(QtWidgets.QFrame.StyledPanel)
         self.Income.setFrameShadow(QtWidgets.QFrame.Raised)
-        self.Income.setObjectName("Income")
+        self.incomeLayout = QVBoxLayout(self.Income)
         
-        self.incomeInfo = QtWidgets.QLabel(self.Income)
-        self.incomeInfo.setGeometry(QtCore.QRect(40, 40, 200, 90))
+        self.incomeInfo = QLabel()
         self.incomeInfo.setObjectName("incomeInfo")
+        self.incomeInfo.setAlignment(Qt.AlignCenter)
         
-        self.IncomeValue = QtWidgets.QLabel(self.Income)
-        self.IncomeValue.setGeometry(QtCore.QRect(60, 140, 162, 32))
+        self.IncomeValue = QLabel()
         self.IncomeValue.setObjectName("IncomeValue")
+        self.IncomeValue.setAlignment(Qt.AlignCenter)
         
-        self.Outcome = QtWidgets.QFrame(self.menuOption)
-        self.Outcome.setGeometry(QtCore.QRect(400, 20, 342, 222))
+        self.incomeLayout.addWidget(self.incomeInfo)
+        self.incomeLayout.addWidget(self.IncomeValue)
+        self.topRowLayout.addWidget(self.Income)
+        
+        # Outcome frame
+        self.Outcome = QFrame()
+        self.Outcome.setObjectName("Outcome")
         self.Outcome.setFrameShape(QtWidgets.QFrame.StyledPanel)
         self.Outcome.setFrameShadow(QtWidgets.QFrame.Raised)
-        self.Outcome.setObjectName("Outcome")
+        self.outcomeLayout = QVBoxLayout(self.Outcome)
         
-        self.outcomeInfo = QtWidgets.QLabel(self.Outcome)
-        self.outcomeInfo.setGeometry(QtCore.QRect(40, 40, 200, 90))
+        self.outcomeInfo = QLabel()
         self.outcomeInfo.setObjectName("outcomeInfo")
-
-        self.outcomeValue = QtWidgets.QLabel(self.Outcome)
-        self.outcomeValue.setGeometry(QtCore.QRect(80, 140, 162, 32))
+        self.outcomeInfo.setAlignment(Qt.AlignCenter)
+        
+        self.outcomeValue = QLabel()
         self.outcomeValue.setObjectName("outcomeValue")
+        self.outcomeValue.setAlignment(Qt.AlignCenter)
         
-        self.Statistic = QtWidgets.QFrame(self.menuOption)
-        self.Statistic.setGeometry(QtCore.QRect(30, 260, 722, 602))
+        self.outcomeLayout.addWidget(self.outcomeInfo)
+        self.outcomeLayout.addWidget(self.outcomeValue)
+        self.topRowLayout.addWidget(self.Outcome)
+        
+        # Add top row to menu layout
+        self.menuLayout.addLayout(self.topRowLayout, 0, 0, 1, 1)
+        
+        # Create middle section with Statistics and Chart
+        self.middleRowLayout = QHBoxLayout()
+        
+        # Statistics frame
+        self.Statistic = QFrame()
         self.Statistic.setObjectName("Statistic")
+        self.statisticLayout = QVBoxLayout(self.Statistic)
         
-        self.statisticOption = QtWidgets.QComboBox(self.menuOption)
-        self.statisticOption.setGeometry(QtCore.QRect(680, 280, 60, 44))
+        # Statistic header layout
+        self.statisticHeaderLayout = QHBoxLayout()
+        
+        self.statisticInfo = QLabel()
+        self.statisticInfo.setObjectName("statisticInfo")
+        self.statisticInfo.setTextFormat(QtCore.Qt.RichText)
+        
+        self.statisticOption = QComboBox()
         self.statisticOption.setObjectName("statisticOption")
         self.statisticOption.addItem("")
         self.statisticOption.addItem("")
@@ -79,98 +104,160 @@ class StatisticView(QWidget):
         self.statisticOption.addItem("")  # separator
         self.statisticOption.addItem("")
         
-        self.SliderButton = QtWidgets.QWidget(self.Statistic)
-        self.SliderButton.setGeometry(QtCore.QRect(420, 20, 222, 42))
-        self.SliderButton.setObjectName("SliderButton")
+        self.statisticHeaderLayout.addWidget(self.statisticInfo)
+        self.statisticHeaderLayout.addStretch()
+        self.statisticHeaderLayout.addWidget(self.statisticOption)
         
-        self.prevButton = QtWidgets.QPushButton(self.SliderButton)
-        self.prevButton.setGeometry(QtCore.QRect(0, 0, 42, 46))
+        # Add statistic header to statistic layout
+        self.statisticLayout.addLayout(self.statisticHeaderLayout)
+        
+        # Slider button widget
+        self.sliderLayout = QHBoxLayout()
+        
+        self.prevButton = QPushButton()
         self.prevButton.setObjectName("prevButton")
+        self.prevButton.setMaximumWidth(40)
         
-        self.nextButton = QtWidgets.QPushButton(self.SliderButton)
-        self.nextButton.setGeometry(QtCore.QRect(180, 0, 40, 46))
-        self.nextButton.setObjectName("nextButton")
-
-        self.sliderType = QtWidgets.QComboBox(self.SliderButton)
-        self.sliderType.setGeometry(QtCore.QRect(40, 0, 138, 44))
+        self.sliderType = QComboBox()
         self.sliderType.setObjectName("sliderType")
         self.sliderType.addItem("")
         self.sliderType.addItem("")
         self.sliderType.addItem("")
         self.sliderType.addItem("")
-
-        self.statisticInfo = QtWidgets.QLabel(self.menuOption)
-        self.statisticInfo.setGeometry(QtCore.QRect(70, 300, 180, 60))
-        self.statisticInfo.setTextFormat(QtCore.Qt.RichText)
-        self.statisticInfo.setObjectName("statisticInfo")
         
-        self.barChart = QtWidgets.QWidget(self.menuOption)
-        self.barChart.setGeometry(QtCore.QRect(50, 360, 682, 502))
-        self.barChart.setObjectName("barChart")
-        self.graph = QtWidgets.QVBoxLayout(self.barChart)
-        self.graph.addWidget(self.plot_widget)
+        self.nextButton = QPushButton()
+        self.nextButton.setObjectName("nextButton")
+        self.nextButton.setMaximumWidth(40)
         
-        self.timeInfo = QtWidgets.QLabel(self.Statistic)
-        self.timeInfo.setGeometry(QtCore.QRect(300, 100, 94, 26))
-        self.timeInfo.setTextFormat(QtCore.Qt.RichText)
-        self.timeInfo.setObjectName("timeInfo")
+        self.sliderLayout.addStretch()
+        self.sliderLayout.addWidget(self.prevButton)
+        self.sliderLayout.addWidget(self.sliderType)
+        self.sliderLayout.addWidget(self.nextButton)
+        self.sliderLayout.addStretch()
         
-        self.pieChart = QtWidgets.QFrame(self.menuOption)
-        self.pieChart.setGeometry(QtCore.QRect(770, 20, 462, 422))
+        # Add slider layout to statistic layout
+        self.statisticLayout.addLayout(self.sliderLayout)
+        
+        # Bar chart layout
+        self.barChartLayout = QVBoxLayout()
+        self.barChartLayout.addWidget(self.plot_widget)
+        
+        # Add bar chart to statistic layout
+        self.statisticLayout.addLayout(self.barChartLayout)
+        
+        # Add statistic frame to middle row
+        self.middleRowLayout.addWidget(self.Statistic, 3)
+        
+        # Right side layout (pie chart and summary)
+        self.rightSideLayout = QVBoxLayout()
+        
+        # Pie chart frame
+        self.pieChart = QFrame()
         self.pieChart.setObjectName("pieChart")
+        self.pieChartLayout = QVBoxLayout(self.pieChart)
         
-        self.chartInfo = QtWidgets.QLabel(self.menuOption)
-        self.chartInfo.setGeometry(QtCore.QRect(830, 40, 320, 60))
-        self.chartInfo.setTextFormat(QtCore.Qt.RichText)
+        # Pie chart header layout
+        self.pieChartHeaderLayout = QHBoxLayout()
+        
+        self.chartInfo = QLabel()
         self.chartInfo.setObjectName("chartInfo")
-
-        self.pieChartOption = QtWidgets.QComboBox(self.menuOption)
-        self.pieChartOption.setGeometry(QtCore.QRect(1140, 50, 60, 44))
+        self.chartInfo.setTextFormat(QtCore.Qt.RichText)
+        
+        self.pieChartOption = QComboBox()
         self.pieChartOption.setObjectName("pieChartOption")
         self.pieChartOption.addItem("")
         self.pieChartOption.addItem("")
         self.pieChartOption.addItem("")
         self.pieChartOption.addItem("")
-
-        self.Summary = QtWidgets.QFrame(self.menuOption)
-        self.Summary.setGeometry(QtCore.QRect(770, 460, 458, 412))
+        
+        self.pieChartHeaderLayout.addWidget(self.chartInfo)
+        self.pieChartHeaderLayout.addStretch()
+        self.pieChartHeaderLayout.addWidget(self.pieChartOption)
+        
+        # Add pie chart header to pie chart layout
+        self.pieChartLayout.addLayout(self.pieChartHeaderLayout)
+        
+        # Add pie chart placeholder
+        self.pieChartPlaceholder = QLabel("Pie Chart Placeholder")
+        self.pieChartPlaceholder.setAlignment(Qt.AlignCenter)
+        self.pieChartLayout.addWidget(self.pieChartPlaceholder)
+        
+        # Add pie chart to right side layout
+        self.rightSideLayout.addWidget(self.pieChart)
+        
+        # Summary frame
+        self.Summary = QFrame()
+        self.Summary.setObjectName("Summary")
         self.Summary.setFrameShape(QtWidgets.QFrame.StyledPanel)
         self.Summary.setFrameShadow(QtWidgets.QFrame.Raised)
-        self.Summary.setObjectName("Summary")
+        self.summaryLayout = QVBoxLayout(self.Summary)
         
-        self.summaryInfo = QtWidgets.QLabel(self.Summary)
-        self.summaryInfo.setGeometry(QtCore.QRect(80, 20, 300, 80))
+        # Summary header
+        self.summaryInfo = QLabel()
         self.summaryInfo.setObjectName("summaryInfo")
+        self.summaryInfo.setAlignment(Qt.AlignCenter)
+        self.summaryLayout.addWidget(self.summaryInfo)
         
-        self.newBalance = QtWidgets.QLabel(self.Summary)
-        self.newBalance.setGeometry(QtCore.QRect(40, 240, 240, 80))
-        self.newBalance.setObjectName("newBalance")
-        
-        self.prevBalance = QtWidgets.QLabel(self.Summary)
-        self.prevBalance.setGeometry(QtCore.QRect(40, 120, 280, 80))
+        # Previous balance section
+        self.prevBalanceLayout = QVBoxLayout()
+        self.prevBalance = QLabel()
         self.prevBalance.setObjectName("prevBalance")
-        
-        self.prevValue = QtWidgets.QLabel(self.Summary)
-        self.prevValue.setGeometry(QtCore.QRect(40, 180, 340, 32))
+        self.prevValue = QLabel()
         self.prevValue.setObjectName("prevValue")
+        self.prevValue.setAlignment(Qt.AlignRight)
+        self.prevBalanceLayout.addWidget(self.prevBalance)
+        self.prevBalanceLayout.addWidget(self.prevValue)
         
-        self.newValue = QtWidgets.QLabel(self.Summary)
-        self.newValue.setGeometry(QtCore.QRect(40, 300, 340, 32))
+        # Add previous balance to summary layout
+        self.summaryLayout.addLayout(self.prevBalanceLayout)
+        
+        # New balance section
+        self.newBalanceLayout = QVBoxLayout()
+        self.newBalance = QLabel()
+        self.newBalance.setObjectName("newBalance")
+        self.newValue = QLabel()
         self.newValue.setObjectName("newValue")
+        self.newValue.setAlignment(Qt.AlignRight)
+        self.newBalanceLayout.addWidget(self.newBalance)
+        self.newBalanceLayout.addWidget(self.newValue)
         
-        self.changeValue = QtWidgets.QLabel(self.Summary)
-        self.changeValue.setGeometry(QtCore.QRect(180, 360, 142, 32))
+        # Add new balance to summary layout
+        self.summaryLayout.addLayout(self.newBalanceLayout)
+        
+        # Change value
+        self.changeValueLayout = QHBoxLayout()
+        self.changeValue = QLabel()
         self.changeValue.setObjectName("changeValue")
+        self.changeValue.setAlignment(Qt.AlignCenter)
+        self.changeValueLayout.addStretch()
+        self.changeValueLayout.addWidget(self.changeValue)
+        self.changeValueLayout.addStretch()
         
+        # Add change value to summary layout
+        self.summaryLayout.addLayout(self.changeValueLayout)
+        
+        # Add summary to right side layout
+        self.rightSideLayout.addWidget(self.Summary)
+        
+        # Add right side layout to middle row
+        self.middleRowLayout.addLayout(self.rightSideLayout, 2)
+        
+        # Add middle row to menu layout
+        self.menuLayout.addLayout(self.middleRowLayout, 1, 0, 1, 1)
+        
+        # Set up event handlers and UI elements
         self.retranslateUi(self)
         self.styleSheet(self)
         self.generate_statistics()
+        
+        # Connect signals
         self.sliderType.installEventFilter(self)
         self.sliderType.currentIndexChanged.connect(self.on_combobox_selection_changed)
         self.prevButton.clicked.connect(lambda: self.change_offset('prev'))
         self.nextButton.clicked.connect(lambda: self.change_offset('next'))
         self.statisticOption.installEventFilter(self)
         self.pieChartOption.installEventFilter(self)
+        
         QtCore.QMetaObject.connectSlotsByName(self)
 
     def retranslateUi(self, Statistik):
@@ -198,7 +285,6 @@ class StatisticView(QWidget):
         self.sliderType.setItemText(3, _translate("Statistik", "Yearly"))
         
         self.statisticInfo.setText(_translate("Statistik", "Statistic"))
-        self.timeInfo.setText(_translate("Statistik", "Statistic"))
         self.summaryInfo.setText(_translate("Statistik", "<html>QuickView <br>Summary<html>"))
         self.newBalance.setText(_translate("Statistik", "New Balance"))
         self.prevBalance.setText(_translate("Statistik", "Previous Balance"))
@@ -314,14 +400,23 @@ class StatisticView(QWidget):
             }
         """
 
+        buttonStyle = """
+            QPushButton {
+                background-color: #D3D3D3;
+                border-radius: 10px;
+                padding: 5px;
+                font-weight: bold;
+            }
+            QPushButton:hover {
+                background-color: #A9A9A9;
+            }
+        """
+
         Statistik.setStyleSheet("background-color: #252931;")
 
         self.incomeInfo.setStyleSheet(textDesign)
         self.outcomeInfo.setStyleSheet(textDesign)
         self.summaryInfo.setStyleSheet(textDesign)
-        self.incomeInfo.setAlignment(Qt.AlignCenter)
-        self.outcomeInfo.setAlignment(Qt.AlignCenter)
-        self.summaryInfo.setAlignment(Qt.AlignCenter)
 
         self.IncomeValue.setStyleSheet(textDesign)
         self.outcomeValue.setStyleSheet(textDesign)
@@ -331,8 +426,6 @@ class StatisticView(QWidget):
 
         self.prevValue.setStyleSheet(textDesign)
         self.newValue.setStyleSheet(textDesign)
-        self.prevValue.setAlignment(Qt.AlignRight)
-        self.newValue.setAlignment(Qt.AlignRight)
 
         self.changeValue.setStyleSheet(textDesign)
         
@@ -344,8 +437,9 @@ class StatisticView(QWidget):
         '''
 
         self.Statistic.setStyleSheet(chartDesign)
-        self.SliderButton.setStyleSheet("background-color: #252931;")
-        self.barChart.setStyleSheet("background-color: transparent;")
+        self.prevButton.setStyleSheet(buttonStyle)
+        self.nextButton.setStyleSheet(buttonStyle)
+        self.sliderType.setStyleSheet("background-color: #D3D3D3; padding: 5px; border-radius: 5px;")
         self.pieChart.setStyleSheet(chartDesign)
 
         self.statisticInfo.setStyleSheet(StatistikDesign)
@@ -355,7 +449,6 @@ class StatisticView(QWidget):
         self.Income.setStyleSheet(frameDesign)
         self.Outcome.setStyleSheet(frameDesign)
 
-        self.SliderButton.setStyleSheet("background-color: #D3D3D3;")
         self.statisticOption.setStyleSheet(iconDesign)
         self.pieChartOption.setStyleSheet(iconDesign)
 
