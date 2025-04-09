@@ -22,8 +22,6 @@ class Dashboard(QWidget):
         """Inisialisasi tampilan UI utama"""
         self.setWindowTitle("Money Tracker")
 
-        self.wallet_controller = Wallet()
-        self.statistic_controller = Statistic()
         self.slider_controller = SlidingWalletWidget(self)
 
         # Stack untuk menyimpan berbagai halaman
