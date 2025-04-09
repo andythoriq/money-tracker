@@ -1,4 +1,3 @@
-style.qss
 QMainWindow {
     background-color:  #252931;
 }

@@ -111,9 +111,10 @@ class HistoryView(QWidget):
                 background-color: #7A9F60;
             }
         """)
-        self.table.horizontalHeader().setStretchLastSection(True)
+        self.table.horizontalHeader().setStretchLastSection(False)
         self.table.verticalHeader().setVisible(False)
         content_layout.addWidget(self.table)
+        self.setStyleSheet("background-color: #98C379;")
 
         # Label Total
         self.label = QLabel("Total : Rp 0")
