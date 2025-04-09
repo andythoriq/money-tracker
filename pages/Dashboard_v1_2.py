@@ -22,6 +22,10 @@ class Dashboard(QWidget):
         """Inisialisasi tampilan UI utama"""
         self.setWindowTitle("Money Tracker")
 
+        self.wallet_controller = Wallet()
+        self.statistic_controller = Statistic()
+        self.slider_controller = SlidingWalletWidget(self)
+
         # Stack untuk menyimpan berbagai halaman
         self.stack = QStackedWidget()
 
@@ -86,9 +90,12 @@ class Dashboard(QWidget):
 
         # Tombol-tombol Sidebar (HomeSection)
         self.btn_home = QPushButton(self.HomeSection)
-        self.btn_home.setIcon(QtGui.QIcon("../money-tracker/img/icon/logo-app.png"))
+        self.btn_home.setIcon(QtGui.QIcon("../money-tracker/img/icon/logo-app-new.png"))
         self.btn_home.setIconSize(QtCore.QSize(80, 80))
-        self.btn_home.clicked.connect(lambda: self.stack.setCurrentWidget(self.container))
+        self.btn_home.clicked.connect(lambda: (
+            self.stack.setCurrentWidget(self.container),
+            # self.slider_controller.refresh_wallets()
+            ))
         self.btn_home.setObjectName("btn_home")
 
         self.btn_income = QPushButton(self.HomeSection)

@@ -123,6 +123,7 @@ class CategoryView(QWidget):
         
         self.table.verticalHeader().setVisible(False)
         content_layout.addWidget(self.table)
+        self.setStyleSheet("background-color: #98C379;")
 
         main_layout.addWidget(content_widget)
         self.setLayout(main_layout)

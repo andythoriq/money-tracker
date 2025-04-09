@@ -33,7 +33,11 @@ class SlidingWalletWidget(QWidget):
             40,
             40
         )
-        self.next_button.clicked.connect(self.slide_next)
+        self.next_button.clicked.connect(lambda: (
+            self.slide_next(),
+            self.slide_timer.start(4000),  # Restart the timer after manual click
+            self.refresh_wallets()
+        ))
         self.layout.addWidget(self.next_button)
 
         # Setup sliding timer
