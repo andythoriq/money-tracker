@@ -156,7 +156,9 @@ class HistoryView(QWidget):
             })
 
         # Filter transaksi
-        if filter_type == "income":
+        if self.radio_all.isChecked():
+            transactions = [t for t in transactions]
+        elif filter_type == "income":
             transactions = [t for t in transactions if t["type"] == "income"]
         elif filter_type == "outcome":
             transactions = [t for t in transactions if t["type"] == "outcome"]

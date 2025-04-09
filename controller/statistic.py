@@ -12,15 +12,19 @@ class Statistic:
         super().__init__()
         self.income_controller = Income(Wallet())
         self.outcome_controller = Outcome(Wallet())
+        self.offset = 0
+        self.jenis = "harian"
         self.cur_data = self.generate_data()
+        self.cur_balance = sum(int(income[1]) for income in self.income_controller.load_incomes()) - sum(int(outcome[1]) for outcome in self.outcome_controller.load_outcomes())
+        self.net = self.cur_data[4][0] - self.cur_data[4][1]
+        self.new_balance = self.cur_balance - self.net
 
-    def generate_data(self, offset = 0, jenis = "harian"):
+    def generate_data(self):
         # Ambil dan konversi data dari Outcome
         outcome_amount = []
         outcome_date = []
         if self.outcome_controller.load_outcomes() != []:
             for outcome in self.outcome_controller.load_outcomes():
-
                 outcome_amount.append(int(outcome[1]))
                 outcome_date.append(outcome[5])
         else:
@@ -62,8 +66,8 @@ class Statistic:
         outcomeSum = 0
         temp = 0
 
-        if (jenis == "harian"):
-            for x in self.ubahHari(offset):
+        if (self.jenis == "harian"):
+            for x in self.ubahHari(self.offset):
                 try:
                     indeks = sorted_tanggalI.index(x)
                     temp += sorted_amountI[indeks]
@@ -80,7 +84,7 @@ class Statistic:
                 except ValueError:
                     yI.append(0)
 
-            for x in self.ubahHari(offset):
+            for x in self.ubahHari(self.offset):
                 try:
                     indeks = sorted_tanggalO.index(x)
                     temp += sorted_amountO[indeks]
@@ -98,15 +102,15 @@ class Statistic:
                     yO.append(0)
 
             # Data untuk x axis harian
-            time = self.ubahHari(offset) # nama hari
+            time = self.ubahHari(self.offset) # nama hari
             x = np.arange(len(time))
             description = self.NamaHariDariTanggal(time) # tanggal hari
             labels = [f"{description[i]}\n({time[i]})" for i in range(len(time))]
 
-        if (jenis == "mingguan"):
-            BSM = self.BulanSkrngMingguan(offset)
+        if (self.jenis == "mingguan"):
+            BSM = self.BulanSkrngMingguan(self.offset)
                         
-            for x1 in self.BulanSkrngMingguan(offset):
+            for x1 in self.BulanSkrngMingguan(self.offset):
                 for x2 in x1:
                     try:
                         indeks = sorted_tanggalI.index(x2)
@@ -126,7 +130,7 @@ class Statistic:
                 yI.append(temp)
                 temp = 0
 
-            for x1 in self.BulanSkrngMingguan(offset):
+            for x1 in self.BulanSkrngMingguan(self.offset):
                 for x2 in x1:
                     try:
                         indeks = sorted_tanggalO.index(x2)
@@ -147,7 +151,7 @@ class Statistic:
                 temp = 0
             
             # Data untuk x axis harian
-            time = self.BulanSkrngMingguan(offset) # nama hari
+            time = self.BulanSkrngMingguan(self.offset) # nama hari
             x = np.arange(len(time))
             for i in range(len(time)):
                 time[i] = time[i][0]
@@ -157,11 +161,11 @@ class Statistic:
             # Membuat label yang mencakup hari dan tanggal
             labels = [f"{description[i]}\n({time[i]})" for i in range(len(time))]
 
-        if jenis == "bulanan":
+        if self.jenis == "bulanan":
             # Konversi sorted_tanggalI menjadi (bulan, tahun)
             tanggal_list = [(int(t.split('/')[1]), int(t.split('/')[2])) for t in sorted_tanggalI]
             # Iterasi melalui bulan dan tahun dari BulanSkrng
-            for bulan, tahun in zip(*self.BulanSkrng(offset)):
+            for bulan, tahun in zip(*self.BulanSkrng(self.offset)):
                 temp = 0  # Menyimpan total income per bulan
 
 		        # Iterasi semua tanggal dan mencari yang sesuai
@@ -175,7 +179,7 @@ class Statistic:
 
             tanggal_list = [(int(t.split('/')[1]), int(t.split('/')[2])) for t in sorted_tanggalO]
             # Iterasi melalui bulan dan tahun dari BulanSkrng
-            for bulan, tahun in zip(*self.BulanSkrng(offset)):
+            for bulan, tahun in zip(*self.BulanSkrng(self.offset)):
                 temp = 0  # Menyimpan total income per bulan
         
                 # Iterasi semua tanggal dan mencari yang sesuai
@@ -188,17 +192,17 @@ class Statistic:
                 outcomeSum += temp
 
             # Data untuk x axis harian
-            blnThn = self.BulanSkrng(offset) # nama hari
+            blnThn = self.BulanSkrng(self.offset) # nama hari
             time = blnThn[0]
             x = np.arange(len(time))
             description = self.NamaBulanDariAngka(time) # tanggal hari
             labels = [f"{description[i]}\n({blnThn[1][i]})" for i in range(len(time))]
         
         # Data untuk x axis tahunan
-        if jenis == "tahunan":
+        if self.jenis == "tahunan":
             tanggal_list = [int(t.split('/')[2]) for t in sorted_tanggalI]
 			
-            for tahun in self.TahunSkrng(offset):
+            for tahun in self.TahunSkrng(self.offset):
                 temp = 0  
             
                 for i, t in enumerate(tanggal_list):
@@ -210,7 +214,7 @@ class Statistic:
 			
             tanggal_list = [int(t.split('/')[2]) for t in sorted_tanggalO]
 			
-            for tahun in self.TahunSkrng(offset):
+            for tahun in self.TahunSkrng(self.offset):
                 temp = 0  
 			    
                 for i, t in enumerate(tanggal_list):
@@ -220,19 +224,27 @@ class Statistic:
 			    # Simpan hasil per tahun dan tambahkan ke total
                 yO.append(temp)
                 outcomeSum += temp
-            time = self.TahunSkrng(offset)
+            time = self.TahunSkrng(self.offset)
             x = np.arange(len(time))
             labels = [f"{time[i]}" for i in range(len(time))]
         
-        return x, yI, yO, labels, incomeSum, outcomeSum
+        return x, yI, yO, labels, [incomeSum, outcomeSum]
+
+    def update_data(self, direction):
+        if direction == 'next':
+            self.new_balance += self.net
+            self.net = self.cur_data[4][0] - self.cur_data[4][1]
+        elif direction == 'prev':
+            self.net = self.cur_data[4][0] - self.cur_data[4][1]
+            self.new_balance -= self.net
 
     # Fungsi untuk menyimpan grafik
-    def save_graph(self):
+    def save_graph(self, parent_widget, plot_widget):
         # Mendapatkan path file untuk menyimpan gambar
-        file_path, _ = QtWidgets.QFileDialog.getSaveFileName(self, "Save Graph", "", "PNG Files (*.png);;JPEG Files (*.jpg);;All Files (*)")
+        file_path, _ = QtWidgets.QFileDialog.getSaveFileName(parent_widget, "Save Graph", "", "PNG Files (*.png);;JPEG Files (*.jpg);;All Files (*)")
         if file_path:
             # Mengambil snapshot dari widget plot
-            pixmap = self.plot_widget.grab()  # Mengambil screenshot dari plot_widget
+            pixmap = plot_widget.grab()  # Mengambil screenshot dari plot_widget
 
             # Menyimpan snapshot sebagai file
             pixmap.save(file_path)  # Menyimpan gambar
@@ -265,17 +277,16 @@ class Statistic:
         today = datetime.today()  # Mendapatkan tanggal hari ini
         
         # Menghitung bulan dan tahun baru berdasarkan offset
-        new_month = today.month + offset * 6
+        new_month = today.month + offset
         new_year = today.year
         
         # Jika bulan baru melebihi Desember, sesuaikan tahun
         if new_month > 12:
-            new_month -= 12
-            new_year += 1
+            new_month %= 12
+            new_year += new_month // 12
         elif new_month < 1:
-            new_month += 12
-            new_year -= 1
-        
+            new_month %= 12
+            new_year += new_month // 12
         # Menghitung hari pertama dari bulan baru
         first_day = datetime(new_year, new_month, 1)
         
@@ -381,14 +392,14 @@ class Statistic:
 
         # Display values on top of bars (income bars)
         for i, val in enumerate(income_barItem):
-            text = TextItem(str(val), color='green')
-            text.setPos(x[i] - 0.25, val + 3)  # Position above the bar
+            text = TextItem(str(val), color='black')
+            text.setPos(x[i] - 0.25, val + 100)  # Position above the bar
             plot_widget.addItem(text)
 
         # Display values on top of bars (outcome bars)
         for i, val in enumerate(outcome_barItem):
-            text = TextItem(str(val), color='red')
-            text.setPos(x[i], val + 3)  # Position above the bar
+            text = TextItem(str(val), color='black')
+            text.setPos(x[i], val + 100)  # Position above the bar
             plot_widget.addItem(text)
 
         # Menyesuaikan format label sumbu Y untuk menghindari notasi ilmiah
@@ -414,3 +425,37 @@ class Statistic:
 
         # Menambahkan legenda ke plot
         plot_widget.addLegend()
+
+    def generate_pie(self, fig):
+        # Data untuk pie chart
+        fig.clf()
+        labels = ['income', 'outcome']
+        sizes = self.cur_data[4]
+        if max(sizes) == 0:
+            fig.canvas.draw()
+            return
+        colors = ['green', 'red']
+        #colors = plt.cm.Paired(range(len(sizes)))  
+
+        # Plot pie chart langsung
+        ax = fig.add_subplot(111)
+        ax.pie(
+            sizes, 
+            colors=colors, 
+            autopct='%1.1f%%', 
+            shadow=True, 
+            wedgeprops={'edgecolor': 'black'}, 
+            startangle=90
+        )
+        
+        ax.legend(
+            labels,  # The labels for the legend
+            loc='lower center',
+            fontsize=10,
+            title="Categories",  # Optional: Add a title to the legend
+            bbox_to_anchor=(0.5, -0.2),  # Optional: Place the legend outside the pie chart
+            ncol = 2
+        )
+        ax.axis('equal')  # Pastikan bentuk bulat
+        ax.set_title('Pie Chart')
+        fig.canvas.draw()
