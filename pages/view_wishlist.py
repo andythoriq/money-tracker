@@ -129,12 +129,6 @@ class WishlistView(QWidget):
         back_button_container.setContentsMargins(0, 10, 20, 20)
         back_button_container.addStretch()
         
-        self.btn_back = QPushButton("Kembali ke Dashboard")
-        self.btn_back.setObjectName("wishlist_button")
-        self.btn_back.setFixedWidth(200)
-        self.btn_back.clicked.connect(self.go_back)
-        back_button_container.addWidget(self.btn_back)
-        
         main_layout.addLayout(back_button_container)
 
         # Set the main container as the central widget

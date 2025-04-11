@@ -10,9 +10,7 @@ from pages.view_statistic import StatisticView
 from pages.view_category import CategoryView
 from pages.view_wishlist import WishlistView
 from controller.Popup import PopupAboutUs
-from controller.wallet import Wallet
 from controller.Sliding import SlidingWalletWidget
-from controller.statistic import Statistic
 
 class Dashboard(QWidget):
     def __init__(self):
@@ -24,8 +22,7 @@ class Dashboard(QWidget):
         """Inisialisasi tampilan UI utama"""
         self.setWindowTitle("Money Tracker")
 
-        self.wallet_controller = Wallet()
-        self.statistic_controller = Statistic()
+        self.slider_controller = SlidingWalletWidget(self)
 
         # Stack untuk menyimpan berbagai halaman
         self.stack = QStackedWidget()
@@ -91,9 +88,12 @@ class Dashboard(QWidget):
 
         # Tombol-tombol Sidebar (HomeSection)
         self.btn_home = QPushButton(self.HomeSection)
-        self.btn_home.setIcon(QtGui.QIcon("../money-tracker/img/icon/logo-app.png"))
+        self.btn_home.setIcon(QtGui.QIcon("../money-tracker/img/icon/logo-app-new.png"))
         self.btn_home.setIconSize(QtCore.QSize(80, 80))
-        self.btn_home.clicked.connect(lambda: self.stack.setCurrentWidget(self.container))
+        self.btn_home.clicked.connect(lambda: (
+            self.stack.setCurrentWidget(self.container),
+            # self.slider_controller.refresh_wallets()
+            ))
         self.btn_home.setObjectName("btn_home")
 
         self.btn_income = QPushButton(self.HomeSection)
@@ -136,7 +136,10 @@ class Dashboard(QWidget):
         self.btn_statistic = QPushButton(self.HomeSection)
         self.btn_statistic.setIcon(QtGui.QIcon("../money-tracker/img/icon/statistic.png"))
         self.btn_statistic.setIconSize(QtCore.QSize(55, 61))
-        self.btn_statistic.clicked.connect(lambda: self.stack.setCurrentWidget(self.statistic_view))
+        self.btn_statistic.clicked.connect(lambda: (
+            self.statistic_view.statistic_controller.cur_data,
+            self.stack.setCurrentWidget(self.statistic_view)
+        ))
         self.btn_statistic.setObjectName("btn_homeSection")
 
         self.btn_category = QPushButton(self.HomeSection)
@@ -303,7 +306,8 @@ class Dashboard(QWidget):
         self.graph_widget = PlotWidget()
         self.graph_widget.setBackground('w')
         self.graph_widget.setMouseEnabled(x=False, y=False)
-        self.statistic_controller.generate_statistics(self.graph_widget)
+        self.statistic_view.statistic_controller.cur_data = self.statistic_view.statistic_controller.generate_data()
+        self.statistic_view.statistic_controller.generate_statistics(self.graph_widget)
 
         layout.addWidget(self.statistic_label)
         layout.addWidget(self.graph_widget)

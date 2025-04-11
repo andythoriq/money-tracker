@@ -111,9 +111,10 @@ class HistoryView(QWidget):
                 background-color: #7A9F60;
             }
         """)
-        self.table.horizontalHeader().setStretchLastSection(True)
+        self.table.horizontalHeader().setStretchLastSection(False)
         self.table.verticalHeader().setVisible(False)
         content_layout.addWidget(self.table)
+        self.setStyleSheet("background-color: #98C379;")
 
         # Label Total
         self.label = QLabel("Total : Rp 0")
@@ -156,7 +157,9 @@ class HistoryView(QWidget):
             })
 
         # Filter transaksi
-        if filter_type == "income":
+        if self.radio_all.isChecked():
+            transactions = [t for t in transactions]
+        elif filter_type == "income":
             transactions = [t for t in transactions if t["type"] == "income"]
         elif filter_type == "outcome":
             transactions = [t for t in transactions if t["type"] == "outcome"]

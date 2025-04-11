@@ -1,18 +1,18 @@
-from pyqtgraph import TextItem, PlotWidget, BarGraphItem
+from pyqtgraph import PlotWidget
+from matplotlib.backends.backend_qt5agg import FigureCanvasQTAgg as FigureCanvas
 from PyQt5.QtWidgets import (QWidget, QVBoxLayout, QHBoxLayout, QGridLayout, 
                              QFrame, QLabel, QComboBox, QPushButton, QSpacerItem, 
                              QSizePolicy)
 from PyQt5 import QtCore, QtWidgets
 from controller.statistic import Statistic
 from PyQt5.QtCore import Qt
+from matplotlib.figure import Figure
 
 
 class StatisticView(QWidget):
     def __init__(self, parent=None):
         super().__init__(parent)
         self.statistic_controller = Statistic()
-        self.offset = 0
-        self.jenis = ""
         self.setupUi()
 
     def setupUi(self):
@@ -97,10 +97,10 @@ class StatisticView(QWidget):
         
         self.statisticOption = QComboBox()
         self.statisticOption.setObjectName("statisticOption")
-        self.statisticOption.addItem("")
-        self.statisticOption.addItem("")
-        self.statisticOption.addItem("")
-        self.statisticOption.addItem("")
+        # self.statisticOption.addItem("")
+        # self.statisticOption.addItem("")
+        # self.statisticOption.addItem("")
+        # self.statisticOption.addItem("")
         self.statisticOption.addItem("")  # separator
         self.statisticOption.addItem("")
         
@@ -165,8 +165,8 @@ class StatisticView(QWidget):
         
         self.pieChartOption = QComboBox()
         self.pieChartOption.setObjectName("pieChartOption")
-        self.pieChartOption.addItem("")
-        self.pieChartOption.addItem("")
+        # self.pieChartOption.addItem("")
+        # self.pieChartOption.addItem("")
         self.pieChartOption.addItem("")
         self.pieChartOption.addItem("")
         
@@ -178,9 +178,10 @@ class StatisticView(QWidget):
         self.pieChartLayout.addLayout(self.pieChartHeaderLayout)
         
         # Add pie chart placeholder
-        self.pieChartPlaceholder = QLabel("Pie Chart Placeholder")
-        self.pieChartPlaceholder.setAlignment(Qt.AlignCenter)
-        self.pieChartLayout.addWidget(self.pieChartPlaceholder)
+        self.fig = Figure()
+        self.canvas = FigureCanvas(self.fig)
+        self.statistic_controller.generate_pie(self.fig)
+        self.pieChartLayout.addWidget(self.canvas)
         
         # Add pie chart to right side layout
         self.rightSideLayout.addWidget(self.pieChart)
@@ -248,11 +249,14 @@ class StatisticView(QWidget):
         # Set up event handlers and UI elements
         self.retranslateUi(self)
         self.styleSheet(self)
-        self.generate_statistics()
+        self.statistic_controller.generate_statistics(self.plot_widget)
+        self.update_label()
         
         # Connect signals
         self.sliderType.installEventFilter(self)
         self.sliderType.currentIndexChanged.connect(self.on_combobox_selection_changed)
+        self.pieChartOption.currentIndexChanged.connect(self.on_pie_selection_changed)
+        self.statisticOption.currentIndexChanged.connect(self.on_bar_selection_changed)
         self.prevButton.clicked.connect(lambda: self.change_offset('prev'))
         self.nextButton.clicked.connect(lambda: self.change_offset('next'))
         self.statisticOption.installEventFilter(self)
@@ -265,16 +269,16 @@ class StatisticView(QWidget):
         Statistik.setWindowTitle(_translate("Statistik", "MainWindow"))
         
         self.incomeInfo.setText(_translate("Statistik", "<html>Jumlah <br>Income</html>"))
-        self.IncomeValue.setText(_translate("Statistik", str(self.statistic_controller.cur_data[4])))
+        self.IncomeValue.setText(_translate("Statistik", str(self.statistic_controller.cur_data[4][0])))
         self.outcomeInfo.setText(_translate("Statistik", "<html>Jumlah <br>Outcome</html>"))
-        self.outcomeValue.setText(_translate("Statistik", str(self.statistic_controller.cur_data[5])))
+        self.outcomeValue.setText(_translate("Statistik", str(self.statistic_controller.cur_data[4][1])))
         
-        self.statisticOption.setItemText(0, _translate("Statistik", "by day"))
-        self.statisticOption.setItemText(1, _translate("Statistik", "by week"))
-        self.statisticOption.setItemText(2, _translate("Statistik", "by month"))
-        self.statisticOption.setItemText(3, _translate("Statistik", "by year"))
-        self.statisticOption.setItemText(4, _translate("Statistik", "~~~~~~~"))
-        self.statisticOption.setItemText(5, _translate("Statistik", "Save Graphic"))
+        # self.statisticOption.setItemText(0, _translate("Statistik", "by day"))
+        # self.statisticOption.setItemText(1, _translate("Statistik", "by week"))
+        # self.statisticOption.setItemText(2, _translate("Statistik", "by month"))
+        # self.statisticOption.setItemText(3, _translate("Statistik", "by year"))
+        self.statisticOption.setItemText(1, _translate("Statistik", "~~~~~~~"))
+        self.statisticOption.setItemText(0, _translate("Statistik", "Save Graphic"))
         
         self.prevButton.setText(_translate("Statistik", "<"))
         self.nextButton.setText(_translate("Statistik", ">"))
@@ -292,10 +296,10 @@ class StatisticView(QWidget):
         self.newValue.setText(_translate("Statistik", "Rp. X00.000"))
         self.changeValue.setText(_translate("Statistik", "+Rp. X0.000"))
         
-        self.pieChartOption.setItemText(0, _translate("Statistik", "by Income"))
-        self.pieChartOption.setItemText(1, _translate("Statistik", "by Outcome"))
-        self.pieChartOption.setItemText(2, _translate("Statistik", "~~~~~~~~"))
-        self.pieChartOption.setItemText(3, _translate("Statistik", "Save Graphic"))
+        # self.pieChartOption.setItemText(0, _translate("Statistik", "by Income"))
+        # self.pieChartOption.setItemText(1, _translate("Statistik", "by Outcome"))
+        self.pieChartOption.setItemText(0, _translate("Statistik", "~~~~~~~~"))
+        self.pieChartOption.setItemText(1, _translate("Statistik", "Save Graphic"))
         
         self.chartInfo.setText(_translate("Statistik", "Category Chart"))
 
@@ -324,16 +328,16 @@ class StatisticView(QWidget):
             QComboBox::lineEdit {
                 border: none;
                 background: transparent;
-                padding: 100px;
+                padding: 10px;
                 color: transparent;  /* Keep the text hidden */
             }
 
             /* Display dropdown list items correctly */
             QComboBox QAbstractItemView {
-                min-width: 150px;  /* Minimum width for dropdown items */
+                min-width: 60px;  /* Minimum width for dropdown items */
                 max-width: 300px;  /* Ensure items have sufficient width to show full text */
                 font-size: 14px;
-                padding: 100px;
+                padding: 10px;
             }
 
             QComboBox QAbstractItemView::item {
@@ -374,7 +378,7 @@ class StatisticView(QWidget):
         """
 
         chartDesign = """
-            QFrame    {
+            #Statistic, #pieChart    {
             border: 10px solid #191D24; 
             padding: 20px; 
             background-color: #FFFFFF;
@@ -428,13 +432,6 @@ class StatisticView(QWidget):
         self.newValue.setStyleSheet(textDesign)
 
         self.changeValue.setStyleSheet(textDesign)
-        
-        '''
-        if -:
-            self.changeValue.setStyleSheet("color: #FF0000;")
-        elif +:
-            self.changeValue.setStyleSheet("color: #00FF00;")
-        '''
 
         self.Statistic.setStyleSheet(chartDesign)
         self.prevButton.setStyleSheet(buttonStyle)
@@ -459,86 +456,57 @@ class StatisticView(QWidget):
             return True  # Mencegah event scroll
         return super().eventFilter(obj, event)
 
-    def generate_statistics(self):
-        self.plot_widget.clear()
-
-        data = self.statistic_controller.cur_data
-
-        x = data[0]
-        income_barItem = data[1]
-        outcome_barItem = data[2]
-        infoLabels = data[3]
-        maxNilai = max(data[1] + data[2])
-
-        # Membuat grafik batang untuk pendapatan (warna hijau) dan pengeluaran (warna merah)
-        income_graph = BarGraphItem(x=x-0.15, height=income_barItem, width=0.3, brush='#FF9F40', name="Pendapatan")
-        outcome_graph = BarGraphItem(x=x+0.15, height=outcome_barItem, width=0.3, brush='#F4BE37', name="Pengeluaran")
-
-        # Menambahkan grafik batang ke plot
-        self.plot_widget.addItem(income_graph)
-        self.plot_widget.addItem(outcome_graph)
-        # Mengubah ticks sumbu X untuk menampilkan dua informasi: hari dan tanggal
-        self.plot_widget.getAxis('bottom').setTicks([list(zip(x, infoLabels))])
-
-        # Mengubah sumbu Y untuk lebih baik menampilkan data
-        self.plot_widget.setLabel('left', 'Nilai', units="")
-        self.plot_widget.setLabel('bottom', 'Hari dan Tanggal')
-
-        # Display values on top of bars (income bars)
-        for i, val in enumerate(income_barItem):
-            text = TextItem(str(val), color='green')
-            text.setPos(x[i] - 0.25, val + 3)  # Position above the bar
-            self.plot_widget.addItem(text)
-
-        # Display values on top of bars (outcome bars)
-        for i, val in enumerate(outcome_barItem):
-            text = TextItem(str(val), color='red')
-            text.setPos(x[i], val + 3)  # Position above the bar
-            self.plot_widget.addItem(text)
-
-        # Menyesuaikan format label sumbu Y untuk menghindari notasi ilmiah
-        axis = self.plot_widget.getAxis('left')
-
-        # Periksa apakah maxNilai kurang dari 5 dan tentukan langkah minimal
-        step = max(1, int(maxNilai / 5))  # Pastikan langkah tidak menjadi 0
-
-        # Membuat ticks dengan langkah yang aman
-        ticks = [(i, "{:,.0f}".format(i)) for i in range(0, maxNilai + 1, step)]
-
-        # Menetapkan ticks pada axis
-        axis.setTicks([ticks])
-
-        # Tombol untuk mengubah view range setelah beberapa detik
-        self.plot_widget.getPlotItem().vb.setRange(yRange=(0, int(maxNilai * 1.3)), padding=0)
-
-        # Menghilangkan toolbar atau elemen lainnya
-        self.plot_widget.getPlotItem().hideButtons()  # Menghilangkan tombol atau kontrol lainnya
-
-        # Menambahkan grid pada plot untuk mempermudah pembacaan
-        self.plot_widget.showGrid(x=True, y=True, alpha=0.3)  # Alpha untuk transparansi grid
-
-        # Menambahkan legenda ke plot
-        self.plot_widget.addLegend()  # Ini adalah cara yang benar untuk menambahkan legenda
-
     def on_combobox_selection_changed(self, index):
         selected_item = self.sliderType.currentText()  # Get the text of the selected item
-        self.offset = 0
+        self.statistic_controller.offset = 0
         # Run specific methods based on the selected item
         if selected_item == "Daily":
-            self.jenis = "harian"
+            self.statistic_controller.jenis = "harian"
         elif selected_item == "Weekly":
-            self.jenis = "mingguan"
+            self.statistic_controller.jenis = "mingguan"
         elif selected_item == "Monthly":
-            self.jenis = "bulanan"
+            self.statistic_controller.jenis = "bulanan"
         elif selected_item == "Yearly":
-            self.jenis = "tahunan"
-        self.statistic_controller.cur_data = self.statistic_controller.generate_data(self.offset, self.jenis)
-        self.generate_statistics()
+            self.statistic_controller.jenis = "tahunan"
+        self.statistic_controller.cur_data = self.statistic_controller.generate_data()
+        self.statistic_controller.generate_statistics(self.plot_widget)
+        self.statistic_controller.generate_pie(self.fig)
+        self.update_label()
+
+    def on_pie_selection_changed(self, index):
+        selected_item = self.pieChartOption.currentText()  # Get the current text
+        if selected_item == "Save Graphic":
+            try:
+                # Save the figure as a PNG file
+                self.fig.savefig("pie_chart.png", format='png')  # Save as PNG (or choose other formats like 'pdf', 'svg')
+                print("Pie chart saved successfully as pie_chart.png")
+            except Exception as e:
+                print(f"Error saving pie chart: {e}")
+
+    def on_bar_selection_changed(self, index):
+        selected_item = self.statisticOption.currentText()  # Get the current text
+        if selected_item == "Save Graphic":
+            self.statistic_controller.save_graph(self, self.plot_widget)       
 
     def change_offset(self, direction):
         if direction == 'next':
-            self.offset += 1
+            self.statistic_controller.offset += 1
         elif direction == 'prev':
-            self.offset -= 1
-        self.statistic_controller.cur_data = self.statistic_controller.generate_data(self.offset, self.jenis)
-        self.generate_statistics()
+            self.statistic_controller.offset -= 1
+        self.statistic_controller.cur_data = self.statistic_controller.generate_data()
+        self.statistic_controller.generate_statistics(self.plot_widget)
+        self.statistic_controller.generate_pie(self.fig)
+        self.statistic_controller.update_data(direction)
+        self.update_label()
+
+    def update_label(self):
+        # Update the text of the QLabel
+        self.IncomeValue.setText(str(self.statistic_controller.cur_data[4][0]))
+        self.outcomeValue.setText(str(self.statistic_controller.cur_data[4][1]))
+        self.prevValue.setText(str(self.statistic_controller.new_balance))
+        self.newValue.setText(str(self.statistic_controller.cur_balance))
+        self.changeValue.setText(str(self.statistic_controller.net))
+        if self.statistic_controller.net < 0:
+            self.changeValue.setStyleSheet("color: #FF0000;")
+        else:
+            self.changeValue.setStyleSheet("color: #00FF00;")
