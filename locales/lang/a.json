@@ -1,0 +1,99 @@
+{
+    "dashboard": {
+        "layout2": "Riwayat Transaksi Minggu Ini!",
+        "l2col1" : "Tanggal",
+        "l2col2" : "Jenis",
+        "l2col3" : "Jumlah",
+        "l2col4" : "Kategori",
+        "l2col5" : "Dompet",
+        "layout3": "Informasi keuanganmu untuk minggu ini",
+        "layout4": "Wishlist",
+        "l4col1" : "no",
+        "l4col2" : "nama",
+        "l4col3" : "harga",
+        "l4col4" : "status"
+    },
+    "income": {
+        "Title": "Income Baru",
+        "form1": "Jumlah Pemasukan:",
+        "form2": "Kategori:",
+        "form3": "Dompet yang akan diisi:",
+        "form4": "Deskripsi:",
+        "form5" : "Masukan Tanggal:",
+        "btn1" : "Simpan",
+        "btn2" : "Kembali"
+    },
+    "outcome": {
+        "Title": "Income Baru",
+        "form1": "Jumlah Pemasukan:",
+        "form2": "Kategori:",
+        "form3": "Dompet yang akan diisi:",
+        "form4": "Deskripsi:",
+        "form5" : "Masukan Tanggal:",
+        "btn1" : "Simpan",
+        "btn2" : "Kembali"
+    },
+    "wallet": {
+        "Title": "Wallet",
+        "entry": "Tambah Wallet",
+        "form1": "Nama",
+        "desc1": "Nama Wallet",
+        "form2": "Saldo",
+        "btn" : "Tambah",
+        "col1": "nama",
+        "col2": "saldo",
+        "col3": "edit",
+        "col4": "delete"
+    },
+    "history": {
+        "Title": "History",
+        "radbtn1": "semua",
+        "radbtn2": "income",
+        "radbtn3": "outcome",
+        "col1": "tanggal",
+        "col2": "jenis",
+        "col3": "jumlah",
+        "col4": "kategori",
+        "col5": "dompet",
+        "col6": "deskripsi",
+        "col7": "edit",
+        "col8": "delete",
+        "foot": "total"
+    },
+    "statistic": {
+        "Title": "Statistic",
+        "head1": "Jumlah Income",
+        "head2": "Jumlah Outcome",
+        "head3": "Statistic",
+        "head4": "Category Chart",
+        "head5": "Quickview Summary",
+        "desc1": "New Balance",
+        "desc2": "Previous Balance"
+    },
+    "category": {
+        "Title": "Category",
+        "desc": "Category Name",
+        "item1": "income",
+        "item2": "outcome",
+        "btn": "add Category",
+        "col1": "name",
+        "col2": "type",
+        "col3": "delete"
+    },
+    "wishlist": {
+        "Title": "Wishlist",
+        "form1": "Nama",
+        "form2": "Harga",
+        "btn1": "Tambah Wishlist",
+        "filter": "Filter Status",
+        "radbtn1": "Semua",
+        "radbtn2": "Sudah Terpenuhi",
+        "radbtn3" : "Belum Terpenuhi",
+        "col1": "no",
+        "col2": "nama",
+        "col3": "harga",
+        "col4": "status",
+        "col5": "edit",
+        "col6": "delete"
+    }
+  }
