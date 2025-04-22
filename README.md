@@ -1,3 +1,3 @@
 ﻿# money-tracker
-progress kode otp
+>Progress kode otp
 ![Progress](git.jpeg)
