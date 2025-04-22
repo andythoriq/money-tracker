@@ -135,25 +135,25 @@ class HistoryView(QWidget):
         # Load data income
         for income in self.income_controller.load_incomes():
             transactions.append({
-                "id": income[0],
-                "date": datetime.strptime(income[5], "%d/%m/%Y"),
+                "id": income.get("ID"),
+                "date": datetime.strptime(income.get("date"), "%d/%m/%Y"),
                 "type": "income",
-                "amount": income[1],
-                "category": income[2],
-                "wallet": income[3],
-                "desc": income[4]
+                "amount": income.get("amount"),
+                "category": income.get("category"),
+                "wallet": income.get("wallet"),
+                "desc": income.get("desc")
             })
 
         # Load data outcome
         for outcome in self.outcome_controller.load_outcomes():
             transactions.append({
-                "id": outcome[0],
-                "date": datetime.strptime(outcome[5], "%d/%m/%Y"),
+                "id": outcome.get("ID"),
+                "date": datetime.strptime(outcome.get("date"), "%d/%m/%Y"),
                 "type": "outcome",
-                "amount": outcome[1],
-                "category": outcome[2],
-                "wallet": outcome[3],
-                "desc": outcome[4]
+                "amount": outcome.get("amount"),
+                "category": outcome.get("category"),
+                "wallet": outcome.get("wallet"),
+                "desc": outcome.get("desc")
             })
 
         # Filter transaksi
@@ -252,7 +252,7 @@ class HistoryView(QWidget):
         category_input.setCurrentText(transaction["category"])
 
         wallet_input = QComboBox()
-        wallet_input.addItems(self.wallet_controller.load_wallet_names())
+        wallet_input.addItems(self.wallet_controller.get_wallet_name())
         wallet_input.setCurrentText(transaction["wallet"])
 
         desc_input = QLineEdit(transaction["desc"])
@@ -288,7 +288,14 @@ class HistoryView(QWidget):
 
     def save_edit(self, transaction, amount, category, wallet, desc, date, dialog):
         """Simpan perubahan edit transaksi"""
-        new_data = [transaction["id"], str(amount.value()), category.currentText(), wallet.currentText(), desc.text(), date.selectedDate().toString("dd/MM/yyyy")]
+        new_data = {
+            "ID": transaction["id"],
+            "amount": amount.value(),
+            "category": category.currentText(),
+            "wallet": wallet.currentText(),
+            "desc": desc.text(),
+            "date": date.selectedDate().toString("dd/MM/yyyy")
+        }
 
         if transaction["type"] == "income":
             self.income_controller.update_income(new_data)

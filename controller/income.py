@@ -1,72 +1,68 @@
-import os
+import json
 
 class Income:
-    FILE_PATH = "database/income.txt"
+    FILE_PATH = "database/income.json"
 
     def __init__(self, wallet_controller):
-        if not os.path.exists(self.FILE_PATH):
-            with open(self.FILE_PATH, "w"):
-                pass
-        
+        """Inisialisasi controller"""
+        try:
+            with open(self.FILE_PATH, "r") as file:
+                pass  # File sudah ada
+        except FileNotFoundError:
+            with open(self.FILE_PATH, "w") as file:
+                json.dump([], file)
         self.wallet_controller = wallet_controller
 
     def load_incomes(self):
-        """Memuat data income dari file"""
-        if not os.path.exists(self.FILE_PATH):
+        """Memuat data income dari file."""
+        try:
+            with open(self.FILE_PATH, "r") as file:
+                return json.load(file)
+        except FileNotFoundError:
             return []
-        with open(self.FILE_PATH, "r") as file:
-            return [line.strip().split(",") for line in file.readlines()]
 
     def save_incomes(self, incomes):
-        """Menyimpan data income ke file"""
+        """Menyimpan data income ke file."""
         with open(self.FILE_PATH, "w") as file:
-            for income in incomes:
-                file.write(",".join(income) + "\n")
+            json.dump(incomes, file, indent=4)
 
-    def add_income(self, amount, category, wallet, description, date):
-        """Menambah income baru & update saldo wallet"""
+    def add_income(self, amount, category, wallet, desc, date):
+        """Menambah income baru & update saldo wallet."""
         incomes = self.load_incomes()
-        
-        # Update saldo di wallet
         if self.wallet_controller.update_balance(wallet, int(amount), "income"):
-            new_id = str(len(incomes) + 1)
-            incomes.append([new_id, str(amount), category, wallet, description, date])
+            new_id = len(incomes) + 1
+            incomes.append({
+                "ID": new_id,
+                "amount": amount,
+                "category": category,
+                "wallet": wallet,
+                "desc": desc,
+                "date": date
+            })
             self.save_incomes(incomes)
             return True
-        
         return False
 
     def update_income(self, updated_income):
-        """Mengupdate data income"""
+        """Mengupdate data income."""
         incomes = self.load_incomes()
         for i, income in enumerate(incomes):
-            if income[0] == updated_income[0]:  # ID
-                # saldo
-                old_amount = int(income[1])
-                new_amount = int(updated_income[1])
-                self.wallet_controller.update_balance(income[3], -old_amount, "income")  # Kurangi saldo lama
-                self.wallet_controller.update_balance(updated_income[3], new_amount, "income")  # Tambah saldo baru
-                
-                # Iincome
+            if income["ID"] == updated_income["ID"]:
+                old_amount = int(income["amount"])
+                new_amount = int(updated_income["amount"])
+                self.wallet_controller.update_balance(income["wallet"], -old_amount, "income")
+                self.wallet_controller.update_balance(updated_income["wallet"], new_amount, "income")
                 incomes[i] = updated_income
                 break
-
         self.save_incomes(incomes)
 
     def delete_income(self, id):
-        """Menghapus income dengan id"""
+        """Menghapus income dengan id."""
         incomes = self.load_incomes()
-
-        deleted_income = [income for income in incomes if int(income[0]) == int(id)]
-        
+        deleted_income = next((income for income in incomes if income["ID"] == id), None)
         if not deleted_income:
             return False
-
-        deleted_income = deleted_income[0]
-
-        self.wallet_controller.update_balance(deleted_income[3], -int(deleted_income[1]), "income")
-
-        new_incomes = [income for income in incomes if int(income[0]) != int(id)]
-        self.save_incomes(new_incomes)
-
+        self.wallet_controller.update_balance(deleted_income["wallet"], -int(deleted_income["amount"]), "income")
+        incomes = [income for income in incomes if income["ID"] != int(id)]
+        self.save_incomes(incomes)
         return True

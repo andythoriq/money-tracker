@@ -153,23 +153,23 @@ class WishlistView(QWidget):
             if len(wishlist) < 4:
                 continue
 
-            self.wishlist_table.setItem(row, 0, QTableWidgetItem(wishlist[0]))  # ID
-            self.wishlist_table.setItem(row, 1, QTableWidgetItem(wishlist[1]))  # Nama
-            self.wishlist_table.setItem(row, 2, QTableWidgetItem(wishlist[2]))  # Harga
+            self.wishlist_table.setItem(row, 0, QTableWidgetItem(str(wishlist.get("ID"))))    # ID
+            self.wishlist_table.setItem(row, 1, QTableWidgetItem(wishlist.get("label")))  # Nama
+            self.wishlist_table.setItem(row, 2, QTableWidgetItem(str(wishlist.get("price")))) # Harga
             
             # Konversi status dari boolean ke text
-            status_text = "Sudah Terpenuhi" if wishlist[3] == "true" else "Belum Terpenuhi"
+            status_text = "Sudah Terpenuhi" if wishlist.get("status") else "Belum Terpenuhi"
             self.wishlist_table.setItem(row, 3, QTableWidgetItem(status_text))  # Status
 
             # Tombol Edit dan Hapus
             edit_button = QPushButton("Edit")
             edit_button.setObjectName("wishlist_button")
-            edit_button.clicked.connect(lambda _, id=wishlist[0]: self.show_edit_dialog(id))
+            edit_button.clicked.connect(lambda _, id=wishlist.get("ID"): self.show_edit_dialog(id))
             self.wishlist_table.setCellWidget(row, 4, edit_button)
 
             delete_button = QPushButton("Hapus")
             delete_button.setObjectName("wishlist_button")
-            delete_button.clicked.connect(lambda _, id=wishlist[0], name=wishlist[1], price=wishlist[2]: self.delete_wishlist(id, name, price))
+            delete_button.clicked.connect(lambda _, id=wishlist.get("ID"), name=wishlist.get("label"), price=wishlist.get("price"): self.delete_wishlist(id, name, price))
             self.wishlist_table.setCellWidget(row, 5, delete_button)
 
     def add_wishlist(self):
@@ -190,7 +190,7 @@ class WishlistView(QWidget):
 
     def show_edit_dialog(self, wishlist_id):
         """Menampilkan popup edit wishlist"""
-        wishlist = next((w for w in self.wishlist_controller.wishlists if w[0] == wishlist_id), None)
+        wishlist = next((w for w in self.wishlist_controller.wishlists if w.get("ID") == wishlist_id), None)
         if not wishlist:
             QMessageBox.warning(self, "Error", "Wishlist tidak ditemukan!")
             return
@@ -202,7 +202,7 @@ class WishlistView(QWidget):
         # Nama
         name_label = QLabel("Nama:")
         name_input = QLineEdit()
-        name_input.setText(wishlist[1])
+        name_input.setText(wishlist.get("label"))
         layout.addWidget(name_label)
         layout.addWidget(name_input)
 
@@ -211,7 +211,7 @@ class WishlistView(QWidget):
         price_input = QSpinBox()
         price_input.setRange(1, 10_000_000)
         price_input.setSingleStep(50_000)
-        price_input.setValue(int(wishlist[2]))
+        price_input.setValue(int(wishlist.get("price")))
         layout.addWidget(price_label)
         layout.addWidget(price_input)
 
@@ -219,7 +219,7 @@ class WishlistView(QWidget):
         status_label = QLabel("Status:")
         status_input = QComboBox()
         status_input.addItems(["Belum Terpenuhi", "Sudah Terpenuhi"])
-        current_status = "Sudah Terpenuhi" if wishlist[3] == "true" else "Belum Terpenuhi"
+        current_status = "Sudah Terpenuhi" if wishlist.get("status") else "Belum Terpenuhi"
         status_input.setCurrentText(current_status)
         layout.addWidget(status_label)
         layout.addWidget(status_input)
@@ -227,7 +227,7 @@ class WishlistView(QWidget):
         # Tombol Simpan
         save_button = QPushButton("Simpan")
         save_button.clicked.connect(lambda: self.save_edit(dialog, wishlist_id, name_input.text(), price_input.value(), 
-                                                         "true" if status_input.currentText() == "Sudah Terpenuhi" else "false"))
+                                                         True if status_input.currentText() == "Sudah Terpenuhi" else False))
         layout.addWidget(save_button)
 
         dialog.setLayout(layout)
@@ -247,9 +247,9 @@ class WishlistView(QWidget):
         else:
             QMessageBox.warning(self, "Error", "Gagal mengupdate wishlist!")
 
-    def delete_wishlist(self, wishlist_id, name, price):
+    def delete_wishlist(self, wishlist_id, label, price):
         """Konfirmasi dan hapus wishlist"""
-        confirm = QMessageBox.question(self, "Hapus Wishlist", f"Apakah Anda ingin menghapus {name} yang bernilai {price}?", 
+        confirm = QMessageBox.question(self, "Hapus Wishlist", f"Apakah Anda ingin menghapus {label} yang bernilai {price}?", 
                                        QMessageBox.Yes | QMessageBox.No, QMessageBox.No)
         if confirm == QMessageBox.Yes:
             success = self.wishlist_controller.delete_wishlist(wishlist_id)
