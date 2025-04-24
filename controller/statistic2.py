@@ -36,15 +36,15 @@ def BulanSkrngMingguan():
 outcome_amount = []
 outcome_date = []
 for outcome in Outcome(Wallet()).load_outcomes():
-    outcome_amount.append(int(outcome[1]))
-    outcome_date.append(outcome[5])
+    outcome_amount.append(int(outcome.get("amount")))
+    outcome_date.append(outcome.get("date"))
 
 # Ambil dan konversi data dari Income
 income_amount = []
 income_date = []
 for income in Income(Wallet()).load_incomes():
-    income_amount.append(int(income[1]))
-    income_date.append(income[5])
+    income_amount.append(int(income.get("amount")))
+    income_date.append(income.get("date"))
 
 # Menggabungkan kedua list dan menyortir berdasarkan tanggal
 sorted_listI = sorted(zip(income_date, income_amount), key=lambda x: datetime.strptime(x[0], "%d/%m/%Y"))

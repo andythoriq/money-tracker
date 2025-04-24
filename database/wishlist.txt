@@ -1,5 +1,0 @@
-1,Tas,90000,false
-2,Permen,5000,true
-3,Ticket Pesawat,250000,false
-4,Bean Bag,150000,true
-5,Motor,5000000,false
