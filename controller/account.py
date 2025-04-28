@@ -10,7 +10,7 @@ class Account:
                 pass  # File sudah ada
         except FileNotFoundError:
             with open(self.FILE_PATH, "w") as file:
-                json.dump({}, file)
+                json.dump([], file)
 
     def load_account(self):
         """
@@ -95,5 +95,5 @@ class Account:
         :param email: Email yang ingin diperiksa
         :return: True jika email ada, False jika tidak
         """
-        accounts = self.load_accounts()
+        accounts = self.load_account()
         return any(acc["email"] == email for acc in accounts)

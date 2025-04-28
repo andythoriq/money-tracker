@@ -192,10 +192,14 @@ class RegisterScreen(QtWidgets.QWidget):
         self.email_input.setPlaceholderText("Masukkan Email")
         self.email_input.setStyleSheet(self.input_style())
         self.email_input_warning = QLabel("")
+        self.email_input_warning.setStyleSheet(
+            "color: #ff0000; font-size: 12px; padding-left: 5px;"
+        )
         layout.addWidget(self.input_email_label)
         layout.addWidget(self.email_input)
         layout.addWidget(self.email_input_warning)
-
+        self.email_input_warning.hide()
+        self.email_input.textChanged.connect(self.email_valid)
         layout.addSpacing(5)
 
         # Info
@@ -231,13 +235,13 @@ class RegisterScreen(QtWidgets.QWidget):
         # Continue button
         self.continue_button = QPushButton("Lanjutkan")
         self.continue_button.setStyleSheet("""
-            background-color: qlineargradient(x1:0, y1:0, x2:1, y2:0, stop:0 #7db16e, stop:1 #b8e994);
-            color: #1c1f26;
+            background-color: #2c2f36;
+            color: #d3e9a3;
             padding: 12px;
             border-radius: 20px;
             font-weight: bold;
         """)
-        self.continue_button.setEnabled(True)
+        self.continue_button.setEnabled(False)
         self.continue_button.clicked.connect(
             lambda: self.stack.setCurrentIndex(self.stack.currentIndex() + 1)
         )
@@ -396,22 +400,32 @@ class RegisterScreen(QtWidgets.QWidget):
 
     def email_valid(self):
         """Validasi email"""
-
         email = self.email_input.text().strip()
-        if not email:
-            return False
+
         if "@" not in email or "." not in email.split("@")[-1]:
+            print(email)
+            self.email_input_warning.show()
             self.email_input.setStyleSheet(self.input_style() + "border: 1px solid #ff0000;")
-            self.email_input_warning = QLabel("Email tidak valid")
-            self.email_input_warning.setStyleSheet("color: #ff0000; font-size: 12px;")
+            self.email_input_warning.setText("Email tidak valid")
             self.email_input_warning.setAlignment(QtCore.Qt.AlignLeft)
             self.email_input.setFocus()
-            return False
-        if self.account_controller.check_email_exists(email):
+            
+        if  self.account_controller.check_email_exists(email):
+            self.email_input_warning.show()
             self.email_input.setStyleSheet(self.input_style() + "border: 1px solid #ff0000;")
-            self.email_input_warning = QLabel("Email sudah terdaftar")
-            return False
-        self.stack.setCurrentIndex(self.stack.currentIndex() + 1)
+            self.email_input_warning.setText("Email sudah terdaftar")
+        
+        if not self.account_controller.check_email_exists(email) and ("@" in email and "." in email.split("@")[-1]):
+            self.email_input_warning.setAlignment(QtCore.Qt.AlignLeft)
+            self.email_input_warning.hide()
+            self.continue_button.setEnabled(True)
+            self.continue_button.setStyleSheet("""
+                background-color: qlineargradient(x1:0, y1:0, x2:1, y2:0, stop:0 #7db16e, stop:1 #b8e994);
+                color: #1c1f26;
+                padding: 12px;
+                border-radius: 20px;
+                font-weight: bold;
+            """)
 
     def add_account(self):
         """Menambahkan akun baru"""
