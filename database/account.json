@@ -1,13 +1,1 @@
-[
-    {
-        "id": 1,
-        "email": "a@gmail.com",
-        "name": "admin",
-        "password": "b8eb1da99906bc678c6176cc42fa2f237f133d8afe4913beb1a7be0d48c7488a",
-        "gender": "laki-laki",
-        "birth": "1990-01-01",
-        "phone": "1234567890",
-        "Type": "user",
-        "createdAt": "2023-10-01T12:00:00Z"
-    }
-]
+
