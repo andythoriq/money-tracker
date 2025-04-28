@@ -85,12 +85,12 @@ class Income:
         
         for field in required_fields:
             if field not in income_data or not income_data[field]:
-                errors[field] = f"{field} is required"
+                errors[field] = f"{field} tidak boleh kosong"
         
         if not errors:
             wallet = income_data['wallet']
             amount = int(income_data['amount'])
             if not self.wallet_controller.update_balance(wallet, amount, "income"):
-                errors['wallet'] = "Failed to update wallet balance"
+                errors['wallet'] = "Gagal memperbarui saldo wallet"
         
         return {"valid": True} if not errors else {"valid": False, "errors": errors}
