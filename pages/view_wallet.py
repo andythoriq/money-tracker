@@ -155,8 +155,8 @@ class WalletView(QWidget):
         self.table_wallet.setRowCount(len(wallets))
 
         for row, wallet in enumerate(wallets):
-            name_item = QTableWidgetItem(wallet.get("name"))
-            amount_item = QTableWidgetItem(f"Rp {wallet.get('amount')}")
+            name_item = QTableWidgetItem(wallet[0])
+            amount_item = QTableWidgetItem(f"Rp {wallet[1]}")
 
             btn_edit = QPushButton("Edit")
             btn_edit.setFixedWidth(80)
@@ -171,7 +171,7 @@ class WalletView(QWidget):
                     background-color: #45a049;
                 }
             """)
-            btn_edit.clicked.connect(lambda _, n=wallet.get("name"): self.edit_wallet(n))
+            btn_edit.clicked.connect(lambda _, n=wallet[0]: self.edit_wallet(n))
 
             btn_delete = QPushButton("Hapus")
             btn_delete.setFixedWidth(80)
@@ -186,7 +186,7 @@ class WalletView(QWidget):
                     background-color: #da190b;
                 }
             """)
-            btn_delete.clicked.connect(lambda _, n=wallet.get("name"): self.delete_wallet(n))
+            btn_delete.clicked.connect(lambda _, n=wallet[0]: self.delete_wallet(n))
 
             self.table_wallet.setItem(row, 0, name_item)
             self.table_wallet.setItem(row, 1, amount_item)

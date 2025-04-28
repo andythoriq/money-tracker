@@ -2,9 +2,10 @@ from PyQt5.QtWidgets import (
     QWidget, QVBoxLayout, QPushButton, QTableWidget, 
     QTableWidgetItem, QHBoxLayout, QLabel, QRadioButton, 
     QButtonGroup, QDialog, QFormLayout, QSpinBox, 
-    QComboBox, QLineEdit, QCalendarWidget, QMessageBox
+    QComboBox, QLineEdit, QCalendarWidget, QMessageBox, 
+    QTableView, QVBoxLayout, QDateEdit
 )
-from PyQt5.QtCore import Qt
+from PyQt5.QtCore import Qt, QSortFilterProxyModel, QDate
 from datetime import datetime
 from controller.income import Income
 from controller.outcome import Outcome
@@ -52,6 +53,75 @@ class HistoryView(QWidget):
         self.radio_income.setObjectName("btn_home")
         self.radio_outcome = QRadioButton("Outcome")
         self.radio_outcome.setObjectName("btn_home")
+        
+        # Search bar untuk kategori
+        self.search_bar = QLineEdit(self)
+        self.search_bar.setPlaceholderText("Cari kategori...")
+        self.search_bar.setStyleSheet("""
+            QLineEdit {
+                background-color: white;
+                border: 1px solid #7A9F60;
+                border-radius: 5px;
+                padding: 5px;
+                color: black;
+            }
+            QLineEdit:focus {
+                border: 2px solid #4CAF50;
+            }
+        """)
+        self.search_bar.textChanged.connect(self.filter_by_category)
+
+        # Date Edit untuk filter tanggal
+        self.date_edit = QDateEdit()
+        self.date_edit.setCalendarPopup(True)
+        self.date_edit.setDate(QDate.currentDate())
+        self.date_edit.setDisplayFormat("dd/MM/yyyy")
+        self.date_edit.setStyleSheet("""
+            QDateEdit {
+                background-color: white;
+                border: 1px solid #7A9F60;
+                border-radius: 5px;
+                padding: 5px;
+                color: black;
+            }
+            QDateEdit::drop-down {
+                subcontrol-origin: padding;
+                subcontrol-position: top right;
+                width: 20px;
+                border-left-width: 1px;
+                border-left-color: #7A9F60;
+                border-left-style: solid;
+                border-top-right-radius: 5px;
+                border-bottom-right-radius: 5px;
+            }
+            QDateEdit::down-arrow {
+                border: none;
+                width: 16px;
+                height: 16px;
+                image: url(img/down-arrow.png);
+            }
+            QDateEdit::down-arrow:enabled {
+                border: none;
+                width: 16px;
+                height: 16px;
+                image: url(img/icon1.png);
+            }
+            QCalendarWidget {
+                background-color: white;
+                border: 1px solid #7A9F60;
+                border-radius: 5px;
+            }
+            QCalendarWidget QToolButton {
+                background-color: #7A9F60;
+                color: white;
+                border-radius: 5px;
+            }
+            QCalendarWidget QMenu {
+                background-color: white;
+            }
+        """)
+        self.date_edit.dateChanged.connect(self.filter_by_date)
+        self.selected_date = None
 
         for radio in [self.radio_all, self.radio_income, self.radio_outcome]:
             radio.setStyleSheet("""
@@ -79,6 +149,26 @@ class HistoryView(QWidget):
         btn_layout.addWidget(self.radio_income)
         btn_layout.addWidget(self.radio_outcome)
         btn_layout.addStretch()
+        btn_layout.addWidget(self.search_bar)
+        btn_layout.addWidget(self.date_edit)
+
+        # Tombol Hapus Filter
+        self.clear_filter_btn = QPushButton("Hapus Filter")
+        self.clear_filter_btn.setStyleSheet("""
+            QPushButton {
+                background-color: #f44336;
+                color: white;
+                border-radius: 5px;
+                padding: 5px 10px;
+                font-size: 12px;
+            }
+            QPushButton:hover {
+                background-color: #da190b;
+            }
+        """)
+        self.clear_filter_btn.clicked.connect(self.clear_filters)
+        btn_layout.addWidget(self.clear_filter_btn)
+
         content_layout.addWidget(filter_widget)
 
         # Tabel Transaksi
@@ -126,6 +216,40 @@ class HistoryView(QWidget):
         self.setLayout(main_layout)
         self.load_data("all")
 
+    def filter_by_date(self, date):
+        """Filter data berdasarkan tanggal"""
+        self.selected_date = date
+        self.apply_filters()
+
+    def filter_by_category(self):
+        """Filter data berdasarkan kategori"""
+        self.apply_filters()
+
+    def apply_filters(self):
+        """Menerapkan semua filter yang ada"""
+        search_text = self.search_bar.text().lower()
+        
+        for row in range(self.table.rowCount()):
+            category_item = self.table.item(row, 3)  # Kolom kategori
+            date_item = self.table.item(row, 0)      # Kolom tanggal
+            
+            show_row = True
+            
+            # Filter kategori
+            if search_text and category_item:
+                category = category_item.text().lower()
+                show_row = show_row and (search_text in category)
+            
+            # Filter tanggal
+            if self.selected_date and date_item:
+                try:
+                    row_date = datetime.strptime(date_item.text(), "%d/%m/%Y").date()
+                    show_row = show_row and (row_date == self.selected_date.toPyDate())
+                except ValueError:
+                    show_row = False
+            
+            self.table.setRowHidden(row, not show_row)
+
     def load_data(self, filter_type):
         """Memuat data ke tabel berdasarkan filter"""
         self.table.setRowCount(0)
@@ -135,25 +259,25 @@ class HistoryView(QWidget):
         # Load data income
         for income in self.income_controller.load_incomes():
             transactions.append({
-                "id": income.get("ID"),
-                "date": datetime.strptime(income.get("date"), "%d/%m/%Y"),
+                "id": income[0],
+                "date": datetime.strptime(income[5], "%d/%m/%Y"),
                 "type": "income",
-                "amount": income.get("amount"),
-                "category": income.get("category"),
-                "wallet": income.get("wallet"),
-                "desc": income.get("desc")
+                "amount": income[1],
+                "category": income[2],
+                "wallet": income[3],
+                "desc": income[4]
             })
 
         # Load data outcome
         for outcome in self.outcome_controller.load_outcomes():
             transactions.append({
-                "id": outcome.get("ID"),
-                "date": datetime.strptime(outcome.get("date"), "%d/%m/%Y"),
+                "id": outcome[0],
+                "date": datetime.strptime(outcome[5], "%d/%m/%Y"),
                 "type": "outcome",
-                "amount": outcome.get("amount"),
-                "category": outcome.get("category"),
-                "wallet": outcome.get("wallet"),
-                "desc": outcome.get("desc")
+                "amount": outcome[1],
+                "category": outcome[2],
+                "wallet": outcome[3],
+                "desc": outcome[4]
             })
 
         # Filter transaksi
@@ -214,6 +338,8 @@ class HistoryView(QWidget):
             self.table.setCellWidget(row, 7, btn_delete)
 
         self.label.setText(f"Total : Rp {total}")
+        # Terapkan filter yang ada
+        self.apply_filters()
 
     def open_edit_popup(self, transaction):
         """Popup Edit Data"""
@@ -252,7 +378,7 @@ class HistoryView(QWidget):
         category_input.setCurrentText(transaction["category"])
 
         wallet_input = QComboBox()
-        wallet_input.addItems(self.wallet_controller.get_wallet_name())
+        wallet_input.addItems(self.wallet_controller.load_wallet_names())
         wallet_input.setCurrentText(transaction["wallet"])
 
         desc_input = QLineEdit(transaction["desc"])
@@ -288,14 +414,7 @@ class HistoryView(QWidget):
 
     def save_edit(self, transaction, amount, category, wallet, desc, date, dialog):
         """Simpan perubahan edit transaksi"""
-        new_data = {
-            "ID": transaction["id"],
-            "amount": amount.value(),
-            "category": category.currentText(),
-            "wallet": wallet.currentText(),
-            "desc": desc.text(),
-            "date": date.selectedDate().toString("dd/MM/yyyy")
-        }
+        new_data = [transaction["id"], str(amount.value()), category.currentText(), wallet.currentText(), desc.text(), date.selectedDate().toString("dd/MM/yyyy")]
 
         if transaction["type"] == "income":
             self.income_controller.update_income(new_data)
@@ -344,3 +463,18 @@ class HistoryView(QWidget):
             info_msg.setWindowTitle("Informasi")
             info_msg.setText("Transaksi berhasil dihapus")
             info_msg.exec_()
+
+    def clear_filters(self):
+        """Mengembalikan semua filter ke setelan awal"""
+        # Reset radio button
+        self.radio_all.setChecked(True)
+        
+        # Reset search bar
+        self.search_bar.clear()
+        
+        # Reset date filter
+        self.date_edit.setDate(QDate.currentDate())
+        self.selected_date = None
+        
+        # Tampilkan semua data
+        self.load_data("all")

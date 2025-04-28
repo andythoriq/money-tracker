@@ -168,10 +168,7 @@ class CategoryView(QWidget):
         self.table.setRowCount(0)
         categories = self.category_controller.load_categories()
 
-        for row_idx, category in enumerate(categories):
-            name = category["name"]
-            category_type = category["type"]
-
+        for row_idx, (name, category_type) in enumerate(categories):
             self.table.insertRow(row_idx)
             self.table.setItem(row_idx, 0, QTableWidgetItem(name))
             self.table.setItem(row_idx, 1, QTableWidgetItem(category_type))
@@ -190,7 +187,7 @@ class CategoryView(QWidget):
                     background-color: #da190b;
                 }
             """)
-            btn_delete.clicked.connect(lambda _, n=name, t=category_type: self.confirm_delete(n, t))
+            btn_delete.clicked.connect(lambda _, n=name, t=category_type: self.confirm_delete(n,t))
             self.table.setCellWidget(row_idx, 2, btn_delete)
 
     def confirm_delete(self, name, category_type):
