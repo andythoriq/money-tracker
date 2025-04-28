@@ -1,4 +1,4 @@
-import hashlib
+import hashlib, re
 from PyQt5 import QtWidgets, QtGui, QtCore
 from PyQt5.QtWidgets import (
     QApplication,
@@ -330,8 +330,12 @@ class RegisterScreen(QtWidgets.QWidget):
         self.password_input.setPlaceholderText("Masukkan password")
         self.password_input.setEchoMode(QtWidgets.QLineEdit.Password)
         self.password_input.setStyleSheet(self.input_style())
+        self.password_warning = QLabel("")
+        self.password_warning.setStyleSheet("color: #ff0000; font-size: 12px;")
+        self.password_warning.hide()
         layout.addWidget(self.input_password_label)
         layout.addWidget(self.password_input)
+        layout.addWidget(self.password_warning)
 
         layout.addSpacing(10)
 
@@ -344,10 +348,18 @@ class RegisterScreen(QtWidgets.QWidget):
         self.password_confirm_input.setPlaceholderText("Ulangi password")
         self.password_confirm_input.setEchoMode(QtWidgets.QLineEdit.Password)
         self.password_confirm_input.setStyleSheet(self.input_style())
+        self.password_confirm_warning = QLabel("")
+        self.password_confirm_warning.setStyleSheet("color: #ff0000; font-size: 12px;")
+        self.password_confirm_warning.hide()
         layout.addWidget(self.input_password_confirm_label)
         layout.addWidget(self.password_confirm_input)
+        layout.addWidget(self.password_confirm_warning)
 
         layout.addSpacing(5)
+
+        # text changed
+        self.password_input.textChanged.connect(self.password_pair_validasi)
+        self.password_confirm_input.textChanged.connect(self.password_pair_validasi)
 
         # Info Validasi Password
         info_label = QLabel(
@@ -360,16 +372,17 @@ class RegisterScreen(QtWidgets.QWidget):
         layout.addSpacing(10)
 
         # Continue button
-        self.continue_button = QPushButton("Lanjutkan")
-        self.continue_button.setStyleSheet("""
-            background-color: qlineargradient(x1:0, y1:0, x2:1, y2:0, stop:0 #7db16e, stop:1 #b8e994);
-            color: #1c1f26;
+        self.continue_button_password = QPushButton("Lanjutkan")
+        self.continue_button_password.setStyleSheet("""
+            background-color: #2c2f36;
+            color: #d3e9a3;
             padding: 12px;
             border-radius: 20px;
             font-weight: bold;
         """)
-        self.continue_button.clicked.connect(self.password_pair)
-        layout.addWidget(self.continue_button)
+        self.continue_button_password.setEnabled(False)
+        self.continue_button_password.clicked.connect(lambda: self.stack.setCurrentIndex(self.stack.currentIndex() + 1))
+        layout.addWidget(self.continue_button_password)
 
         layout.addSpacing(30)
 
@@ -385,18 +398,69 @@ class RegisterScreen(QtWidgets.QWidget):
 
         return widget
 
-    def password_pair(self):
+    def password_pair_validasi(self):
         """Validasi password"""
         password = self.password_input.text().strip()
         password_confirm = self.password_confirm_input.text().strip()
+        is_password_valid = (bool(re.search(r'[A-Z]', password)) and 
+                             bool(re.search(r'[A-Z]', password_confirm)) and 
+                             bool(re.search(r'[0-9]', password)) and 
+                             bool(re.search(r'[0-9]', password_confirm)) and 
+                             password == password_confirm)
 
-        if not password or not password_confirm:
-            print("Password tidak boleh kosong")
-        if "1" or "2" or "3" or "4" or "5" or "6" or "7" or "8" or "9" not in password:
-            print("Password harus mengandung angka")
+        if not len(password) >= 8:
+            self.password_warning.setText("Password minimal 8 karakter")
+            self.password_warning.show()
+            self.password_confirm_warning.setText("Password minimal 8 karakter")
+            self.password_confirm_warning.show()
+            self.continue_button_password.setEnabled(False)
+            self.continue_button_password.setStyleSheet("""
+                background-color: #2c2f36;
+                color: #d3e9a3;
+                padding: 12px;
+                border-radius: 20px;
+                font-weight: bold;
+            """)
+
+        if not is_password_valid:
+            self.password_warning.setText("Password harus terdiri dari huruf kapital dan angka")
+            self.password_warning.show()
+            self.password_confirm_warning.setText("Password harus terdiri dari huruf kapital dan angka")
+            self.password_confirm_warning.show()
+            self.continue_button_password.setEnabled(False)
+            self.continue_button_password.setStyleSheet("""
+                background-color: #2c2f36;
+                color: #d3e9a3;
+                padding: 12px;
+                border-radius: 20px;
+                font-weight: bold;
+            """)
+
         if password != password_confirm:
-            print("Password tidak cocok")
-        self.stack.setCurrentIndex(self.stack.currentIndex() + 1)
+            self.password_warning.setText("Password dan konfirmasi password harus sama")
+            self.password_warning.show()
+            self.password_confirm_warning.setText("Password dan konfirmasi password harus sama")
+            self.password_confirm_warning.show()
+            self.continue_button_password.setEnabled(False)
+            self.continue_button_password.setStyleSheet("""
+                background-color: #2c2f36;
+                color: #d3e9a3;
+                padding: 12px;
+                border-radius: 20px;
+                font-weight: bold;
+            """)
+        
+        if (len(password) >= 8 and is_password_valid and password == password_confirm):
+            self.password_warning.hide()
+            self.password_confirm_warning.hide()
+            self.continue_button_password.setEnabled(True)
+            self.continue_button_password.setStyleSheet("""
+                background-color: qlineargradient(x1:0, y1:0, x2:1, y2:0, stop:0 #7db16e, stop:1 #b8e994);
+                color: #1c1f26;
+                padding: 12px;
+                border-radius: 20px;
+                font-weight: bold;
+            """)
 
     def email_valid(self):
         """Validasi email"""
@@ -427,23 +491,6 @@ class RegisterScreen(QtWidgets.QWidget):
                 font-weight: bold;
             """)
 
-    def add_account(self):
-        """Menambahkan akun baru"""
-        email = self.email_input.text().strip()
-        username = self.input_nama.text().strip
-        gender = "Laki-laki" if self.radio_laki.isChecked() else "Perempuan"
-        birth_date = self.date_edit.text()
-        phone_number = self.input_hp.text().strip()
-        created_at = QtCore.QDate.currentDate().toString("yyyy-MM-dd")
-
-        # Hash password using SHA-256
-        password = hashlib.sha256(
-            (self.password_input.text().strip()).encode()
-        ).hexdigest()
-
-        self.account_controller.add_account(
-            email, username, password, gender, birth_date, phone_number, created_at
-        )
 
     def validate_input_register(self):
         """Validasi input"""
@@ -471,6 +518,24 @@ class RegisterScreen(QtWidgets.QWidget):
                 border-radius: 20px;
                 font-weight: bold;
             """)
+
+    def add_account(self):
+        """Menambahkan akun baru"""
+        email = self.email_input.text().strip()
+        username = self.input_nama.text().strip
+        gender = "Laki-laki" if self.radio_laki.isChecked() else "Perempuan"
+        birth_date = self.date_edit.text()
+        phone_number = self.input_hp.text().strip()
+        created_at = QtCore.QDate.currentDate().toString("yyyy-MM-dd")
+
+        # Hash password using SHA-256
+        password = hashlib.sha256(
+            (self.password_input.text().strip()).encode()
+        ).hexdigest()
+
+        self.account_controller.add_account(
+            email, username, password, gender, birth_date, phone_number, created_at
+        )
 
     def input_style(self):
         return """
