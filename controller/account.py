@@ -10,7 +10,7 @@ class Account:
                 pass  # File sudah ada
         except FileNotFoundError:
             with open(self.FILE_PATH, "w") as file:
-                json.dump({}, file)
+                json.dump([], file)
 
     def load_account(self):
         """
