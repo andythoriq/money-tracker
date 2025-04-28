@@ -166,26 +166,15 @@ class IncomeView(QWidget):
         desc = self.input_desc.text().strip()
         date = self.calendar.selectedDate().toString("dd/MM/yyyy")  # Ambil tanggal dari kalender
 
-    # Cek apakah ada yang kosong
-        if amount == 0:
-            PopupWarning("Warning", "Jumlah pemasukkan tidak boleh kosong")
-            return
-        if not category:
-            PopupWarning("Warning", "Kategori tidak boleh kosong")
-            return
-        if not wallet:
-            PopupWarning("Warning", "Dompet tidak boleh kosong")
-            return
-        if not desc:
-            PopupWarning("Warning", "Deskripsi tidak boleh kosong")
-            return
-        
-        if self.income_controller.add_income(amount, category, wallet, desc, date):
+        result = self.income_controller.add_income(amount, category, wallet, desc, date)
+        if result.get("valid"):
             self.refresh_inputs()
             self.refresh_combobox()
             PopupSuccess("Success", "Pemasukkan berhasil disimpan!")
         else:
-            PopupWarning("Warning", "Gagal menyimpan pemasukkan!")
+            errors = result.get("errors")
+            error_message = "\n".join([f"{key}: {value}" for key, value in errors.items()])
+            PopupWarning("Warning", f"Gagal menyimpan pemasukkan!\n{error_message}")
 
     def go_back(self):
         """Kembali ke Dashboard"""
