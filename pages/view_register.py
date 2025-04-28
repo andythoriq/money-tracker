@@ -1,11 +1,19 @@
 import hashlib
 from PyQt5 import QtWidgets, QtGui, QtCore
 from PyQt5.QtWidgets import (
-    QApplication, QWidget, QLabel, QPushButton, QVBoxLayout, QLineEdit, QCheckBox, QHBoxLayout
+    QApplication,
+    QWidget,
+    QLabel,
+    QPushButton,
+    QVBoxLayout,
+    QLineEdit,
+    QCheckBox,
+    QHBoxLayout,
 )
 from PyQt5.QtGui import QFont, QColor, QPalette
 from PyQt5.QtCore import Qt
 from controller.account import Account
+
 
 class RegisterScreen(QtWidgets.QWidget):
     def __init__(self, stack):
@@ -94,7 +102,9 @@ class RegisterScreen(QtWidgets.QWidget):
             border-radius: 20px;
             font-weight: bold;
         """)
-        btn_lanjut.clicked.connect(lambda: self.stack.setCurrentIndex(self.stack.currentIndex() + 1))
+        btn_lanjut.clicked.connect(
+            lambda: self.stack.setCurrentIndex(self.stack.currentIndex() + 1)
+        )
         layout.addWidget(btn_lanjut)
 
         # Link sudah punya akun
@@ -104,7 +114,7 @@ class RegisterScreen(QtWidgets.QWidget):
             color: #d3e9a3;
             font-size: 13px;
         """)
-        btn_login.clicked.connect(lambda: self.stack.setCurrentIndex(0))  # balik ke onboarding
+        btn_login.clicked.connect(lambda: self.stack.setCurrentIndex(0))
         layout.addWidget(btn_login)
 
         self.setLayout(layout)
@@ -128,23 +138,29 @@ class RegisterScreen(QtWidgets.QWidget):
             font-size: 18px;
             border: none;
         """)
-        btn_back.clicked.connect(lambda: self.stack.setCurrentIndex(self.stack.currentIndex() - 1))
+        btn_back.clicked.connect(
+            lambda: self.stack.setCurrentIndex(self.stack.currentIndex() - 1)
+        )
         layout.addWidget(btn_back, alignment=QtCore.Qt.AlignLeft)
 
         layout.addSpacing(30)
 
         # Progress Indicator (3 steps)
         progress_layout = QHBoxLayout()
-        self.step1 = QLabel('✔')
-        self.step2 = QLabel('✔')
-        self.step3 = QLabel('✔')
+        self.step1 = QLabel("✔")
+        self.step2 = QLabel("✔")
+        self.step3 = QLabel("✔")
 
         for step in [self.step1, self.step2, self.step3]:
             step.setAlignment(Qt.AlignCenter)
             step.setFixedSize(30, 30)
-            step.setStyleSheet("border: 2px solid #c1c1c1; border-radius: 15px; color: #c1c1c1; background-color: transparent;")
+            step.setStyleSheet(
+                "border: 2px solid #c1c1c1; border-radius: 15px; color: #c1c1c1; background-color: transparent;"
+            )
             # step.setContentsMargins(0,30,100,30)
-        self.step1.setStyleSheet("border: 2px solid #7db16e; border-radius: 15px; color: #7db16e; background-color: transparent;")
+        self.step1.setStyleSheet(
+            "border: 2px solid #7db16e; border-radius: 15px; color: #7db16e; background-color: transparent;"
+        )
 
         progress_layout.addWidget(self.step1)
         progress_layout.addWidget(self.step2)
@@ -155,7 +171,7 @@ class RegisterScreen(QtWidgets.QWidget):
 
         # Title
         title = QLabel("Alamat Email")
-        title.setFont(QFont('Arial', 16, QFont.Bold))
+        title.setFont(QFont("Arial", 16, QFont.Bold))
         title.setStyleSheet("color: #d3e9a3")
         layout.addWidget(title)
 
@@ -173,7 +189,9 @@ class RegisterScreen(QtWidgets.QWidget):
         layout.addSpacing(5)
 
         # Info
-        info_label = QLabel("Alamat email yang dimasukkan ini akan menjadi akun Money Tracker milikmu.")
+        info_label = QLabel(
+            "Alamat email yang dimasukkan ini akan menjadi akun Money Tracker milikmu."
+        )
         info_label.setWordWrap(True)
         info_label.setStyleSheet("color: #c1c1c1; font-size: 12px;")
         layout.addWidget(info_label)
@@ -184,8 +202,12 @@ class RegisterScreen(QtWidgets.QWidget):
         checkbox_layout = QHBoxLayout()
         self.email_checkbox = QCheckBox()
         self.email_checkbox.setChecked(True)
-        self.email_checkbox.setStyleSheet("QCheckBox::indicator { width: 25px; height: 25px;}")
-        email_text = QLabel("Saya bersedia menerima email terkait akun Money Tracker dan layanannya")
+        self.email_checkbox.setStyleSheet(
+            "QCheckBox::indicator { width: 25px; height: 25px;}"
+        )
+        email_text = QLabel(
+            "Saya bersedia menerima email terkait akun Money Tracker dan layanannya"
+        )
         email_text.setWordWrap(True)
         email_text.setStyleSheet("color: #c1c1c1; font-size: 12px;")
         email_text.setAlignment(QtCore.Qt.AlignLeft)
@@ -205,13 +227,17 @@ class RegisterScreen(QtWidgets.QWidget):
             border-radius: 20px;
             font-weight: bold;
         """)
-        self.continue_button.clicked.connect(lambda: self.stack.setCurrentIndex(self.stack.currentIndex() + 1))
+        self.continue_button.clicked.connect(
+            lambda: self.stack.setCurrentIndex(self.stack.currentIndex() + 1)
+        )
         layout.addWidget(self.continue_button)
 
         layout.addSpacing(30)
 
         # Agreement
-        agreement = QLabel("Dengan menekan tombol \"Lanjutkan\", kamu menyetujui bahwa data dan informasi Money Tracker ID milikmu akan digunakan sesuai Kebijakan Data Pribadi.")
+        agreement = QLabel(
+            'Dengan menekan tombol "Lanjutkan", kamu menyetujui bahwa data dan informasi Money Tracker ID milikmu akan digunakan sesuai Kebijakan Data Pribadi.'
+        )
         agreement.setWordWrap(True)
         agreement.setStyleSheet("color: #7f8c8d; font-size: 11px;")
 
@@ -220,7 +246,7 @@ class RegisterScreen(QtWidgets.QWidget):
         widget.setLayout(layout)
 
         return widget
-    
+
     def register_password_view(self):
         """Menampilkan halaman pembuatan password"""
         widget = QtWidgets.QWidget()
@@ -240,24 +266,32 @@ class RegisterScreen(QtWidgets.QWidget):
             font-size: 18px;
             border: none;
         """)
-        btn_back.clicked.connect(lambda: self.stack.setCurrentIndex(self.stack.currentIndex() - 1))
+        btn_back.clicked.connect(
+            lambda: self.stack.setCurrentIndex(self.stack.currentIndex() - 1)
+        )
         layout.addWidget(btn_back, alignment=QtCore.Qt.AlignLeft)
 
         layout.addSpacing(30)
 
         # Progress Indicator (3 steps)
         progress_layout = QHBoxLayout()
-        self.step1 = QLabel('✔')
-        self.step2 = QLabel('✔')
-        self.step3 = QLabel('✔')
+        self.step1 = QLabel("✔")
+        self.step2 = QLabel("✔")
+        self.step3 = QLabel("✔")
 
         for step in [self.step1, self.step2, self.step3]:
             step.setAlignment(Qt.AlignCenter)
             step.setFixedSize(30, 30)
-            step.setStyleSheet("border: 2px solid #c1c1c1; border-radius: 15px; color: #c1c1c1; background-color: transparent;")
+            step.setStyleSheet(
+                "border: 2px solid #c1c1c1; border-radius: 15px; color: #c1c1c1; background-color: transparent;"
+            )
             # step.setContentsMargins(0,30,100,30)
-        self.step1.setStyleSheet("border: 2px solid #7db16e; border-radius: 15px; color: #7db16e; background-color: transparent;")
-        self.step2.setStyleSheet("border: 2px solid #7db16e; border-radius: 15px; color: #7db16e; background-color: transparent;")
+        self.step1.setStyleSheet(
+            "border: 2px solid #7db16e; border-radius: 15px; color: #7db16e; background-color: transparent;"
+        )
+        self.step2.setStyleSheet(
+            "border: 2px solid #7db16e; border-radius: 15px; color: #7db16e; background-color: transparent;"
+        )
 
         progress_layout.addWidget(self.step1)
         progress_layout.addWidget(self.step2)
@@ -268,7 +302,7 @@ class RegisterScreen(QtWidgets.QWidget):
 
         # Title
         title = QLabel("Buat password")
-        title.setFont(QFont('Arial', 16, QFont.Bold))
+        title.setFont(QFont("Arial", 16, QFont.Bold))
         title.setStyleSheet("color: #d3e9a3")
         layout.addWidget(title)
 
@@ -288,7 +322,9 @@ class RegisterScreen(QtWidgets.QWidget):
 
         # Password confirmation input
         self.input_password_confirm_label = QtWidgets.QLabel("Konfirmasi password")
-        self.input_password_confirm_label.setStyleSheet("color: #d3e9a3; font-size: 14px;")
+        self.input_password_confirm_label.setStyleSheet(
+            "color: #d3e9a3; font-size: 14px;"
+        )
         self.password_confirm_input = QLineEdit()
         self.password_confirm_input.setPlaceholderText("Ulangi password")
         self.password_confirm_input.setEchoMode(QtWidgets.QLineEdit.Password)
@@ -296,11 +332,12 @@ class RegisterScreen(QtWidgets.QWidget):
         layout.addWidget(self.input_password_confirm_label)
         layout.addWidget(self.password_confirm_input)
 
-
         layout.addSpacing(5)
 
         # Info Validasi Password
-        info_label = QLabel("Password harus terdiri dari kombinasi karakter huruf (a-z, A-Z) dan angka (0-9).")
+        info_label = QLabel(
+            "Password harus terdiri dari kombinasi karakter huruf (a-z, A-Z) dan angka (0-9)."
+        )
         info_label.setWordWrap(True)
         info_label.setStyleSheet("color: #c1c1c1; font-size: 14px;")
         layout.addWidget(info_label)
@@ -316,13 +353,15 @@ class RegisterScreen(QtWidgets.QWidget):
             border-radius: 20px;
             font-weight: bold;
         """)
-        self.continue_button.clicked.connect(lambda: self.password_pair)
+        self.continue_button.clicked.connect(self.password_pair)
         layout.addWidget(self.continue_button)
 
         layout.addSpacing(30)
 
         # Agreement
-        agreement = QLabel("Dengan menekan tombol \"Lanjutkan\", kamu menyetujui bahwa data dan informasi Money Tracker ID milikmu akan digunakan sesuai Kebijakan Data Pribadi.")
+        agreement = QLabel(
+            'Dengan menekan tombol "Lanjutkan", kamu menyetujui bahwa data dan informasi Money Tracker ID milikmu akan digunakan sesuai Kebijakan Data Pribadi.'
+        )
         agreement.setWordWrap(True)
         agreement.setStyleSheet("color: #7f8c8d; font-size: 11px;")
         layout.addWidget(agreement)
@@ -338,14 +377,11 @@ class RegisterScreen(QtWidgets.QWidget):
 
         if not password or not password_confirm:
             print("Password tidak boleh kosong")
-            return False
         if "1" or "2" or "3" or "4" or "5" or "6" or "7" or "8" or "9" not in password:
             print("Password harus mengandung angka")
-            return False
         if password != password_confirm:
             print("Password tidak cocok")
-            return False
-        return self.stack.setCurrentIndex(self.stack.currentIndex() + 1) 
+        self.stack.setCurrentIndex(self.stack.currentIndex() + 1)
 
     def email_valid(self):
         """Validasi email"""
@@ -367,9 +403,13 @@ class RegisterScreen(QtWidgets.QWidget):
         created_at = QtCore.QDate.currentDate().toString("yyyy-MM-dd")
 
         # Hash password using SHA-256
-        password = hashlib.sha256((self.password_input.text().strip()).encode()).hexdigest()
+        password = hashlib.sha256(
+            (self.password_input.text().strip()).encode()
+        ).hexdigest()
 
-        self.account_controller.add_account(email, username, password, gender, birth_date, phone_number, created_at) 
+        self.account_controller.add_account(
+            email, username, password, gender, birth_date, phone_number, created_at
+        )
 
     def input_style(self):
         return """

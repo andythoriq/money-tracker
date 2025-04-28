@@ -3,7 +3,10 @@ from PyQt5.QtWidgets import QStackedWidget, QWidget
 import sys
 from pages.view_login import LoginScreen
 from pages.view_register import RegisterScreen
+from pages.view_otpbaru import Ui_accotp
+from pages.view_pemulihan import Ui_pemulihan
 from pages.Dashboard_v1_2 import Dashboard
+
 
 class OnboardingScreen(QWidget):
     def __init__(self):
@@ -21,6 +24,9 @@ class OnboardingScreen(QWidget):
         self.init_main_menu()
 
         # Tambahkan halaman ke stack
+        key_dict = {"key": ""}
+        self.otp_backend = Ui_accotp(self.stack, "inijohan29@gmail.com", key_dict)
+        self.forget_view = Ui_pemulihan(self.stack)
         self.login_view = LoginScreen(self.stack)
         self.register_view = RegisterScreen(self.stack)
         self.register_email = self.register_view.register_email_view()
@@ -32,12 +38,14 @@ class OnboardingScreen(QWidget):
         self.stack.addWidget(self.register_view)
         self.stack.addWidget(self.register_email)
         self.stack.addWidget(self.register_password)
+        self.stack.addWidget(self.otp_backend)
         self.stack.addWidget(self.dashboard)
+        self.stack.addWidget(self.forget_view)
 
         # Layout utama window
         main_layout = QtWidgets.QVBoxLayout(self)
         main_layout.addWidget(self.stack)
-        main_layout.setStyleSheet("background-color: #1c1f26;")
+        self.stack.setStyleSheet("background-color: #1c1f26;")
         self.setLayout(main_layout)
 
     def init_main_menu(self):
@@ -59,7 +67,9 @@ class OnboardingScreen(QWidget):
         layout.addWidget(title)
 
         # Deskripsi
-        desc = QtWidgets.QLabel("Dari catatan pengeluaran sampai wishlist belanja, semua ada di sini.")
+        desc = QtWidgets.QLabel(
+            "Dari catatan pengeluaran sampai wishlist belanja, semua ada di sini."
+        )
         desc.setStyleSheet("color: #d3e9a3; font-size: 13px;")
         desc.setWordWrap(True)
         desc.setAlignment(QtCore.Qt.AlignCenter)
@@ -76,7 +86,9 @@ class OnboardingScreen(QWidget):
             border-radius: 20px;
             font-weight: bold;
         """)
-        btn_daftar.clicked.connect(lambda: self.stack.setCurrentWidget(self.register_view))
+        btn_daftar.clicked.connect(
+            lambda: self.stack.setCurrentWidget(self.register_view)
+        )
         layout.addWidget(btn_daftar)
 
         # Tombol Masuk
