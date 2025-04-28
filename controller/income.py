@@ -28,20 +28,27 @@ class Income:
 
     def add_income(self, amount, category, wallet, desc, date):
         """Menambah income baru & update saldo wallet."""
+        result = self.validate_income_data({
+            "amount": amount,
+            "category": category,
+            "wallet": wallet,
+            "desc": desc,
+            "date": date
+        })
+        if not result.get("valid"):
+            return result  # Stop execution if validation fails
+
         incomes = self.load_incomes()
-        if self.wallet_controller.update_balance(wallet, int(amount), "income"):
-            new_id = len(incomes) + 1
-            incomes.append({
-                "ID": new_id,
-                "amount": amount,
-                "category": category,
-                "wallet": wallet,
-                "desc": desc,
-                "date": date
-            })
-            self.save_incomes(incomes)
-            return True
-        return False
+        incomes.append({
+            "ID": len(incomes) + 1,
+            "amount": amount,
+            "category": category,
+            "wallet": wallet,
+            "desc": desc,
+            "date": date
+        })
+        self.save_incomes(incomes)
+        return result  # Return True if income is successfully added
 
     def update_income(self, updated_income):
         """Mengupdate data income."""
@@ -66,3 +73,24 @@ class Income:
         incomes = [income for income in incomes if income["ID"] != int(id)]
         self.save_incomes(incomes)
         return True
+    
+    def validate_income_data(self, income_data):
+        """
+        Validate income data to ensure it meets the required criteria.
+        :param income_data: Dictionary containing income data.
+        :return: Dictionary with validation result and error messages.
+        """
+        required_fields = ['amount', 'category', 'wallet', 'desc', 'date']
+        errors = {}
+        
+        for field in required_fields:
+            if field not in income_data or not income_data[field]:
+                errors[field] = f"{field} is required"
+        
+        if not errors:
+            wallet = income_data['wallet']
+            amount = int(income_data['amount'])
+            if not self.wallet_controller.update_balance(wallet, amount, "income"):
+                errors['wallet'] = "Failed to update wallet balance"
+        
+        return {"valid": True} if not errors else {"valid": False, "errors": errors}
