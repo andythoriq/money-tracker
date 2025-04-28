@@ -247,7 +247,7 @@ class StatisticView(QWidget):
         self.menuLayout.addLayout(self.middleRowLayout, 1, 0, 1, 1)
         
         # Set up event handlers and UI elements
-        self.retranslateUi(self)
+        self.retranslateUi()
         self.styleSheet(self)
         self.statistic_controller.generate_statistics(self.plot_widget)
         self.update_label()
@@ -264,44 +264,42 @@ class StatisticView(QWidget):
         
         QtCore.QMetaObject.connectSlotsByName(self)
 
-    def retranslateUi(self, Statistik):
+    def retranslateUi(self, lang=None):
         _translate = QtCore.QCoreApplication.translate
-        Statistik.setWindowTitle(_translate("Statistik", "MainWindow"))
-        
-        self.incomeInfo.setText(_translate("Statistik", "<html>Jumlah <br>Income</html>"))
-        self.IncomeValue.setText(_translate("Statistik", str(self.statistic_controller.cur_data[4][0])))
-        self.outcomeInfo.setText(_translate("Statistik", "<html>Jumlah <br>Outcome</html>"))
-        self.outcomeValue.setText(_translate("Statistik", str(self.statistic_controller.cur_data[4][1])))
-        
-        # self.statisticOption.setItemText(0, _translate("Statistik", "by day"))
-        # self.statisticOption.setItemText(1, _translate("Statistik", "by week"))
-        # self.statisticOption.setItemText(2, _translate("Statistik", "by month"))
-        # self.statisticOption.setItemText(3, _translate("Statistik", "by year"))
-        self.statisticOption.setItemText(1, _translate("Statistik", "~~~~~~~"))
-        self.statisticOption.setItemText(0, _translate("Statistik", "Save Graphic"))
-        
-        self.prevButton.setText(_translate("Statistik", "<"))
-        self.nextButton.setText(_translate("Statistik", ">"))
-        
-        self.sliderType.setItemText(0, _translate("Statistik", "Daily"))
-        self.sliderType.setItemText(1, _translate("Statistik", "Weekly"))
-        self.sliderType.setItemText(2, _translate("Statistik", "Monthly"))
-        self.sliderType.setItemText(3, _translate("Statistik", "Yearly"))
-        
-        self.statisticInfo.setText(_translate("Statistik", "Statistic"))
-        self.summaryInfo.setText(_translate("Statistik", "<html>QuickView <br>Summary<html>"))
-        self.newBalance.setText(_translate("Statistik", "New Balance"))
-        self.prevBalance.setText(_translate("Statistik", "Previous Balance"))
-        self.prevValue.setText(_translate("Statistik", "Rp. X00.000"))
-        self.newValue.setText(_translate("Statistik", "Rp. X00.000"))
-        self.changeValue.setText(_translate("Statistik", "+Rp. X0.000"))
-        
-        # self.pieChartOption.setItemText(0, _translate("Statistik", "by Income"))
-        # self.pieChartOption.setItemText(1, _translate("Statistik", "by Outcome"))
-        self.pieChartOption.setItemText(0, _translate("Statistik", "~~~~~~~~"))
-        self.pieChartOption.setItemText(1, _translate("Statistik", "Save Graphic"))
-        
-        self.chartInfo.setText(_translate("Statistik", "Category Chart"))
+        if lang:
+            #self.btn_income.setText(_translate("Form", lang.get("statistic", {}).get("Title", "Statistic")))
+            self.incomeInfo.setText(_translate("Form", lang.get("statistic", {}).get("head1", "<html>Jumlah <br>Income</html>")))
+            self.outcomeInfo.setText(_translate("Form", lang.get("statistic", {}).get("head2", "<html>Jumlah <br>Outcome</html>")))
+            self.statisticInfo.setText(_translate("Form", lang.get("statistic", {}).get("head3", "Statistic")))
+            self.chartInfo.setText(_translate("Form", lang.get("statistic", {}).get("head4", "Category Chart")))
+            self.summaryInfo.setText(_translate("Form", lang.get("statistic", {}).get("head5", "<html>QuickView <br>Summary<html>")))
+            self.newBalance.setText(_translate("Form", lang.get("statistic", {}).get("desc1", "New Balance")))
+            self.prevBalance.setText(_translate("Form", lang.get("statistic", {}).get("desc2", "Previous Balance")))
+
+        else:
+            self.incomeInfo.setText(_translate("Statistik", "<html>Jumlah <br>Income</html>"))
+            self.outcomeInfo.setText(_translate("Statistik", "<html>Jumlah <br>Outcome</html>"))
+            
+            self.statisticOption.setItemText(1, _translate("Statistik", "~~~~~~~"))
+            self.statisticOption.setItemText(0, _translate("Statistik", "Save Graphic"))
+            
+            self.prevButton.setText(_translate("Statistik", "<"))
+            self.nextButton.setText(_translate("Statistik", ">"))
+            
+            self.sliderType.setItemText(0, _translate("Statistik", "Daily"))
+            self.sliderType.setItemText(1, _translate("Statistik", "Weekly"))
+            self.sliderType.setItemText(2, _translate("Statistik", "Monthly"))
+            self.sliderType.setItemText(3, _translate("Statistik", "Yearly"))
+            
+            self.statisticInfo.setText(_translate("Statistik", "Statistic"))
+            self.summaryInfo.setText(_translate("Statistik", "<html>QuickView <br>Summary<html>"))
+            self.newBalance.setText(_translate("Statistik", "New Balance"))
+            self.prevBalance.setText(_translate("Statistik", "Previous Balance"))
+
+            self.pieChartOption.setItemText(0, _translate("Statistik", "~~~~~~~~"))
+            self.pieChartOption.setItemText(1, _translate("Statistik", "Save Graphic"))
+            
+            self.chartInfo.setText(_translate("Statistik", "Category Chart"))
 
     def styleSheet(self, Statistik):
         iconDesign = """
@@ -415,8 +413,6 @@ class StatisticView(QWidget):
                 background-color: #A9A9A9;
             }
         """
-
-        Statistik.setStyleSheet("background-color: #252931;")
 
         self.incomeInfo.setStyleSheet(textDesign)
         self.outcomeInfo.setStyleSheet(textDesign)

@@ -1,6 +1,106 @@
 {
-    "welcome": "Selamat Datang!",
-    "settings": "Pengaturan",
-    "language": "Bahasa",
-    "theme": "Tema"
-}  
+    "dashboard": {
+        "btn1": " Edit Pemasukan",
+        "btn2": " Edit Pengeluaran",
+        "btn3": " Dompet",
+        "btn4": " Riwayat",
+        "btn5": " Statistik",
+        "btn6": " Kategori",
+        "btn7": " Wishlist",
+        "layout2": "Riwayat Transaksi Minggu Ini!",
+        "l2col1" : "Tanggal",
+        "l2col2" : "Jenis",
+        "l2col3" : "Jumlah",
+        "l2col4" : "Kategori",
+        "l2col5" : "Dompet",
+        "layout3": "Informasi keuanganmu untuk minggu ini",
+        "layout4": "Wishlist",
+        "l4col1" : "No",
+        "l4col2" : "Nama",
+        "l4col3" : "Harga",
+        "l4col4" : "Status"
+    },
+    "income": {
+        "Title": "Pemasukan Baru",
+        "form1": "Jumlah Pemasukan:",
+        "form2": "Kategori:",
+        "form3": "Dompet yang akan diisi:",
+        "form4": "Deskripsi:",
+        "form5" : "Masukkan Tanggal:",
+        "btn1" : "Simpan",
+        "btn2" : "Kembali"
+    },
+    "outcome": {
+        "Title": "Pengeluaran Baru",
+        "form1": "Jumlah Pengeluaran:",
+        "form2": "Kategori:",
+        "form3": "Dompet yang akan dikurangi:",
+        "form4": "Deskripsi:",
+        "form5" : "Masukkan Tanggal:",
+        "btn1" : "Simpan",
+        "btn2" : "Kembali"
+    },
+    "wallet": {
+        "Title": "Dompet",
+        "entry": "Tambah Dompet",
+        "form1": "Nama",
+        "desc1": "Nama Dompet",
+        "form2": "Saldo",
+        "btn" : "Tambah",
+        "col1": "Nama",
+        "col2": "Saldo",
+        "col3": "Edit",
+        "col4": "Hapus"
+    },
+    "history": {
+        "Title": "Riwayat",
+        "radbtn1": "Semua",
+        "radbtn2": "Pemasukan",
+        "radbtn3": "Pengeluaran",
+        "col1": "Tanggal",
+        "col2": "Jenis",
+        "col3": "Jumlah",
+        "col4": "Kategori",
+        "col5": "Dompet",
+        "col6": "Deskripsi",
+        "col7": "Edit",
+        "col8": "Hapus",
+        "foot": "Total"
+    },
+    "statistic": {
+        "Title": "Statistik",
+        "head1": "Jumlah Pemasukan",
+        "head2": "Jumlah Pengeluaran",
+        "head3": "Statistik",
+        "head4": "Kategori Chart",
+        "head5": "Ringkasan Quickview",
+        "desc1": "Saldo Baru",
+        "desc2": "Saldo Sebelumnya"
+    },
+    "category": {
+        "Title": "Kategori",
+        "desc": "Nama Kategori",
+        "item1": "Pemasukan",
+        "item2": "Pengeluaran",
+        "btn": "Tambah Kategori",
+        "col1": "Nama",
+        "col2": "Tipe",
+        "col3": "Hapus"
+    },
+    "wishlist": {
+        "Title": "Wishlist",
+        "form1": "Nama",
+        "form2": "Harga",
+        "btn1": "Tambah Wishlist",
+        "filter": "Filter Status",
+        "radbtn1": "Semua",
+        "radbtn2": "Sudah Terpenuhi",
+        "radbtn3" : "Belum Terpenuhi",
+        "col1": "No",
+        "col2": "Nama",
+        "col3": "Harga",
+        "col4": "Status",
+        "col5": "Edit",
+        "col6": "Hapus"
+    }
+}

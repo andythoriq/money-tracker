@@ -1,5 +1,12 @@
 {
     "dashboard": {
+        "btn1": " Edit Income",
+        "btn2": " Edit Outcome",
+        "btn3": " Wallet",
+        "btn4": " History",
+        "btn5": " Statistic",
+        "btn6": " Category",
+        "btn7": " Wishlist",
         "layout2": "Riwayat Transaksi Minggu Ini!",
         "l2col1" : "Tanggal",
         "l2col2" : "Jenis",
@@ -8,10 +15,10 @@
         "l2col5" : "Dompet",
         "layout3": "Informasi keuanganmu untuk minggu ini",
         "layout4": "Wishlist",
-        "l4col1" : "no",
-        "l4col2" : "nama",
-        "l4col3" : "harga",
-        "l4col4" : "status"
+        "l4col1" : "No",
+        "l4col2" : "Nama",
+        "l4col3" : "Harga",
+        "l4col4" : "Status"
     },
     "income": {
         "Title": "Income Baru",
@@ -19,17 +26,17 @@
         "form2": "Kategori:",
         "form3": "Dompet yang akan diisi:",
         "form4": "Deskripsi:",
-        "form5" : "Masukan Tanggal:",
+        "form5" : "Masukkan Tanggal:",
         "btn1" : "Simpan",
         "btn2" : "Kembali"
     },
     "outcome": {
-        "Title": "Income Baru",
+        "Title": "Outcome Baru",
         "form1": "Jumlah Pemasukan:",
         "form2": "Kategori:",
         "form3": "Dompet yang akan diisi:",
         "form4": "Deskripsi:",
-        "form5" : "Masukan Tanggal:",
+        "form5" : "Masukkan Tanggal:",
         "btn1" : "Simpan",
         "btn2" : "Kembali"
     },
@@ -40,45 +47,45 @@
         "desc1": "Nama Wallet",
         "form2": "Saldo",
         "btn" : "Tambah",
-        "col1": "nama",
-        "col2": "saldo",
-        "col3": "edit",
-        "col4": "delete"
+        "col1": "Nama",
+        "col2": "Saldo",
+        "col3": "Edit",
+        "col4": "Delete"
     },
     "history": {
         "Title": "History",
-        "radbtn1": "semua",
-        "radbtn2": "income",
-        "radbtn3": "outcome",
-        "col1": "tanggal",
-        "col2": "jenis",
-        "col3": "jumlah",
-        "col4": "kategori",
-        "col5": "dompet",
-        "col6": "deskripsi",
-        "col7": "edit",
-        "col8": "delete",
-        "foot": "total"
+        "radbtn1": "Semua",
+        "radbtn2": "Income",
+        "radbtn3": "Outcome",
+        "col1": "Tanggal",
+        "col2": "Jenis",
+        "col3": "Jumlah",
+        "col4": "Kategori",
+        "col5": "Dompet",
+        "col6": "Deskripsi",
+        "col7": "Edit",
+        "col8": "Delete",
+        "foot": "Total"
     },
     "statistic": {
         "Title": "Statistic",
-        "head1": "Jumlah Income",
-        "head2": "Jumlah Outcome",
+        "head1": "<html>Jumlah <br>Income</html>",
+        "head2": "<html>Jumlah <br>Outcome</html>",
         "head3": "Statistic",
         "head4": "Category Chart",
-        "head5": "Quickview Summary",
+        "head5": "<html>QuickView <br>Summary<html>",
         "desc1": "New Balance",
         "desc2": "Previous Balance"
     },
     "category": {
         "Title": "Category",
         "desc": "Category Name",
-        "item1": "income",
-        "item2": "outcome",
-        "btn": "add Category",
-        "col1": "name",
-        "col2": "type",
-        "col3": "delete"
+        "item1": "Income",
+        "item2": "Outcome",
+        "btn": "Add Category",
+        "col1": "Name",
+        "col2": "Tipe",
+        "col3": "Delete"
     },
     "wishlist": {
         "Title": "Wishlist",
@@ -89,11 +96,11 @@
         "radbtn1": "Semua",
         "radbtn2": "Sudah Terpenuhi",
         "radbtn3" : "Belum Terpenuhi",
-        "col1": "no",
-        "col2": "nama",
-        "col3": "harga",
-        "col4": "status",
-        "col5": "edit",
-        "col6": "delete"
+        "col1": "No",
+        "col2": "Nama",
+        "col3": "Harga",
+        "col4": "Status",
+        "col5": "Edit",
+        "col6": "Delete"
     }
   }

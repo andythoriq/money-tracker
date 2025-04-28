@@ -1,0 +1,107 @@
+{
+    "dashboard": {
+      "btn1": "Einnahmen bearbeiten",
+      "btn2": "Ausgaben bearbeiten",
+      "btn3": "Brieftasche",
+      "btn4": "Verlauf",
+      "btn5": "Statistiken",
+      "btn6": "Kategorie",
+      "btn7": "Wunschliste",
+      "layout2": "Transaktionsverlauf dieser Woche!",
+      "l2col1": "Datum",
+      "l2col2": "Typ",
+      "l2col3": "Betrag",
+      "l2col4": "Kategorie",
+      "l2col5": "Brieftasche",
+      "layout3": "Deine Finanzdaten für diese Woche",
+      "layout4": "Wunschliste",
+      "l4col1": "Nr.",
+      "l4col2": "Name",
+      "l4col3": "Preis",
+      "l4col4": "Status"
+    },
+    "income": {
+      "Title": "Neue Einnahme",
+      "form1": "Einnahmenbetrag:",
+      "form2": "Kategorie:",
+      "form3": "Empfangende Brieftasche:",
+      "form4": "Beschreibung:",
+      "form5": "Datum eingeben:",
+      "btn1": "Speichern",
+      "btn2": "Zurück"
+    },
+    "outcome": {
+      "Title": "Neue Ausgabe",
+      "form1": "Ausgabenbetrag:",
+      "form2": "Kategorie:",
+      "form3": "Belastete Brieftasche:",
+      "form4": "Beschreibung:",
+      "form5": "Datum eingeben:",
+      "btn1": "Speichern",
+      "btn2": "Zurück"
+    },
+    "wallet": {
+      "Title": "Brieftasche",
+      "entry": "Brieftasche hinzufügen",
+      "form1": "Name",
+      "desc1": "Name der Brieftasche",
+      "form2": "Saldo",
+      "btn": "Hinzufügen",
+      "col1": "Name",
+      "col2": "Saldo",
+      "col3": "Bearbeiten",
+      "col4": "Löschen"
+    },
+    "history": {
+      "Title": "Verlauf",
+      "radbtn1": "Alle",
+      "radbtn2": "Einnahmen",
+      "radbtn3": "Ausgaben",
+      "col1": "Datum",
+      "col2": "Typ",
+      "col3": "Betrag",
+      "col4": "Kategorie",
+      "col5": "Brieftasche",
+      "col6": "Beschreibung",
+      "col7": "Bearbeiten",
+      "col8": "Löschen",
+      "foot": "Gesamt"
+    },
+    "statistic": {
+      "Title": "Statistiken",
+      "head1": "Gesamteinnahmen",
+      "head2": "Gesamtausgaben",
+      "head3": "Statistik",
+      "head4": "Kategoriediagramm",
+      "head5": "Schnellübersicht",
+      "desc1": "Neuer Kontostand",
+      "desc2": "Vorheriger Kontostand"
+    },
+    "category": {
+      "Title": "Kategorie",
+      "desc": "Kategoriename",
+      "item1": "Einnahme",
+      "item2": "Ausgabe",
+      "btn": "Kategorie hinzufügen",
+      "col1": "Name",
+      "col2": "Typ",
+      "col3": "Löschen"
+    },
+    "wishlist": {
+      "Title": "Wunschliste",
+      "form1": "Name",
+      "form2": "Preis",
+      "btn1": "Zur Wunschliste hinzufügen",
+      "filter": "Nach Status filtern",
+      "radbtn1": "Alle",
+      "radbtn2": "Erfüllt",
+      "radbtn3": "Nicht erfüllt",
+      "col1": "Nr.",
+      "col2": "Name",
+      "col3": "Preis",
+      "col4": "Status",
+      "col5": "Bearbeiten",
+      "col6": "Löschen"
+    }
+  }
+  

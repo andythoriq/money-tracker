@@ -1,5 +1,5 @@
 import os
-from PyQt5.QtWidgets import QWidget, QPushButton, QVBoxLayout, QLabel, QStackedWidget, QGroupBox, QHBoxLayout, QTableWidget, QTableWidgetItem
+from PyQt5.QtWidgets import QWidget, QPushButton, QVBoxLayout, QLabel, QStackedWidget, QGroupBox, QHBoxLayout, QTableWidget, QTableWidgetItem, QComboBox
 from PyQt5 import QtGui, QtCore, QtWidgets
 from pyqtgraph import PlotWidget
 from pages.view_wallet import WalletView
@@ -11,9 +11,11 @@ from pages.view_category import CategoryView
 from pages.view_wishlist import WishlistView
 from controller.Popup import PopupAboutUs
 from controller.Sliding import SlidingWalletWidget
+from controller.setting import Setting
+
 
 class Dashboard(QWidget):
-    def __init__(self):
+    def __init__(self, config=None):
         super().__init__()
         self.init_ui()
         self.resize(1366, 768)  # Ukuran awal jendela
@@ -32,6 +34,9 @@ class Dashboard(QWidget):
         self.container.setSizePolicy(QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Expanding)
         self.container.setMinimumSize(0, 0)
 
+        selected_language = Setting.load_config()
+        self.language_data = Setting.load_language_file(selected_language.get("language"))
+
         # Sidebar kiri (HomeSection)
         self.HomeSection = QGroupBox()
 
@@ -46,9 +51,9 @@ class Dashboard(QWidget):
 
         # Menambahkan halaman ke stack
         self.stack.addWidget(self.container)
-        self.stack.addWidget(self.wallet_view)
         self.stack.addWidget(self.income_view)
         self.stack.addWidget(self.outcome_view)
+        self.stack.addWidget(self.wallet_view)
         self.stack.addWidget(self.history_view)
         self.stack.addWidget(self.statistic_view)
         self.stack.addWidget(self.category_view)
@@ -161,12 +166,26 @@ class Dashboard(QWidget):
         self.aboutUs = QPushButton(self.HomeSection)
         self.aboutUs.setIcon(QtGui.QIcon("../money-tracker/img/icon/aboutUs.png"))
         self.aboutUs.setIconSize(QtCore.QSize(55, 61))
-        self.aboutUs.setStyleSheet("background-color: #121D2C;")
+        self.aboutUs.setStyleSheet("background-color: transparent;")
         self.aboutUs.setObjectName("btn_aboutUs")
         self.aboutUs.clicked.connect(lambda: PopupAboutUs(self.aboutUs))
 
+        self.language = QComboBox(self.HomeSection)
+        self.language.setObjectName("cb_lang")
+        languages = Setting.get_available_languages()
+        self.language.addItems(languages)
+        self.language.currentIndexChanged.connect(self.change_language)
+
+        self.btn_theme = QPushButton(self.HomeSection)
+        self.btn_theme.setCheckable(True)
+        self.btn_theme.setIcon(QtGui.QIcon("../money-tracker/img/icon/moon.svg"))
+        self.btn_theme.setIconSize(QtCore.QSize(48, 48))
+        self.btn_theme.setStyleSheet("background-color: transparent;")
+        self.btn_theme.setObjectName("btn_theme")
+        self.btn_theme.clicked.connect(self.toggle_theme)
+
         self.label = QLabel(self.HomeSection)
-        self.label.setStyleSheet("color: white; background-color: #121D2C;")
+        self.label.setStyleSheet("color: white; background-color: transparent;")
         self.label.setObjectName("label")
 
         self.retranslateUi()
@@ -188,22 +207,22 @@ class Dashboard(QWidget):
 
     def layout_2_ui(self):
         layout = QVBoxLayout()
-        self.history_label = QLabel("Riwayat Transaksi Minggu Ini")
+        self.history_label = QLabel()
         self.history_label.setObjectName("Label_1")
 
-        history_table = QTableWidget()
-        history_table.setObjectName("history_table")
-        history_table.setColumnCount(5)
-        history_table.setHorizontalHeaderLabels(["Tanggal", "Jenis", "Jumlah", "Kategori", "Dompet"])
+        self.history_table = QTableWidget()
+        self.history_table.setObjectName("history_table")
+        self.history_table.setColumnCount(5)
 
-        history_table.setColumnWidth(0, 100)  # Tanggal
-        history_table.setColumnWidth(1, 100)  # Jenis
-        history_table.setColumnWidth(2, 100)  # Jumlah
-        history_table.setColumnWidth(3, 100)  # Kategori
-        history_table.setColumnWidth(4, 100)  # Dompet
+
+        self.history_table.setColumnWidth(0, 100)  # Tanggal
+        self.history_table.setColumnWidth(1, 100)  # Jenis
+        self.history_table.setColumnWidth(2, 100)  # Jumlah
+        self.history_table.setColumnWidth(3, 100)  # Kategori
+        self.history_table.setColumnWidth(4, 100)  # Dompet
 
         # Table style, untuk kasus ini tidak dapat digunakan pada file style.qss
-        history_table.setStyleSheet("""
+        self.history_table.setStyleSheet("""
             QTableWidget {
                 background-color: #7A9F60;
                 border-radius: 10px;
@@ -225,7 +244,7 @@ class Dashboard(QWidget):
         """)
 
         # Sembunyikan header vertikal
-        history_table.verticalHeader().setVisible(False)
+        self.history_table.verticalHeader().setVisible(False)
 
         # Muat data transaksi dari HistoryView
         transactions = []
@@ -273,14 +292,14 @@ class Dashboard(QWidget):
         recent_transactions = this_week_transactions[:10]
         
         # Update table
-        history_table.setRowCount(len(recent_transactions))
+        self.history_table.setRowCount(len(recent_transactions))
         
         for row, transaction in enumerate(recent_transactions):
-            history_table.setItem(row, 0, QTableWidgetItem(transaction["date"]))  # Tanggal
-            history_table.setItem(row, 1, QTableWidgetItem(transaction["type"]))  # Jenis
-            history_table.setItem(row, 2, QTableWidgetItem(f"Rp {transaction['amount']}"))  # Jumlah
-            history_table.setItem(row, 3, QTableWidgetItem(transaction["category"]))  # Kategori
-            history_table.setItem(row, 4, QTableWidgetItem(transaction["wallet"]))  # Dompet
+            self.history_table.setItem(row, 0, QTableWidgetItem(transaction["date"]))  # Tanggal
+            self.history_table.setItem(row, 1, QTableWidgetItem(transaction["type"]))  # Jenis
+            self.history_table.setItem(row, 2, QTableWidgetItem(f"Rp {transaction['amount']}"))  # Jumlah
+            self.history_table.setItem(row, 3, QTableWidgetItem(transaction["category"]))  # Kategori
+            self.history_table.setItem(row, 4, QTableWidgetItem(transaction["wallet"]))  # Dompet
 
         # Menambahkan tombol "View All" di bawah tabel
         view_all_btn = QPushButton("View All")
@@ -292,7 +311,7 @@ class Dashboard(QWidget):
         ))
 
         layout.addWidget(self.history_label)
-        layout.addWidget(history_table)
+        layout.addWidget(self.history_table)
         layout.addWidget(view_all_btn, alignment=QtCore.Qt.AlignRight)
         self.layout_2.setLayout(layout)
         self.layout_2.setContentsMargins(0, 0, 0, 0)  # Menghilangkan margin di sekitar layout_2
@@ -300,7 +319,7 @@ class Dashboard(QWidget):
 
     def layout_3_ui(self):
         layout = QVBoxLayout()
-        self.statistic_label = QLabel("Informasi keuanganmu untuk minggu ini")
+        self.statistic_label = QLabel()
         self.statistic_label.setObjectName("Label_1")
 
         self.graph_widget = PlotWidget()
@@ -315,43 +334,42 @@ class Dashboard(QWidget):
     
     def layout_4_ui(self):
         layout = QVBoxLayout()
-        title = QLabel("Wishlist")
-        title.setObjectName("Label_1")
-        layout.addWidget(title)
+        self.title = QLabel()
+        self.title.setObjectName("Label_1")
+        layout.addWidget(self.title)
         
-        wishlist_table = QTableWidget()
-        wishlist_table.setObjectName("wishlist_table")
-        wishlist_table.setColumnCount(4)
-        wishlist_table.setHorizontalHeaderLabels(["No.", "Nama", "Harga", "Status"])
+        self.wishlist_table = QTableWidget()
+        self.wishlist_table.setObjectName("wishlist_table")
+        self.wishlist_table.setColumnCount(4)
         
-        wishlist_table.setColumnWidth(0, 50)   # No.
-        wishlist_table.setColumnWidth(1, 264)  # Nama
-        wishlist_table.setColumnWidth(2, 150)  # Harga
-        wishlist_table.setColumnWidth(3, 150)  # Status
+        self.wishlist_table.setColumnWidth(0, 50)   # No.
+        self.wishlist_table.setColumnWidth(1, 264)  # Nama
+        self.wishlist_table.setColumnWidth(2, 150)  # Harga
+        self.wishlist_table.setColumnWidth(3, 150)  # Status
         
         # Sembunyikan header vertikal
-        wishlist_table.verticalHeader().setVisible(False)
+        self.wishlist_table.verticalHeader().setVisible(False)
         
         # Muat data wishlist
         wishlists = self.wishlist_view.wishlist_controller.wishlists
         
         # Set jumlah baris maksimal 4
-        wishlist_table.setRowCount(min(len(wishlists), 4))
+        self.wishlist_table.setRowCount(min(len(wishlists), 4))
         
         # Hanya tampilkan 4 data pertama
         for row, wishlist in enumerate(wishlists[:4]):
             if len(wishlist) < 4:  # Periksa apakah data lengkap
                 continue
                 
-            wishlist_table.setItem(row, 0, QTableWidgetItem(wishlist[0]))  # No.
-            wishlist_table.setItem(row, 1, QTableWidgetItem(wishlist[1]))  # Nama
-            wishlist_table.setItem(row, 2, QTableWidgetItem(wishlist[2]))  # Harga
+            self.wishlist_table.setItem(row, 0, QTableWidgetItem(wishlist[0]))  # No.
+            self.wishlist_table.setItem(row, 1, QTableWidgetItem(wishlist[1]))  # Nama
+            self.wishlist_table.setItem(row, 2, QTableWidgetItem(wishlist[2]))  # Harga
             
             # Konversi status dari boolean ke text
             status_text = "Sudah Terpenuhi" if wishlist[3] == "true" else "Belum Terpenuhi"
-            wishlist_table.setItem(row, 3, QTableWidgetItem(status_text))  # Status
+            self.wishlist_table.setItem(row, 3, QTableWidgetItem(status_text))  # Status
         
-        layout.addWidget(wishlist_table)
+        layout.addWidget(self.wishlist_table)
         self.layout_4.setLayout(layout)
 
 
@@ -513,8 +531,22 @@ class Dashboard(QWidget):
         self.aboutUs.setGeometry(
             aboutus_x_position,
             y_position,
-            button_width,
-            button_height
+            60,
+            60
+        )
+
+        self.btn_theme.setGeometry(
+            int(aboutus_x_position * 5),
+            y_position,
+            48,
+            48
+        )
+
+        self.language.setGeometry(
+            int(aboutus_x_position * 9),
+            y_position,
+            100,
+            20
         )
 
         self.label.setGeometry(
@@ -558,14 +590,66 @@ class Dashboard(QWidget):
             button_layout4_height
         )
 
+    def toggle_theme(self):
+        theme_handler = Setting(self)
+        theme_handler.toggle_icon(self.btn_theme)
+
+    def change_language(self):
+        """Mengubah bahasa UI berdasarkan bahasa yang dipilih"""
+        selected_language = self.language.currentText()  # Mengambil kode bahasa yang dipilih
+        self.language_data = Setting.load_language_file(selected_language)
+        self.retranslateView()
+        self.retranslateUi()
+
+    def retranslateView(self):
+        index_aktif = self.stack.currentIndex()
+        if index_aktif > 0:
+            self.income_view.retranslateUi(self.language_data)
+            self.outcome_view.retranslateUi(self.language_data)
+            self.wallet_view.retranslateUi(self.language_data)
+            self.history_view.retranslateUi(self.language_data)
+            self.statistic_view.retranslateUi(self.language_data)
+            self.category_view.retranslateUi(self.language_data)
+            self.wishlist_view.retranslateUi(self.language_data)
+
     def retranslateUi(self):
         _translate = QtCore.QCoreApplication.translate
-        self.setWindowTitle(_translate("Form", "Money Tracker"))
-        self.btn_income.setText(_translate("Form", " Edit Income"))
-        self.btn_outcome.setText(_translate("Form", " Edit Outcome"))
-        self.btn_wallet.setText(_translate("Form", " Wallet"))
-        self.btn_history.setText(_translate("Form", " History"))
-        self.btn_statistic.setText(_translate("Form", " Statistic"))
-        self.btn_category.setText(_translate("Form", " Category"))
-        self.btn_wishlist.setText(_translate("Form", " Wishlist"))
-        self.label.setText(_translate("Form", "v1.2"))
+        if self.language_data:
+            self.btn_income.setText(_translate("Form", self.language_data.get("dashboard", {}).get("btn1", "Edit Income")))
+            self.btn_outcome.setText(_translate("Form", self.language_data.get("dashboard", {}).get("btn2", "Edit Outcome")))
+            self.btn_wallet.setText(_translate("Form", self.language_data.get("dashboard", {}).get("btn3", "Wallet")))
+            self.btn_history.setText(_translate("Form", self.language_data.get("dashboard", {}).get("btn4", "History")))
+            self.btn_statistic.setText(_translate("Form", self.language_data.get("dashboard", {}).get("btn5", "Statistic")))
+            self.btn_category.setText(_translate("Form", self.language_data.get("dashboard", {}).get("btn6", "Category")))
+            self.btn_wishlist.setText(_translate("Form", self.language_data.get("dashboard", {}).get("btn7", "Wishlist")))
+            self.history_label.setText(_translate("Form", self.language_data.get("dashboard", {}).get("layout2", "Riwayat Transaksi Minggu Ini!")))
+            self.history_table.setHorizontalHeaderLabels(
+                [
+                self.language_data.get("dashboard", {}).get("l2col1", "Tanggal"), 
+                self.language_data.get("dashboard", {}).get("l2col2", "Jenis"), 
+                self.language_data.get("dashboard", {}).get("l2col3", "Jumlah"), 
+                self.language_data.get("dashboard", {}).get("l2col4", "Kategori"), 
+                self.language_data.get("dashboard", {}).get("l2col5", "Dompet")
+                ]
+                )
+            self.statistic_label.setText(_translate("Form", self.language_data.get("dashboard", {}).get("layout3", "Informasi keuanganmu untuk minggu ini")))
+            self.title.setText(_translate("Form", self.language_data.get("dashboard", {}).get("layout4", "Wishlist")))
+            self.wishlist_table.setHorizontalHeaderLabels(
+                [
+                self.language_data.get("dashboard", {}).get("l4col1", "No."), 
+                self.language_data.get("dashboard", {}).get("l4col2", "Nama"), 
+                self.language_data.get("dashboard", {}).get("l4col3", "Harga"), 
+                self.language_data.get("dashboard", {}).get("l4col4", "Status")
+                ]
+                )
+            self.label.setText(_translate("Form", "v1.2"))
+        else:
+            self.setWindowTitle(_translate("Form", "Money Tracker"))
+            self.btn_income.setText(_translate("Form", " Edit Income"))
+            self.btn_outcome.setText(_translate("Form", " Edit Outcome"))
+            self.btn_wallet.setText(_translate("Form", " Wallet"))
+            self.btn_history.setText(_translate("Form", " History"))
+            self.btn_statistic.setText(_translate("Form", " Statistic"))
+            self.btn_category.setText(_translate("Form", " Category"))
+            self.btn_wishlist.setText(_translate("Form", " Wishlist"))
+            self.label.setText(_translate("Form", "v1.2"))

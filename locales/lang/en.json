@@ -1,7 +1,106 @@
 {
-    "welcome": "Welcome!",
-    "settings": "Settings",
-    "language": "Language",
-    "theme": "Theme"
+    "dashboard": {
+      "btn1": " Edit Income",
+      "btn2": " Edit Outcome",
+      "btn3": " Wallet",
+      "btn4": " History",
+      "btn5": " Statistic",
+      "btn6": " Category",
+      "btn7": " Wishlist",
+      "layout2": "This Week's Transaction History!",
+      "l2col1": "Date",
+      "l2col2": "Type",
+      "l2col3": "Amount",
+      "l2col4": "Category",
+      "l2col5": "Wallet",
+      "layout3": "Your financial info for this week",
+      "layout4": "Wishlist",
+      "l4col1": "No",
+      "l4col2": "Name",
+      "l4col3": "Price",
+      "l4col4": "Status"
+    },
+    "income": {
+      "Title": "New Income",
+      "form1": "Income Amount:",
+      "form2": "Category:",
+      "form3": "Wallet to be credited:",
+      "form4": "Description:",
+      "form5": "Enter Date:",
+      "btn1": "Save",
+      "btn2": "Back"
+    },
+    "outcome": {
+      "Title": "New Outcome",
+      "form1": "Outcome Amount:",
+      "form2": "Category:",
+      "form3": "Wallet to be debited:",
+      "form4": "Description:",
+      "form5": "Enter Date:",
+      "btn1": "Save",
+      "btn2": "Back"
+    },
+    "wallet": {
+      "Title": "Wallet",
+      "entry": "Add Wallet",
+      "form1": "Name",
+      "desc1": "Wallet Name",
+      "form2": "Balance",
+      "btn": "Add",
+      "col1": "Name",
+      "col2": "Balance",
+      "col3": "Edit",
+      "col4": "Delete"
+    },
+    "history": {
+      "Title": "History",
+      "radbtn1": "All",
+      "radbtn2": "Income",
+      "radbtn3": "Outcome",
+      "col1": "Date",
+      "col2": "Type",
+      "col3": "Amount",
+      "col4": "Category",
+      "col5": "Wallet",
+      "col6": "Description",
+      "col7": "Edit",
+      "col8": "Delete",
+      "foot": "Total"
+    },
+    "statistic": {
+      "Title": "Statistics",
+      "head1": "Total Income",
+      "head2": "Total Outcome",
+      "head3": "Statistics",
+      "head4": "Category Chart",
+      "head5": "Quickview Summary",
+      "desc1": "New Balance",
+      "desc2": "Previous Balance"
+    },
+    "category": {
+      "Title": "Category",
+      "desc": "Category Name",
+      "item1": "Income",
+      "item2": "Outcome",
+      "btn": "Add Category",
+      "col1": "Name",
+      "col2": "Type",
+      "col3": "Delete"
+    },
+    "wishlist": {
+      "Title": "Wishlist",
+      "form1": "Name",
+      "form2": "Price",
+      "btn1": "Add to Wishlist",
+      "filter": "Filter Status",
+      "radbtn1": "All",
+      "radbtn2": "Fulfilled",
+      "radbtn3": "Not Fulfilled",
+      "col1": "No",
+      "col2": "Name",
+      "col3": "Price",
+      "col4": "Status",
+      "col5": "Edit",
+      "col6": "Delete"
+    }
 }
-  

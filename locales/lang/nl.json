@@ -1,0 +1,107 @@
+{
+    "dashboard": {
+      "btn1": "Bewerk Inkomst",
+      "btn2": "Bewerk Uitgave",
+      "btn3": "Portemonnee",
+      "btn4": "Geschiedenis",
+      "btn5": "Statistieken",
+      "btn6": "Categorie",
+      "btn7": "Wenslijst",
+      "layout2": "Transactiegeschiedenis van deze week!",
+      "l2col1": "Datum",
+      "l2col2": "Type",
+      "l2col3": "Bedrag",
+      "l2col4": "Categorie",
+      "l2col5": "Portemonnee",
+      "layout3": "Jouw financiële informatie voor deze week",
+      "layout4": "Wenslijst",
+      "l4col1": "Nr",
+      "l4col2": "Naam",
+      "l4col3": "Prijs",
+      "l4col4": "Status"
+    },
+    "income": {
+      "Title": "Nieuwe Inkomst",
+      "form1": "Inkomstd bedrag:",
+      "form2": "Categorie:",
+      "form3": "Portemonnee om in te vullen:",
+      "form4": "Beschrijving:",
+      "form5": "Voer Datum in:",
+      "btn1": "Opslaan",
+      "btn2": "Terug"
+    },
+    "outcome": {
+      "Title": "Nieuwe Uitgave",
+      "form1": "Uitgavebedrag:",
+      "form2": "Categorie:",
+      "form3": "Portemonnee om af te trekken:",
+      "form4": "Beschrijving:",
+      "form5": "Voer Datum in:",
+      "btn1": "Opslaan",
+      "btn2": "Terug"
+    },
+    "wallet": {
+      "Title": "Portemonnee",
+      "entry": "Voeg Portemonnee Toe",
+      "form1": "Naam",
+      "desc1": "Portemonnee Naam",
+      "form2": "Saldo",
+      "btn": "Toevoegen",
+      "col1": "Naam",
+      "col2": "Saldo",
+      "col3": "Bewerken",
+      "col4": "Verwijderen"
+    },
+    "history": {
+      "Title": "Geschiedenis",
+      "radbtn1": "Alles",
+      "radbtn2": "Inkomsten",
+      "radbtn3": "Uitgaven",
+      "col1": "Datum",
+      "col2": "Type",
+      "col3": "Bedrag",
+      "col4": "Categorie",
+      "col5": "Portemonnee",
+      "col6": "Beschrijving",
+      "col7": "Bewerken",
+      "col8": "Verwijderen",
+      "foot": "Totaal"
+    },
+    "statistic": {
+      "Title": "Statistieken",
+      "head1": "Totale Inkomsten",
+      "head2": "Totale Uitgaven",
+      "head3": "Statistieken",
+      "head4": "Categorie Diagram",
+      "head5": "Snelle Samenvatting",
+      "desc1": "Nieuw Saldo",
+      "desc2": "Vorige Saldo"
+    },
+    "category": {
+      "Title": "Categorie",
+      "desc": "Categorienaam",
+      "item1": "Inkomsten",
+      "item2": "Uitgaven",
+      "btn": "Categorie Toevoegen",
+      "col1": "Naam",
+      "col2": "Type",
+      "col3": "Verwijderen"
+    },
+    "wishlist": {
+      "Title": "Wenslijst",
+      "form1": "Naam",
+      "form2": "Prijs",
+      "btn1": "Voeg toe aan Wenslijst",
+      "filter": "Filter op Status",
+      "radbtn1": "Alles",
+      "radbtn2": "Voltooid",
+      "radbtn3": "Niet Voltooid",
+      "col1": "Nr",
+      "col2": "Naam",
+      "col3": "Prijs",
+      "col4": "Status",
+      "col5": "Bewerken",
+      "col6": "Verwijderen"
+    }
+  }
+  

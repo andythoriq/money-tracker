@@ -4,7 +4,7 @@ from PyQt5.QtWidgets import (
     QButtonGroup, QDialog, QFormLayout, QSpinBox, 
     QComboBox, QLineEdit, QCalendarWidget, QMessageBox
 )
-from PyQt5.QtCore import Qt
+from PyQt5.QtCore import Qt, QCoreApplication
 from datetime import datetime
 from controller.income import Income
 from controller.outcome import Outcome
@@ -28,9 +28,9 @@ class HistoryView(QWidget):
         main_layout.setSpacing(20)
 
         # Title Section
-        title_label = QLabel("History")
-        title_label.setObjectName("tittleLabel")
-        main_layout.addWidget(title_label)
+        self.title_label = QLabel("History")
+        self.title_label.setObjectName("tittleLabel")
+        main_layout.addWidget(self.title_label)
 
         # Content Container
         content_widget = QWidget()
@@ -130,7 +130,7 @@ class HistoryView(QWidget):
         """Memuat data ke tabel berdasarkan filter"""
         self.table.setRowCount(0)
         transactions = []
-        total = 0
+        self.total = 0
 
         # Load data income
         for income in self.income_controller.load_incomes():
@@ -170,9 +170,9 @@ class HistoryView(QWidget):
         self.table.setRowCount(len(transactions))
         for row, transaction in enumerate(transactions):
             if transaction["type"] == "income":
-                total += int(transaction["amount"])
+                self.total += int(transaction["amount"])
             else:
-                total -= int(transaction["amount"])
+                self.total -= int(transaction["amount"])
 
             self.table.setItem(row, 0, QTableWidgetItem(transaction["date"].strftime("%d/%m/%Y")))
             self.table.setItem(row, 1, QTableWidgetItem(transaction["type"]))
@@ -213,7 +213,7 @@ class HistoryView(QWidget):
             btn_delete.clicked.connect(lambda _, t=transaction: self.confirm_delete(t))
             self.table.setCellWidget(row, 7, btn_delete)
 
-        self.label.setText(f"Total : Rp {total}")
+        self.label.setText(f"Total : Rp {self.total}")
 
     def open_edit_popup(self, transaction):
         """Popup Edit Data"""
@@ -337,3 +337,24 @@ class HistoryView(QWidget):
             info_msg.setWindowTitle("Informasi")
             info_msg.setText("Transaksi berhasil dihapus")
             info_msg.exec_()
+
+    def retranslateUi(self, lang=None):
+        _translate = QCoreApplication.translate
+        if lang:
+            self.title_label.setText(_translate("Form", lang.get("history", {}).get("Title", "")))
+            self.radio_all.setText(_translate("Form", lang.get("history", {}).get("radbtn1", "")))
+            self.radio_income.setText(_translate("Form", lang.get("history", {}).get("radbtn2", "")))
+            self.radio_outcome.setText(_translate("Form", lang.get("history", {}).get("radbtn3", "")))
+            self.table.setHorizontalHeaderLabels(
+                [
+                    lang.get("history", {}).get("col1", ""), 
+                    lang.get("history", {}).get("col2", ""), 
+                    lang.get("history", {}).get("col3", ""), 
+                    lang.get("history", {}).get("col4", ""), 
+                    lang.get("history", {}).get("col5", ""), 
+                    lang.get("history", {}).get("col6", ""), 
+                    lang.get("history", {}).get("col7", ""), 
+                    lang.get("history", {}).get("col8", ""), 
+                    ]
+                )
+            self.label.setText(_translate("Form", lang.get("history", {}).get("foot", "") + f"Rp {self.total}"))
