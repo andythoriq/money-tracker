@@ -86,11 +86,14 @@ class Income:
         for field in required_fields:
             if field not in income_data or not income_data[field]:
                 errors[field] = f"tidak boleh kosong"
-        
+
         if not errors:
             wallet = income_data['wallet']
             amount = int(income_data['amount'])
             if not self.wallet_controller.update_balance(wallet, amount, "income"):
                 errors['wallet'] = "Gagal memperbarui saldo wallet"
+
+            if income_data.get('amount') > 9_999_999_999:
+                errors["amount"] = "Jumlah saldo tidak boleh lebih dari 9.999.999.999."
         
         return {"valid": True} if not errors else {"valid": False, "errors": errors}
