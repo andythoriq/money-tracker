@@ -8,13 +8,16 @@ from pages.view_outcome import OutcomeView
 from pages.view_history import HistoryView
 from pages.view_category import CategoryView
 from pages.view_wishlist import WishlistView
+from pages.view_login import LoginScreen
+from pages.view_register import RegisterScreen
 from controller.Popup import PopupAboutUs
 from controller.wallet import Wallet
 from controller.Sliding import SlidingWalletWidget
 
 class Dashboard(QWidget):
-    def __init__(self):
+    def __init__(self, stack):
         super().__init__()
+        self.stack = stack
         self.init_ui()
         self.resize(1366, 768)  # Ukuran awal jendela
 
@@ -57,8 +60,8 @@ class Dashboard(QWidget):
 
         # Layout utama
         main_layout = QHBoxLayout()
-        main_layout.addWidget(self.HomeSection, 10)  # Sidebar kiri (22%)
-        main_layout.addWidget(self.stack, 36)  # Konten utama (78%)
+        main_layout.addWidget(self.HomeSection, 10) # Sidebar kiri (22%)
+        main_layout.addWidget(self.stack, 36) # Konten utama (78%)
         self.setLayout(main_layout)
         
     def init_main_menu(self):
