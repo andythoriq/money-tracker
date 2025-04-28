@@ -34,7 +34,7 @@ class Income:
             "wallet": wallet,
             "desc": desc,
             "date": date
-        })
+        }, False)
         if not result.get("valid"):
             return result  # Stop execution if validation fails
 
@@ -55,13 +55,26 @@ class Income:
         incomes = self.load_incomes()
         for i, income in enumerate(incomes):
             if income["ID"] == updated_income["ID"]:
+                result = self.validate_income_data({
+                    "amount": updated_income['amount'],
+                    "category": updated_income['category'],
+                    "wallet": updated_income['wallet'],
+                    "desc": updated_income['desc'],
+                    "date": updated_income['date']
+                }, True)
+
+                if not result.get("valid"):
+                    return result # Stop execution if validation fails
+
                 old_amount = int(income["amount"])
                 new_amount = int(updated_income["amount"])
                 self.wallet_controller.update_balance(income["wallet"], -old_amount, "income")
                 self.wallet_controller.update_balance(updated_income["wallet"], new_amount, "income")
+                
                 incomes[i] = updated_income
-                break
-        self.save_incomes(incomes)
+                self.save_incomes(incomes)
+                return result  # Return True if income is successfully updated
+        return False
 
     def delete_income(self, id):
         """Menghapus income dengan id."""
@@ -74,7 +87,7 @@ class Income:
         self.save_incomes(incomes)
         return True
     
-    def validate_income_data(self, income_data):
+    def validate_income_data(self, income_data, is_edit):
         """
         Validate income data to ensure it meets the required criteria.
         :param income_data: Dictionary containing income data.
@@ -87,13 +100,13 @@ class Income:
             if field not in income_data or not income_data[field]:
                 errors[field] = f"tidak boleh kosong"
 
-        if not errors:
+        if income_data.get('amount') > 9_999_999_999:
+            errors["amount"] = "Jumlah saldo tidak boleh lebih dari 9.999.999.999."
+
+        if not errors and not is_edit:
             wallet = income_data['wallet']
             amount = int(income_data['amount'])
             if not self.wallet_controller.update_balance(wallet, amount, "income"):
                 errors['wallet'] = "Gagal memperbarui saldo wallet"
 
-            if income_data.get('amount') > 9_999_999_999:
-                errors["amount"] = "Jumlah saldo tidak boleh lebih dari 9.999.999.999."
-        
         return {"valid": True} if not errors else {"valid": False, "errors": errors}
