@@ -88,3 +88,12 @@ class Account:
 
         with open(self.FILE_PATH, "w") as file:
             json.dump(accounts, file)
+
+    def check_email_exists(self, email):
+        """
+        Memeriksa apakah email sudah ada di database.
+        :param email: Email yang ingin diperiksa
+        :return: True jika email ada, False jika tidak
+        """
+        accounts = self.load_accounts()
+        return any(acc["email"] == email for acc in accounts)
