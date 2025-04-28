@@ -10,8 +10,8 @@ from PyQt5.QtWidgets import (
     QCheckBox,
     QHBoxLayout,
 )
-from PyQt5.QtGui import QFont, QColor, QPalette
-from PyQt5.QtCore import Qt
+from PyQt5.QtGui import QFont, QColor, QPalette, QRegExpValidator
+from PyQt5.QtCore import Qt, QRegExp
 from controller.account import Account
 
 
@@ -23,6 +23,7 @@ class RegisterScreen(QtWidgets.QWidget):
         self.init_ui()
 
     def init_ui(self):
+
         self.setStyleSheet("background-color: #1c1f26;")
         layout = QtWidgets.QVBoxLayout()
         layout.setAlignment(QtCore.Qt.AlignTop)
@@ -88,24 +89,31 @@ class RegisterScreen(QtWidgets.QWidget):
         self.input_hp = QtWidgets.QLineEdit()
         self.input_hp.setPlaceholderText("Nomor Handphone")
         self.input_hp.setStyleSheet(self.input_style())
+        self.input_hp.setValidator(QRegExpValidator(QRegExp("[0-9]+")))
         layout.addWidget(self.input_hp_label)
         layout.addWidget(self.input_hp)
 
         layout.addSpacing(10)
 
+        # text changed
+        self.input_nama.textChanged.connect(self.validate_input_register)
+        self.input_hp.textChanged.connect(self.validate_input_register)
+        self.date_edit.dateChanged.connect(self.validate_input_register)
+        self.radio_laki.toggled.connect(self.validate_input_register)
+        self.radio_perempuan.toggled.connect(self.validate_input_register)
+
         # Tombol Lanjut
-        btn_lanjut = QtWidgets.QPushButton("Lanjut")
-        btn_lanjut.setStyleSheet("""
-            background-color: qlineargradient(x1:0, y1:0, x2:1, y2:0, stop:0 #7db16e, stop:1 #b8e994);
-            color: #1c1f26;
+        self.btn_lanjut = QtWidgets.QPushButton("Lanjut")
+        self.btn_lanjut.setStyleSheet("""
+            background-color: #2c2f36;
+            color: #d3e9a3;
             padding: 12px;
             border-radius: 20px;
             font-weight: bold;
         """)
-        btn_lanjut.clicked.connect(
-            lambda: self.stack.setCurrentIndex(self.stack.currentIndex() + 1)
-        )
-        layout.addWidget(btn_lanjut)
+        self.btn_lanjut.setEnabled(False)
+        self.btn_lanjut.clicked.connect(lambda: (self.validate_input_register, self.stack.setCurrentIndex(self.stack.currentIndex() + 1)))
+        layout.addWidget(self.btn_lanjut)
 
         # Link sudah punya akun
         btn_login = QtWidgets.QPushButton("Sudah punya akun?")
@@ -183,8 +191,10 @@ class RegisterScreen(QtWidgets.QWidget):
         self.email_input = QLineEdit()
         self.email_input.setPlaceholderText("Masukkan Email")
         self.email_input.setStyleSheet(self.input_style())
+        self.email_input_warning = QLabel("")
         layout.addWidget(self.input_email_label)
         layout.addWidget(self.email_input)
+        layout.addWidget(self.email_input_warning)
 
         layout.addSpacing(5)
 
@@ -227,6 +237,7 @@ class RegisterScreen(QtWidgets.QWidget):
             border-radius: 20px;
             font-weight: bold;
         """)
+        self.continue_button.setEnabled(True)
         self.continue_button.clicked.connect(
             lambda: self.stack.setCurrentIndex(self.stack.currentIndex() + 1)
         )
@@ -390,8 +401,17 @@ class RegisterScreen(QtWidgets.QWidget):
         if not email:
             return False
         if "@" not in email or "." not in email.split("@")[-1]:
+            self.email_input.setStyleSheet(self.input_style() + "border: 1px solid #ff0000;")
+            self.email_input_warning = QLabel("Email tidak valid")
+            self.email_input_warning.setStyleSheet("color: #ff0000; font-size: 12px;")
+            self.email_input_warning.setAlignment(QtCore.Qt.AlignLeft)
+            self.email_input.setFocus()
             return False
-        return True
+        if self.account_controller.check_email_exists(email):
+            self.email_input.setStyleSheet(self.input_style() + "border: 1px solid #ff0000;")
+            self.email_input_warning = QLabel("Email sudah terdaftar")
+            return False
+        self.stack.setCurrentIndex(self.stack.currentIndex() + 1)
 
     def add_account(self):
         """Menambahkan akun baru"""
@@ -410,6 +430,33 @@ class RegisterScreen(QtWidgets.QWidget):
         self.account_controller.add_account(
             email, username, password, gender, birth_date, phone_number, created_at
         )
+
+    def validate_input_register(self):
+        """Validasi input"""
+        
+        input_gender = self.radio_laki.isChecked() or self.radio_perempuan.isChecked()
+
+        if (self.input_nama.text() and self.date_edit.text() and self.input_hp.text() and input_gender):
+
+            # Semua field terisi
+            self.btn_lanjut.setStyleSheet("""
+                background-color: qlineargradient(x1:0, y1:0, x2:1, y2:0, stop:0 #7db16e, stop:1 #b8e994);
+                color: #1c1f26;
+                padding: 12px;
+                border-radius: 20px;
+                font-weight: bold;
+            """)
+            self.btn_lanjut.setEnabled(True)
+        else:
+            # Ada field yang kosong
+            self.btn_lanjut.setEnabled(False)
+            self.btn_lanjut.setStyleSheet("""
+                background-color: #2c2f36;
+                color: #d3e9a3;
+                padding: 12px;
+                border-radius: 20px;
+                font-weight: bold;
+            """)
 
     def input_style(self):
         return """
