@@ -204,11 +204,11 @@ class WalletView(QWidget):
             self.load_wallets()
             self.input_name.clear()
             self.input_amount.setValue(0)
-            PopupSuccess("Success", "Pemasukkan berhasil disimpan!")
+            PopupSuccess("Success", "Wallet berhasil disimpan!")
         else:
             errors = result.get("errors")
             error_message = "\n".join([f"{key}: {value}" for key, value in errors.items()])
-            PopupWarning("Warning", f"Gagal menyimpan pemasukkan!\n{error_message}")
+            PopupWarning("Warning", f"Gagal menyimpan wallet!\n{error_message}")
 
     def edit_wallet(self, name):
         """Mengedit saldo wallet"""

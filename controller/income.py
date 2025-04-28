@@ -85,7 +85,7 @@ class Income:
         
         for field in required_fields:
             if field not in income_data or not income_data[field]:
-                errors[field] = f"{field} tidak boleh kosong"
+                errors[field] = f"tidak boleh kosong"
         
         if not errors:
             wallet = income_data['wallet']

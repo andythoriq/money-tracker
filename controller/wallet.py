@@ -110,16 +110,16 @@ class Wallet:
 
         if not is_edit:
             if not wallet_data.get('name'):
-                errors["name"] = "Nama wallet tidak boleh kosong."
+                errors["name"] = "wallet tidak boleh kosong."
             elif wallet_data.get('name') in self.get_wallet_name():
-                errors["name"] = "Nama wallet sudah ada."
+                errors["name"] = "wallet sudah ada."
             elif len(wallet_data.get('name')) < 3:
-                errors["name"] = "Nama wallet harus lebih dari 3 karakter."
+                errors["name"] = "wallet harus lebih dari 3 karakter."
             elif len(wallet_data.get('name')) > 20:
-                errors["name"] = "Nama wallet tidak boleh lebih dari 20 karakter."
+                errors["name"] = "wallet tidak boleh lebih dari 20 karakter."
             elif not wallet_data.get('name').isalnum():
-                errors["name"] = "Nama wallet hanya boleh mengandung huruf dan angka."
+                errors["name"] = "wallet hanya boleh mengandung huruf dan angka."
             elif not wallet_data.get('name')[0].isalpha():
-                errors["name"] = "Nama wallet harus diawali dengan huruf."
+                errors["name"] = "wallet harus diawali dengan huruf."
 
         return {"valid": not bool(errors), "errors": errors}
