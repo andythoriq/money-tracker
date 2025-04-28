@@ -467,17 +467,26 @@ class RegisterScreen(QtWidgets.QWidget):
         email = self.email_input.text().strip()
 
         if "@" not in email or "." not in email.split("@")[-1]:
-            print(email)
-            self.email_input_warning.show()
-            self.email_input.setStyleSheet(self.input_style() + "border: 1px solid #ff0000;")
             self.email_input_warning.setText("Email tidak valid")
-            self.email_input_warning.setAlignment(QtCore.Qt.AlignLeft)
-            self.email_input.setFocus()
+            self.email_input_warning.show()
+            self.continue_button.setStyleSheet("""
+                background-color: #2c2f36;
+                color: #d3e9a3;
+                padding: 12px;
+                border-radius: 20px;
+                font-weight: bold;
+            """)
             
         if  self.account_controller.check_email_exists(email):
-            self.email_input_warning.show()
-            self.email_input.setStyleSheet(self.input_style() + "border: 1px solid #ff0000;")
             self.email_input_warning.setText("Email sudah terdaftar")
+            self.email_input_warning.show()
+            self.continue_button.setStyleSheet("""
+                background-color: #2c2f36;
+                color: #d3e9a3;
+                padding: 12px;
+                border-radius: 20px;
+                font-weight: bold;
+            """)
         
         if not self.account_controller.check_email_exists(email) and ("@" in email and "." in email.split("@")[-1]):
             self.email_input_warning.setAlignment(QtCore.Qt.AlignLeft)

@@ -22,6 +22,9 @@ class Account:
                 return json.load(file)
         except FileNotFoundError:
             return []
+        except json.JSONDecodeError:
+        # Jika file kosong atau tidak valid, anggap tidak ada akun
+            return []
 
     def save_accounts(self, accounts):
         """
