@@ -1,0 +1,107 @@
+{
+    "dashboard": {
+      "btn1": "Edytuj dochód",
+      "btn2": "Edytuj wydatek",
+      "btn3": "Portfel",
+      "btn4": "Historia",
+      "btn5": "Statystyki",
+      "btn6": "Kategoria",
+      "btn7": "Lista życzeń",
+      "layout2": "Historia transakcji w tym tygodniu!",
+      "l2col1": "Data",
+      "l2col2": "Typ",
+      "l2col3": "Kwota",
+      "l2col4": "Kategoria",
+      "l2col5": "Portfel",
+      "layout3": "Twoje informacje finansowe na ten tydzień",
+      "layout4": "Lista życzeń",
+      "l4col1": "Nr",
+      "l4col2": "Nazwa",
+      "l4col3": "Cena",
+      "l4col4": "Status"
+    },
+    "income": {
+      "Title": "Nowy dochód",
+      "form1": "Kwota dochodu:",
+      "form2": "Kategoria:",
+      "form3": "Portfel do zasilenia:",
+      "form4": "Opis:",
+      "form5": "Wprowadź datę:",
+      "btn1": "Zapisz",
+      "btn2": "Powrót"
+    },
+    "outcome": {
+      "Title": "Nowy wydatek",
+      "form1": "Kwota wydatku:",
+      "form2": "Kategoria:",
+      "form3": "Portfel do obciążenia:",
+      "form4": "Opis:",
+      "form5": "Wprowadź datę:",
+      "btn1": "Zapisz",
+      "btn2": "Powrót"
+    },
+    "wallet": {
+      "Title": "Portfel",
+      "entry": "Dodaj portfel",
+      "form1": "Nazwa",
+      "desc1": "Nazwa portfela",
+      "form2": "Saldo",
+      "btn": "Dodaj",
+      "col1": "Nazwa",
+      "col2": "Saldo",
+      "col3": "Edytuj",
+      "col4": "Usuń"
+    },
+    "history": {
+      "Title": "Historia",
+      "radbtn1": "Wszystkie",
+      "radbtn2": "Dochód",
+      "radbtn3": "Wydatek",
+      "col1": "Data",
+      "col2": "Typ",
+      "col3": "Kwota",
+      "col4": "Kategoria",
+      "col5": "Portfel",
+      "col6": "Opis",
+      "col7": "Edytuj",
+      "col8": "Usuń",
+      "foot": "Suma"
+    },
+    "statistic": {
+      "Title": "Statystyki",
+      "head1": "Suma dochodu",
+      "head2": "Suma wydatków",
+      "head3": "Statystyki",
+      "head4": "Wykres kategorii",
+      "head5": "Podsumowanie",
+      "desc1": "Nowe saldo",
+      "desc2": "Poprzednie saldo"
+    },
+    "category": {
+      "Title": "Kategoria",
+      "desc": "Nazwa kategorii",
+      "item1": "Dochód",
+      "item2": "Wydatek",
+      "btn": "Dodaj kategorię",
+      "col1": "Nazwa",
+      "col2": "Typ",
+      "col3": "Usuń"
+    },
+    "wishlist": {
+      "Title": "Lista życzeń",
+      "form1": "Nazwa",
+      "form2": "Cena",
+      "btn1": "Dodaj do listy",
+      "filter": "Filtruj według statusu",
+      "radbtn1": "Wszystkie",
+      "radbtn2": "Spełnione",
+      "radbtn3": "Niespełnione",
+      "col1": "Nr",
+      "col2": "Nazwa",
+      "col3": "Cena",
+      "col4": "Status",
+      "col5": "Edytuj",
+      "col6": "Usuń"
+    }
+  }
+  

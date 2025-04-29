@@ -1,0 +1,512 @@
+/* Main Window */
+QMainWindow {
+    background-color: #1C1C1C; /* Dark background */
+}
+
+/* Buttons */
+QPushButton {
+    background-color: #333333; /* Dark button */
+    color: white;
+    border-radius: 5px;
+    padding: 5px;
+    font-size: 14px;
+}
+
+QPushButton:hover {
+    background-color: #555555; /* Lighter dark on hover */
+}
+
+QPushButton:pressed {
+    background-color: #777777; /* Even lighter dark on pressed */
+}
+
+/* ComboBox */
+QComboBox {
+    background-color: #2C2C2C; /* Slightly lighter dark background */
+    color: white;
+    border: 1px solid #444444;
+    padding: 3px;
+    border-radius: 4px;
+}
+
+QComboBox:hover {
+    background-color: #3C3C3C; /* Lighter gray on hover */
+}
+
+/* Line Edit */
+QLineEdit {
+    background-color: #2C2C2C; /* Slightly lighter dark */
+    border: 1px solid #444444;
+    padding: 5px;
+    border-radius: 4px;
+    color: white;
+}
+
+/* Container */
+#container {
+    background-color: #1C1C1C; /* Dark background */
+    border: none;
+}
+
+/* Layout Section */
+#Layout {
+    background-color: #333333; /* Dark gray layout */
+    border: none;
+    border-radius: 15px;
+}
+
+/* Group Box */
+#groupBox {
+    background-color: #333333;
+    border-radius: 25%;
+}
+
+/* Home Section */
+#HomeSection {
+    background-color: #121212; /* Dark background */
+    border: none;
+    padding: 5px;
+}
+
+/* Label */
+#Label_1 {
+    font: 24pt;
+    color: white;
+    padding-left: 10px;
+}
+
+/* Logo Section */
+#logoApp {
+    background-color: #333333;
+    border-radius: 15px;
+}
+
+/* Buttons in Home Section */
+#btn_homeSection {
+    background-color: #444444; /* Dark gray */
+    text-align: left;
+    padding-left: 20px;
+    font-family: Inter;
+    font: 18pt;
+    color: white;
+    border-radius: 15px;
+}
+
+#btn_homeSection:hover {
+    background-color: #555555;
+}
+
+#btn_homeSection:focus {
+    background-color: #666666;
+}
+
+/* Other Buttons */
+#btn_home {
+    background-color: #444444;
+    border-radius: 15px;
+    font-family: Inter;
+    font: 24pt;
+    color: white;
+}
+
+#btn_home:hover {
+    background-color: #555555;
+}
+
+#btn_home:focus {
+    background-color: #666666;
+}
+
+/* Title Label */
+#tittleLabel {
+    background-color: #333333;
+    font: 24pt;
+    color: white;
+    padding: 15px;
+    border-radius: 10px;
+}
+
+/* Wallet View Styles */
+#editWallet {
+    QInputDialog {
+        background-color: #444444;
+    }
+    QLabel {
+        color: white;
+        font-size: 14px;
+    }
+    QLineEdit {
+        background-color: #333333;
+        border: 1px solid #555555;
+        border-radius: 5px;
+        padding: 5px;
+    }
+    QPushButton {
+        background-color: #555555;
+        color: white;
+        border-radius: 5px;
+        padding: 5px;
+        min-width: 70px;
+    }
+    QPushButton:hover {
+        background-color: #666666;
+    }
+}
+
+/* Delete Wallet */
+#deleteWallet {
+    QMessageBox {
+        background-color: #444444;
+    }
+    QLabel {
+        color: white;
+    }
+    QPushButton {
+        background-color: #555555;
+        color: white;
+        border-radius: 5px;
+        padding: 5px;
+        min-width: 70px;
+    }
+    QPushButton:hover {
+        background-color: #666666;
+    }
+}
+
+/* Wishlist View Styles */
+#wishlist_container {
+    background-color: #1C1C1C;
+    border: none;
+}
+
+#wishlist_content {
+    background-color: #333333;
+    border-radius: 15px;
+    padding: 20px;
+    margin: 20px;
+}
+
+#wishlist_table {
+    background-color: transparent;
+    border: none;
+    gridline-color: #555555;
+    color: white;
+}
+
+#wishlist_table QHeaderView::section {
+    background-color: #444444;
+    color: white;
+    padding: 5px;
+    border: none;
+}
+
+#wishlist_input {
+    background-color: #333333;
+    border: 1px solid #555555;
+    border-radius: 5px;
+    padding: 5px;
+    font-size: 14px;
+}
+
+#wishlist_button {
+    background-color: #444444;
+    color: white;
+    border-radius: 5px;
+    padding: 5px;
+    font-size: 14px;
+}
+
+#wishlist_button:hover {
+    background-color: #555555;
+}
+
+#wishlist_button:pressed {
+    background-color: #666666;
+}
+
+#wishlist_radio {
+    color: white;
+    font-size: 14px;
+}
+
+#wishlist_radio::indicator {
+    width: 15px;
+    height: 15px;
+}
+
+#wishlist_radio::indicator:checked {
+    background-color: #444444;
+    border: 2px solid white;
+    border-radius: 7px;
+}
+
+#wishlist_radio::indicator:unchecked {
+    background-color: #333333;
+    border: 2px solid #444444;
+    border-radius: 7px;
+}
+
+#wishlist_label {
+    color: white;
+    font-size: 14px;
+}
+
+/* Income View Styles */
+#form_label {
+    color: white;
+    font-family: Inter;
+    font-size: 14px;
+    font-weight: bold;
+    margin-bottom: 5px;
+}
+
+#form_input {
+    background-color: #333333;
+    border: 1px solid #444444;
+    border-radius: 5px;
+    padding: 8px;
+    font-size: 14px;
+    min-width: 300px;
+}
+
+/* Outcome Styles */
+#Layout[class="OutcomeView"] {
+    background-color: #444444;
+    border: none;
+    border-radius: 15px;
+    padding: 20px;
+    margin: 10px;
+}
+
+#form_input[class="OutcomeView"] {
+    background-color: #333333;
+    border: 1px solid #444444;
+    border-radius: 5px;
+    padding: 8px;
+    font-size: 14px;
+    min-width: 300px;
+}
+
+/* Calendar Styles */
+#calendar {
+    background-color: #1C1C1C;
+    border: 1px solid #444444;
+    padding: 5px;
+    color: white;
+    selection-background-color: #555555;
+    min-width: 300px;
+    max-width: 1000px;
+}
+
+#calendar QToolButton {
+    color: white;
+    background-color: #444444;
+    border-radius: 5px;
+    padding: 5px;
+    margin: 2px;
+}
+
+#calendar QToolButton:hover {
+    background-color: #555555;
+}
+
+#calendar QToolButton:pressed {
+    background-color: #666666;
+}
+
+#calendar QMenu {
+    background-color: #1C1C1C;
+    color: white;
+    border: 1px solid #444444;
+}
+
+#calendar QMenu::item:selected {
+    background-color: #555555;
+}
+
+#calendar QSpinBox {
+    background-color: #1C1C1C;
+    color: white;
+    border: 1px solid #444444;
+    border-radius: 3px;
+    padding: 2px;
+}
+
+#calendar QTableView {
+    background-color: #1C1C1C;
+    alternate-background-color: #2C2C2C;
+    color: white;
+    selection-background-color: #555555;
+    selection-color: white;
+    border: none;
+}
+
+#calendar QWidget {
+    alternate-background-color: #2C2C2C;
+}
+
+#calendar QWidget#qt_calendar_navigationbar {
+    background-color: #1C1C1C;
+    border-bottom: 1px solid #444444;
+    padding: 5px;
+}
+
+#calendar QWidget#qt_calendar_prevmonth, 
+#calendar QWidget#qt_calendar_nextmonth {
+    background-color: #444444;
+    border-radius: 3px;
+    padding: 5px;
+    color: white;
+}
+
+#calendar QWidget#qt_calendar_prevmonth:hover, 
+#calendar QWidget#qt_calendar_nextmonth:hover {
+    background-color: #555555;
+}
+
+#calendar QWidget#qt_calendar_prevmonth:pressed, 
+#calendar QWidget#qt_calendar_nextmonth:pressed {
+    background-color: #666666;
+}
+
+#btn_save, #btn_back {
+    background-color: #444444;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    padding: 10px 20px;
+    font-size: 14px;
+    min-width: 100px;
+    margin: 10px;
+}
+
+#btn_save:hover, #btn_back:hover {
+    background-color: #555555;
+}
+
+#btn_save:pressed, #btn_back:pressed {
+    background-color: #666666;
+}
+
+QSpinBox::up-button, QSpinBox::down-button {
+    background-color: #444444;
+    border: none;
+    border-radius: 3px;
+    width: 20px;
+}
+
+QSpinBox::up-button:hover, QSpinBox::down-button:hover {
+    background-color: #555555;
+}
+
+QStackedWidget {
+    background-color: #252931;
+}
+
+/* Statistic View Styles */
+#iconDesignStatistic {
+    QComboBox {
+        background-color: #383C42;  /* Warna latar belakang combobox */
+        width: 60px;  /* Only the width for the dropdown arrow */
+        height: 22px;
+        padding: 0px;
+        border: none;  /* Remove border */
+        text-align: center;  /* Ensure nothing is visible in collapsed state */
+    }
+
+    QComboBox::drop-down {
+        width: 60px;  /* Size of the dropdown arrow */
+    }
+
+    QComboBox::down-arrow {
+        image: url(img/icon/database.svg);  /* Ensure this image exists and is correctly loaded */
+        width: 60px;  /* Size of the dropdown arrow */
+        height: 60px;
+    }
+
+    /* Hide the text area but don't completely remove it */
+    QComboBox::lineEdit {
+        border: none;
+        background: transparent;
+        padding: 100px;
+        color: transparent;  /* Keep the text hidden */
+    }
+
+    /* Display dropdown list items correctly */
+    QComboBox QAbstractItemView {
+        min-width: 150px;  /* Minimum width for dropdown items */
+        max-width: 300px;  /* Ensure items have sufficient width to show full text */
+        font-size: 14px;
+        padding: 100px;
+        background-color: #2C3039;  /* Background dropdown items */
+    }
+
+    QComboBox QAbstractItemView::item {
+        padding-left: 10px;  /* Indentation for item text */
+        padding-right: 10px;
+        height: 40px;  /* Height of each item */
+        color: #ffffff;  /* White text */
+    }
+
+    QComboBox::item:selected {
+        background-color: #4C566A;  /* Darker selected item */
+        color: white;  /* Text color for selected item */
+    }
+
+    QComboBox::editable {
+        background: transparent;
+        border: none;
+        padding: 0px;
+        color: transparent;  /* Hide the text but still keep the arrow visible */
+    }
+}
+
+#textDesignStatistic {
+    QLabel {
+        font-family: 'Arimo';
+        font-size: 16px;             /* Sets font size */
+        color: #FFFFFF;                 /* Sets text color */
+        font-weight: bold;               /* Makes the font extra bold */
+        text-align: center;
+        border: none;
+    }
+
+    #changeValue {
+        font-family: 'Arimo';
+        font-size: 10px;             /* Sets font size */
+        color: #B0B0B0;                 /* Sets lighter text color for change value */
+        font-weight: bold;               /* Makes the font extra bold */
+    }
+}
+
+#chartDesignStatistic {
+    QFrame {
+        border: 10px solid #191D24; 
+        padding: 20px; 
+        background-color: #2C3039;  /* Darker background for frames */
+        border-radius: 15px; 
+    }
+}
+
+#DesignStatistic {
+    QFrame {
+        border: 10px solid #191D24; 
+        padding: 20px; 
+        background-color: #2C3039;  /* Darker background for frames */
+        border-radius: 15px; 
+    }
+}
+
+#buttonDesignStatistic {
+    QPushButton {
+        background-color: #505C64;  /* Lighter gray button */
+        border-radius: 10px;
+        padding: 5px;
+        font-weight: bold;
+        color: white;
+    }
+
+    QPushButton:hover {
+        background-color: #3E4B53;  /* Darker on hover */
+    }
+}
