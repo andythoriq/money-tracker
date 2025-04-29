@@ -4,3 +4,7 @@ __pycache__/
 **/__pycache__/
 env
 pages/env
+controller/env
+.env
+pages/.env
+controller/.env
