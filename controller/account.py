@@ -46,16 +46,17 @@ class Account:
         accounts.append(
             {
                 "id": accounts[-1]["id"] + 1 if accounts else 1,
+                "email": email,
                 "name": name,
                 "password": password,
                 "gender": gender,
                 "birth": birth,
                 "phone": phone,
-                "email": email,
             }
         )
 
         self.save_accounts(accounts)
+        return True
 
     def load_account_names(self):
         """

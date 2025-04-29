@@ -484,6 +484,7 @@ class RegisterScreen(QtWidgets.QWidget):
                 border-radius: 20px;
                 font-weight: bold;
             """)
+            self.user_data["password"] = password
 
     def email_valid(self):
         """Validasi email"""
@@ -570,10 +571,9 @@ class RegisterScreen(QtWidgets.QWidget):
         gender = user_data["gender"]
         birth_date = user_data["birth_date"]
         phone_number = user_data["phone"]
-        created_at = QtCore.QDate.currentDate().toString("yyyy-MM-dd")
 
         # Hash password using SHA-256
-        password = hashlib.sha256((user_data["password"]).encode()).hexdigest()
+        password = hashlib.sha256(user_data["password"].encode()).hexdigest()
 
         # Panggil controller untuk menambahkan akun
         success = self.account_controller.add_account(
@@ -582,6 +582,8 @@ class RegisterScreen(QtWidgets.QWidget):
 
         if success:
             # Jika berhasil, kembali ke halaman login
+            print("Berhasil membuat akun")
+            self.user_data.clear()
             self.stack.setCurrentIndex(0)
         else:
             # Jika gagal, tampilkan pesan error
