@@ -24,11 +24,12 @@ class OnboardingScreen(QWidget):
 
         # Tambahkan halaman ke stack
         key_dict = {"key": ""}
-        self.otp_backend = Ui_accotp(self.stack, "inijohan29@gmail.com", key_dict)
+        newuser = {"email": ""}
+        self.otp_backend = Ui_accotp(self.stack, newuser, key_dict)
         self.forget_view = Ui_pemulihan(self.stack)
         self.login_view = LoginScreen(self.stack)
         self.register_view = RegisterScreen(self.stack)
-        self.register_email = self.register_view.register_email_view()
+        self.register_email = self.register_view.register_email_view(newuser)
         self.register_password = self.register_view.register_password_view()
 
         self.stack.addWidget(self.main_menu_widget)

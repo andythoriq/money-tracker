@@ -47,7 +47,7 @@ class Otp:
             smtp = smtplib.SMTP("smtp.gmail.com", 587)
             smtp.starttls()
             smtp.login(sender, str(AUTHKEY))
-            receiver = usermail
+            receiver = usermail["email"]
 
             otpmsg = EmailMessage()
             otpmsg["Subject"] = "Kode OTP Aplikasi Money Tracker"
