@@ -157,7 +157,7 @@ class OutcomeView(QWidget):
 
         self.input_category.addItems(category_names)
         for wallet in wallets:
-            self.input_wallet.addItem(f"{wallet[0]} - Rp {wallet[1]}", wallet[0])
+            self.input_wallet.addItem(f"{wallet.get('name')} - Rp {wallet.get('amount')}", wallet.get("name"))
 
     def add_outcome(self):
         """Menambahkan pengeluaran"""
@@ -166,29 +166,16 @@ class OutcomeView(QWidget):
         wallet = self.input_wallet.currentData()
         desc = self.input_desc.text().strip()
         date = self.calendar.selectedDate().toString("dd/MM/yyyy")  # Ambil tanggal dari kalender
-
-    # Cek apakah ada yang kosong
-        if amount == 0:
-            PopupWarning("Warning", "Jumlah pemasukkan tidak boleh kosong")
-            return
-        if not category:
-            PopupWarning("Warning", "Kategori tidak boleh kosong")
-            return
-        if not wallet:
-            PopupWarning("Warning", "Dompet tidak boleh kosong")
-            return
-        if not desc:
-            PopupWarning("Warning", "Deskripsi tidak boleh kosong")
-            return
-        
-        if self.outcome_controller.add_outcome(amount, category, wallet, desc, date):
+ 
+        result = self.outcome_controller.add_outcome(amount, category, wallet, desc, date)
+        if result.get("valid"):
             self.refresh_inputs()
             self.refresh_combobox()
             PopupSuccess("Success", "Pengeluaran berhasil disimpan!")
-        elif self.outcome_controller.add_outcome(amount, category, wallet, desc, date) == False:
-            PopupWarning("Warning", "Saldo tidak cukup")
         else:
-            PopupWarning("Warning", "Gagal menyimpan pemasukkan!")
+            errors = result.get("errors")
+            error_message = "\n".join([f"{key}: {value}" for key, value in errors.items()])
+            PopupWarning("Warning", f"Gagal menyimpan pengeluaran!\n{error_message}")
 
     def go_back(self):
         """Kembali ke Dashboard"""

@@ -187,10 +187,10 @@ class Dashboard(QWidget):
         self.layout_1.setLayout(layout)
 
     def layout_2_ui(self):
-        layout = QVBoxLayout()
         self.history_label = QLabel("Riwayat Transaksi Minggu Ini")
         self.history_label.setObjectName("Label_1")
 
+        layout = QVBoxLayout()
         history_table = QTableWidget()
         history_table.setObjectName("history_table")
         history_table.setColumnCount(5)
@@ -233,20 +233,20 @@ class Dashboard(QWidget):
         # mengambil data dari income dan outcome controller dan menggunakannya dalam satu list
         for income in self.history_view.income_controller.load_incomes():
             transactions.append({
-                "date": income[5],  # Assuming date is at index 5
+                "date": income.get('date'),
                 "type": "income",
-                "amount": income[1],
-                "category": income[2],
-                "wallet": income[3]
+                "amount": income.get('amount'),
+                "category": income.get('category'),
+                "wallet": income.get('wallet')
             })
 
         for outcome in self.history_view.outcome_controller.load_outcomes():
             transactions.append({
-                "date": outcome[5],  # Assuming date is at index 5
+                "date": outcome.get('date'),
                 "type": "outcome",
-                "amount": outcome[1],
-                "category": outcome[2],
-                "wallet": outcome[3]
+                "amount": outcome.get('amount'),
+                "category": outcome.get('category'),
+                "wallet": outcome.get('wallet')
             })
 
         # menyortir transaksi berdasarkan tanggal
@@ -278,7 +278,7 @@ class Dashboard(QWidget):
         for row, transaction in enumerate(recent_transactions):
             history_table.setItem(row, 0, QTableWidgetItem(transaction["date"]))  # Tanggal
             history_table.setItem(row, 1, QTableWidgetItem(transaction["type"]))  # Jenis
-            history_table.setItem(row, 2, QTableWidgetItem(f"Rp {transaction['amount']}"))  # Jumlah
+            history_table.setItem(row, 2, QTableWidgetItem(f"Rp {str(transaction['amount'])}"))  # Jumlah
             history_table.setItem(row, 3, QTableWidgetItem(transaction["category"]))  # Kategori
             history_table.setItem(row, 4, QTableWidgetItem(transaction["wallet"]))  # Dompet
 
@@ -291,12 +291,12 @@ class Dashboard(QWidget):
             self.stack.setCurrentWidget(self.history_view)
         ))
 
-        layout.addWidget(self.history_label)
         layout.addWidget(history_table)
         layout.addWidget(view_all_btn, alignment=QtCore.Qt.AlignRight)
         self.layout_2.setLayout(layout)
         self.layout_2.setContentsMargins(0, 0, 0, 0)  # Menghilangkan margin di sekitar layout_2
         self.layout_2.setSizePolicy(QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Expanding)
+
 
     def layout_3_ui(self):
         layout = QVBoxLayout()
@@ -343,13 +343,13 @@ class Dashboard(QWidget):
             if len(wishlist) < 4:  # Periksa apakah data lengkap
                 continue
                 
-            wishlist_table.setItem(row, 0, QTableWidgetItem(wishlist[0]))  # No.
-            wishlist_table.setItem(row, 1, QTableWidgetItem(wishlist[1]))  # Nama
-            wishlist_table.setItem(row, 2, QTableWidgetItem(wishlist[2]))  # Harga
+            wishlist_table.setItem(row, 0, QTableWidgetItem(str(wishlist.get('ID'))))
+            wishlist_table.setItem(row, 1, QTableWidgetItem(wishlist.get('label')))
+            wishlist_table.setItem(row, 2, QTableWidgetItem(str(wishlist.get('price'))))
             
             # Konversi status dari boolean ke text
-            status_text = "Sudah Terpenuhi" if wishlist[3] == "true" else "Belum Terpenuhi"
-            wishlist_table.setItem(row, 3, QTableWidgetItem(status_text))  # Status
+            status_text = "Sudah Terpenuhi" if wishlist.get('status') else "Belum Terpenuhi"
+            wishlist_table.setItem(row, 3, QTableWidgetItem(status_text))
         
         layout.addWidget(wishlist_table)
         self.layout_4.setLayout(layout)
