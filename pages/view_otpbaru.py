@@ -77,6 +77,7 @@ class Ui_accotp(QtWidgets.QWidget):
             }
         """)
         self.otp_input.setPlaceholderText("Masukkan kode OTP")
+        self.otp_input.textChanged.connect(self.verify_otp)
         otp_layout.addWidget(self.otp_input)
 
         main_layout.addLayout(otp_layout)
@@ -131,7 +132,7 @@ class Ui_accotp(QtWidgets.QWidget):
                 font-weight: bold;
             }
         """)
-        self.continue_button.clicked.connect(self.verify_otp)
+        self.continue_button.clicked.connect(self.add_account)
         main_layout.addWidget(self.continue_button)
 
         main_layout.addStretch()
@@ -165,7 +166,6 @@ class Ui_accotp(QtWidgets.QWidget):
     def verify_otp(self):
         result = self.otp_backend.otpcheck(self.otp_input.text(), self.key_dict["key"])
         if result:
-            self.register_controller.add_account()
             self.continue_button.setStyleSheet("""
                 background-color: qlineargradient(x1:0, y1:0, x2:1, y2:0, stop:0 #7db16e, stop:1 #b8e994);
                 color: #1c1f26;
@@ -173,7 +173,7 @@ class Ui_accotp(QtWidgets.QWidget):
                 border-radius: 20px;
                 font-weight: bold;
             """)
-            
+
         else:
             self.continue_button.setStyleSheet("""
                 background-color: #2c2f36;
@@ -182,3 +182,7 @@ class Ui_accotp(QtWidgets.QWidget):
                 border-radius: 20px;
                 font-weight: bold;
             """)
+
+    def add_account(self):
+        self.register_controller.add_account()
+        self.stack.setCurrentIndex(0)
