@@ -8,39 +8,11 @@ import os
 # Get the path to the 'config.json' file located in the 'locales' folder
 CONFIG_FILE = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "locales", "config.json"))
 LOCALE_DIR = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "locales", "lang"))
+THEME_DIR = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "locales", "theme"))
 
 class Setting:
     def __init__(self, view):
         self.view = view
-        # self.config = load_config()
-    #     self.translations = load_translation(self.config["language"])
-
-    #     self.init_ui()
-
-    # def init_ui(self):
-    #     self.view.label.setText(self.translations.get("welcome", "Welcome!"))
-
-    #     # Setup Language Dropdown
-    #     langs = get_available_languages()
-    #     self.view.lang_select.addItems(langs)
-    #     self.view.lang_select.setCurrentText(self.config["language"])
-    #     self.view.lang_select.currentTextChanged.connect(self.change_language)
-
-    #     # Setup Theme Dropdown
-    #     self.view.theme_select.setCurrentText(self.config["theme_color"])
-    #     self.view.theme_select.currentTextChanged.connect(self.change_theme)
-    #     self.apply_theme()
-
-    # def change_language(self, lang):
-    #     self.config["language"] = lang
-    #     self.translations = load_translation(lang)
-    #     self.view.label.setText(self.translations.get("welcome", "Welcome!"))
-    #     save_config(self.config)
-
-    # def change_theme(self, theme):
-    #     self.config["theme_color"] = theme
-    #     self.apply_theme()
-    #     save_config(self.config)
 
     def load_config():
         try:
@@ -78,24 +50,15 @@ class Setting:
     def toggle_icon(self, theme):
         if theme.isChecked():
             theme.setIcon(QtGui.QIcon("../money-tracker/img/icon/sun.svg"))
-            self.view.setStyleSheet("""
-            #container, #calendar, #wishlist_container, QStackedWidget, #HomeSection{    
-            background-color: #FFFFFF;
-            }
-            QWidget, QTableWidget, QLabel{    
-            color: #000000;
-            }
-            """)
         else:
             theme.setIcon(QtGui.QIcon("../money-tracker/img/icon/moon.svg"))
-            self.view.setStyleSheet("""
-            #container, #calendar, #wishlist_container, QStackedWidget {    
-            background-color: #252931;
-            }
-            #HomeSection {    
-            background-color: #121D2C;
-            }
-            QTableWidget, QLabel{    
-            color: #FFFFFF;
-            }
-            """)
+
+    def load_theme(self, theme, directory="locales/theme"):
+        path = os.path.join(directory, f"{theme}.qss")
+        
+        if os.path.exists(path):
+            with open(path, "r") as file:
+                qss = file.read()
+                self.view.setStyleSheet(qss)
+        else:
+            print(f"Warning: Stylesheet {path} not found!")

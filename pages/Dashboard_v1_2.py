@@ -34,8 +34,10 @@ class Dashboard(QWidget):
         self.container.setSizePolicy(QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Expanding)
         self.container.setMinimumSize(0, 0)
 
-        selected_language = Setting.load_config()
-        self.language_data = Setting.load_language_file(selected_language.get("language"))
+        self.config = Setting.load_config()
+        self.language_data = Setting.load_language_file(self.config.get("language"))
+        theme_handler = Setting(self)
+        theme_handler.load_theme(self.config["theme_color"])
 
         # Sidebar kiri (HomeSection)
         self.HomeSection = QGroupBox()
@@ -174,6 +176,7 @@ class Dashboard(QWidget):
         self.language.setObjectName("cb_lang")
         languages = Setting.get_available_languages()
         self.language.addItems(languages)
+        self.language.setCurrentIndex(self.language.findText(self.config.get("language")))
         self.language.currentIndexChanged.connect(self.change_language)
 
         self.btn_theme = QPushButton(self.HomeSection)
@@ -188,6 +191,7 @@ class Dashboard(QWidget):
         self.label.setStyleSheet("color: white; background-color: transparent;")
         self.label.setObjectName("label")
 
+        self.retranslateView()
         self.retranslateUi()
 
         # Atur ulang posisi dan ukuran tombol saat pertama kali dijalankan
@@ -591,19 +595,33 @@ class Dashboard(QWidget):
         )
 
     def toggle_theme(self):
+        theme = ["dark", "light", "mono"]
+        current_theme_color = self.config["theme_color"]
+
+        # Find the current theme's index and get the next one (wrap around using modulo)
+        current_index = theme.index(current_theme_color)
+        next_index = (current_index + 1) % len(theme)
+
+        # Update the theme color in the config
+        self.config["theme_color"] = theme[next_index]
+
+
         theme_handler = Setting(self)
+        Setting.save_config(self.config)
         theme_handler.toggle_icon(self.btn_theme)
+        theme_handler.load_theme(self.config["theme_color"])
 
     def change_language(self):
         """Mengubah bahasa UI berdasarkan bahasa yang dipilih"""
-        selected_language = self.language.currentText()  # Mengambil kode bahasa yang dipilih
-        self.language_data = Setting.load_language_file(selected_language)
+        self.config["language"] = self.language.currentText()
+        Setting.save_config(self.config)
+        self.language_data = Setting.load_language_file(self.language.currentText())
         self.retranslateView()
         self.retranslateUi()
 
     def retranslateView(self):
         index_aktif = self.stack.currentIndex()
-        if index_aktif > 0:
+        if index_aktif >= 0:
             self.income_view.retranslateUi(self.language_data)
             self.outcome_view.retranslateUi(self.language_data)
             self.wallet_view.retranslateUi(self.language_data)
