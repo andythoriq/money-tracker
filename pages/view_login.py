@@ -1,6 +1,7 @@
 from PyQt5 import QtWidgets, QtGui, QtCore
 from PyQt5.QtWidgets import QWidget
 from controller.account import Account
+from pages.Dashboard_v1_2 import Dashboard
 import hashlib
 
 class LoginScreen(QWidget):
@@ -8,6 +9,7 @@ class LoginScreen(QWidget):
         super().__init__()
         self.stack = stack
         self.account_controller = Account()
+        self.dashboard = Dashboard()
         self.init_ui()
 
     def init_ui(self):
@@ -145,4 +147,4 @@ class LoginScreen(QWidget):
         password = hashlib.sha256((self.password_input.text()).encode()).hexdigest()
 
         if any(acc["email"] == email and acc["password"] == password for acc in account_info):
-            self.stack.setCurrentIndex(5)
+            self.dashboard.show()

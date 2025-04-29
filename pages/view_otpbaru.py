@@ -1,6 +1,7 @@
 from PyQt5 import QtCore, QtGui, QtWidgets
 from controller.otp import Otp
-
+from controller.account import Account
+from pages.view_register import RegisterScreen
 
 class Ui_accotp(QtWidgets.QWidget):
     def __init__(self, stack, email, key_dict):
@@ -8,6 +9,8 @@ class Ui_accotp(QtWidgets.QWidget):
         self.stack = stack
         self.email = email
         self.key_dict = key_dict
+        self.account_controller = Account()
+        self.register_controller = RegisterScreen(self.stack)
         self.setupUi()
 
     def setupUi(self):
@@ -162,5 +165,20 @@ class Ui_accotp(QtWidgets.QWidget):
     def verify_otp(self):
         result = self.otp_backend.otpcheck(self.otp_input.text(), self.key_dict["key"])
         if result:
-            # Implementasi setelah verifikasi OTP berhasil
-            pass
+            self.register_controller.add_account()
+            self.continue_button.setStyleSheet("""
+                background-color: qlineargradient(x1:0, y1:0, x2:1, y2:0, stop:0 #7db16e, stop:1 #b8e994);
+                color: #1c1f26;
+                padding: 12px;
+                border-radius: 20px;
+                font-weight: bold;
+            """)
+            
+        else:
+            self.continue_button.setStyleSheet("""
+                background-color: #2c2f36;
+                color: #d3e9a3;
+                padding: 12px;
+                border-radius: 20px;
+                font-weight: bold;
+            """)

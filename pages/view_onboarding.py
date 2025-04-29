@@ -5,7 +5,6 @@ from pages.view_login import LoginScreen
 from pages.view_register import RegisterScreen
 from pages.view_otpbaru import Ui_accotp
 from pages.view_pemulihan import Ui_pemulihan
-from pages.Dashboard_v1_2 import Dashboard
 
 
 class OnboardingScreen(QWidget):
@@ -31,7 +30,6 @@ class OnboardingScreen(QWidget):
         self.register_view = RegisterScreen(self.stack)
         self.register_email = self.register_view.register_email_view()
         self.register_password = self.register_view.register_password_view()
-        self.dashboard = Dashboard(self.stack)
 
         self.stack.addWidget(self.main_menu_widget)
         self.stack.addWidget(self.login_view)
@@ -39,7 +37,6 @@ class OnboardingScreen(QWidget):
         self.stack.addWidget(self.register_email)
         self.stack.addWidget(self.register_password)
         self.stack.addWidget(self.otp_backend)
-        self.stack.addWidget(self.dashboard)
         self.stack.addWidget(self.forget_view)
 
         # Layout utama window

@@ -545,7 +545,7 @@ class RegisterScreen(QtWidgets.QWidget):
         self.account_controller.add_account(
             email, username, password, gender, birth_date, phone_number, created_at
         )
-
+        
     def input_style(self):
         return """
             background-color: #2c2f36;
