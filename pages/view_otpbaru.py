@@ -3,17 +3,18 @@ from controller.otp import Otp
 from controller.account import Account
 from pages.view_register import RegisterScreen
 
+
 class Ui_accotp(QtWidgets.QWidget):
-    def __init__(self, stack, email, key_dict):
+    def __init__(self, stack, key_dict, user_data):
         super().__init__()
         self.stack = stack
-        self.email = email
+        self.user_data = user_data
         self.key_dict = key_dict
         self.account_controller = Account()
-        self.register_controller = RegisterScreen(self.stack)
-        self.setupUi()
+        self.register_controller = RegisterScreen(self.stack, user_data)
+        self.setupUi(user_data)
 
-    def setupUi(self):
+    def setupUi(self, user_data):
         self.setGeometry(0, 0, 360, 640)
         self.setStyleSheet("background-color: #1c1f26; color: #d3e9a3;")
 
@@ -132,7 +133,7 @@ class Ui_accotp(QtWidgets.QWidget):
                 font-weight: bold;
             }
         """)
-        self.continue_button.clicked.connect(self.add_account)
+        self.continue_button.clicked.connect(lambda: self.add_account(user_data))
         main_layout.addWidget(self.continue_button)
 
         main_layout.addStretch()
@@ -159,30 +160,38 @@ class Ui_accotp(QtWidgets.QWidget):
             self.timer.stop()
 
     def send_otp(self):
-        if self.otp_backend.startsmtp(self.email, self.key_dict):
+        if self.otp_backend.startsmtp(self.user_data["email"], self.key_dict):
             self.timer.start(1000)
             self.back_button.setEnabled(False)
 
     def verify_otp(self):
         result = self.otp_backend.otpcheck(self.otp_input.text(), self.key_dict["key"])
         if result:
+            self.continue_button.setEnabled(True)
             self.continue_button.setStyleSheet("""
-                background-color: qlineargradient(x1:0, y1:0, x2:1, y2:0, stop:0 #7db16e, stop:1 #b8e994);
-                color: #1c1f26;
-                padding: 12px;
-                border-radius: 20px;
-                font-weight: bold;
+                QPushButton {
+                    background-color: qlineargradient(x1:0, y1:0, x2:1, y2:0, stop:0 #7db16e, stop:1 #b8e994);
+                    color: #1c1f26;
+                    border: none;
+                    border-radius: 5px;
+                    padding: 10px;
+                    font-weight: bold;
+                }
             """)
-
         else:
+            self.continue_button.setEnabled(False)
             self.continue_button.setStyleSheet("""
-                background-color: #2c2f36;
-                color: #d3e9a3;
-                padding: 12px;
-                border-radius: 20px;
-                font-weight: bold;
+                QPushButton {
+                    background-color: #2c2f36;
+                    color: #d3e9a3;
+                    border: none;
+                    border-radius: 5px;
+                    padding: 10px;
+                    font-weight: bold;
+                }
             """)
 
-    def add_account(self):
-        self.register_controller.add_account()
+    def add_account(self, user_data):
+        """Menambahkan akun baru setelah verifikasi OTP berhasil"""
+        self.register_controller.add_account(user_data)
         self.stack.setCurrentIndex(0)

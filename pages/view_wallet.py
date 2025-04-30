@@ -172,7 +172,7 @@ class WalletView(QWidget):
                     background-color: #45a049;
                 }
             """)
-            btn_edit.clicked.connect(lambda _, n=wallet.get("name"): self.edit_wallet(n))
+            self.btn_edit.clicked.connect(lambda _, n=wallet.get("name"): self.edit_wallet(n))
 
             self.btn_delete = QPushButton("Hapus")
             self.btn_delete.setFixedWidth(80)
@@ -187,7 +187,7 @@ class WalletView(QWidget):
                     background-color: #da190b;
                 }
             """)
-            btn_delete.clicked.connect(lambda _, n=wallet.get("name"): self.delete_wallet(n))
+            self.btn_delete.clicked.connect(lambda _, n=wallet.get("name"): self.delete_wallet(n))
 
             self.table_wallet.setItem(row, 0, name_item)
             self.table_wallet.setItem(row, 1, amount_item)
@@ -280,5 +280,24 @@ class WalletView(QWidget):
                     lang.get("wallet", {}).get("col4", "")
                     ]
                 )
-            self.btn_edit.setText(_translate("Form", lang.get("wallet", {}).get("col3", "")))
-            self.btn_delete.setText(_translate("Form", lang.get("wallet", {}).get("col4", "")))
+            try:
+                if self.btn_edit:  # Pastikan btn_edit ada
+                    self.btn_edit.setText(_translate("Form", lang.get("wallet", {}).get("col3", "")))
+                else:
+                    # Jika btn_edit ada tapi None atau tidak valid, bisa diberi penanganan khusus
+                    print("btn_edit is None or invalid")
+            except AttributeError:
+                # Menangani jika btn_edit tidak ada sama sekali
+                print("btn_edit is missing")
+
+            try:
+                if self.btn_delete:  # Pastikan btn_delete ada
+                    self.btn_delete.setText(_translate("Form", lang.get("wallet", {}).get("col4", "")))
+                else:
+                    # Jika btn_delete ada tapi None atau tidak valid, bisa diberi penanganan khusus
+                    print("btn_delete is None or invalid")
+            except AttributeError:
+                # Menangani jika btn_delete tidak ada sama sekali
+                print("btn_delete is missing")
+
+

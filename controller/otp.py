@@ -47,7 +47,7 @@ class Otp:
             smtp = smtplib.SMTP("smtp.gmail.com", 587)
             smtp.starttls()
             smtp.login(sender, str(AUTHKEY))
-            receiver = usermail["email"]
+            receiver = usermail
 
             otpmsg = EmailMessage()
             otpmsg["Subject"] = "Kode OTP Aplikasi Money Tracker"
@@ -62,7 +62,7 @@ class Otp:
             smtp.quit()
 
             self.last_otp_time = time.time()
-            self.otp_expiry = self.last_otp_time + 300
+            self.otp_expiry = self.last_otp_time + 300  # OTP berlaku selama 5 menit
             key_dict["key"] = self.current_otp
             return True
         except Exception as e:
@@ -81,3 +81,6 @@ class Otp:
         if userotp == otpcode:
             print("Kode OTP Benar!")
             return True
+        else:
+            print("Kode OTP Salah!")
+            return False

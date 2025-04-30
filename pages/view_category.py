@@ -222,4 +222,12 @@ class CategoryView(QWidget):
                     lang.get("category", {}).get("col3", "")
                     ]
                 )
-            self.btn_delete.setText(_translate("Form", lang.get("category", {}).get("col3", "")))
+            try:
+                if self.btn_delete:  # Pastikan btn_delete ada
+                    self.btn_delete.setText(_translate("Form", lang.get("category", {}).get("col3", "")))
+                else:
+                    # Jika btn_delete ada tapi None atau tidak valid, bisa diberi penanganan khusus
+                    print("btn_delete is None or invalid")
+            except AttributeError:
+                # Menangani jika btn_delete tidak ada sama sekali
+                print("btn_delete is missing")
