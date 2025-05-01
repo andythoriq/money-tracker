@@ -20,27 +20,47 @@ class Wishlist:
             for wishlist in self.wishlists:
                 file.write(",".join(wishlist) + "\n")
 
-    def add_wishlist(self, name, price, status):
-        """Menambah wishlist baru dengan ID"""
-        new_id = str(len(self.wishlists) + 1)
-        self.wishlists.append([new_id, name, str(price), str(status).lower()])  
+    def add_wishlist(self, label, price, status):
+        """Menambah wishlist baru dengan ID."""
+
+        # validasi
+        result = self.validate_wishlist({
+            "label": label,
+            "price": price,
+            "status": status
+        })
+
+        if not result.get("valid"):
+            return result
+
+        self.wishlists.append({
+            "ID": len(self.wishlists) + 1,
+            "label": label,
+            "price": price,
+            "status": status
+        })
         self.save_wishlists()
-        return new_id
+        return result
 
-    def edit_wishlist(self, wishlist_id, name, price, status):
-        """Mengedit wishlist berdasarkan ID"""
-        updated = False
+    def edit_wishlist(self, wishlist_id, label, price, status):
+        """Mengedit wishlist berdasarkan ID."""
         for wishlist in self.wishlists:
-            if wishlist[0] == str(wishlist_id):
-                wishlist[1] = name
-                wishlist[2] = str(price)
-                wishlist[3] = str(status).lower()
-                updated = True
-                break
+            if wishlist["ID"] == wishlist_id:
+                result = self.validate_wishlist({
+                    "label": label,
+                    "price": price,
+                    "status": status
+                })
+                if not result.get("valid"):
+                    return result # Stop execution if validation fails
 
-        if updated:
-            self.save_wishlists()
-        return updated
+                wishlist["label"] = label
+                wishlist["price"] = price
+                wishlist["status"] = status
+
+                self.save_wishlists()
+                return result
+        return False
 
     def delete_wishlist(self, wishlist_id):
         """Menghapus wishlist berdasarkan ID"""
@@ -62,5 +82,31 @@ class Wishlist:
         saldo_wallet = self.wallet_controller.get_balance_by_name(nama_wallet)
         if saldo_wallet is None:
             return []
+        return [wishlist for wishlist in self.wishlists if wishlist["price"] <= saldo_wallet]
+
+    def validate_wishlist(self, wishlist_data):
+        required_fields = ['label', 'price']
+        errors = {}
         
-        return [wishlist for wishlist in self.wishlists if int(wishlist[2]) <= saldo_wallet]
+        for field in required_fields:
+            if field not in wishlist_data or not wishlist_data[field]:
+                errors[field] = f"tidak boleh kosong"
+
+        if not errors:
+            if wishlist_data.get('price') < 0:
+                errors["price"] = "Jumlah saldo tidak boleh kurang dari 0."
+            elif wishlist_data.get('price') > 9_999_999_999:
+                errors["price"] = "Jumlah saldo tidak boleh lebih dari 9.999.999.999."
+
+            if not wishlist_data.get('label'):
+                errors["label"] = "tidak boleh kosong."
+            elif len(wishlist_data.get('label')) < 3:
+                errors["label"] = "harus lebih dari 3 karakter."
+            elif len(wishlist_data.get('label')) > 64:
+                errors["label"] = "tidak boleh lebih dari 20 karakter."
+            elif not wishlist_data.get('label').isalnum():
+                errors["label"] = "hanya boleh mengandung huruf dan angka."
+            elif not wishlist_data.get('label')[0].isalpha():
+                errors["label"] = "harus diawali dengan huruf."
+        
+        return {"valid": True} if not errors else {"valid": False, "errors": errors}

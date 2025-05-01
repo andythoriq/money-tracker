@@ -3,6 +3,7 @@ from PyQt5.QtWidgets import (
     QTableWidget, QTableWidgetItem, QLineEdit, QLabel, QGroupBox, QSpinBox, QMessageBox, QInputDialog, QSizePolicy, QHeaderView
 )
 from PyQt5.QtCore import Qt, QCoreApplication
+from controller.Popup import PopupWarning, PopupSuccess
 from controller.wallet import Wallet
 
 class WalletView(QWidget):
@@ -137,34 +138,17 @@ class WalletView(QWidget):
         name = self.input_name.text().strip()
         amount = self.input_amount.value()
 
-        if name:
-            self.wallet_controller.add_wallet(name, amount)
+        
+        result = self.wallet_controller.add_wallet(name, amount)
+        if result.get("valid"):
             self.load_wallets()
             self.input_name.clear()
             self.input_amount.setValue(0)
+            PopupSuccess("Success", "Wallet berhasil disimpan!")
         else:
-            msg = QMessageBox()
-            msg.setStyleSheet("""
-                QMessageBox {
-                    background-color: #7A9F60;
-                }
-                QLabel {
-                    color: white;
-                }
-                QPushButton {
-                    background-color: #4CAF50;
-                    color: white;
-                    border-radius: 5px;
-                    padding: 5px;
-                    min-width: 70px;
-                }
-                QPushButton:hover {
-                    background-color: #45a049;
-                }
-            """)
-            msg.setWindowTitle("Error")
-            msg.setText("Nama wallet tidak boleh kosong!")
-            msg.exec_()
+            errors = result.get("errors")
+            error_message = "\n".join([f"{key}: {value}" for key, value in errors.items()])
+            PopupWarning("Warning", f"Gagal menyimpan wallet!\n{error_message}")
 
     def edit_wallet(self, name):
         """Mengedit saldo wallet"""
@@ -172,8 +156,14 @@ class WalletView(QWidget):
         dialog.setObjectName("label")
         new_amount, ok = dialog.getInt(self, "Edit Wallet", f"Saldo baru untuk {name}:", min=0)
         if ok:
-            self.wallet_controller.edit_wallet(name, new_amount)
-            self.load_wallets()
+            result = self.wallet_controller.edit_wallet(name, new_amount)
+            if result.get("valid"):
+                self.load_wallets()
+                PopupSuccess("Success", "Wallet berhasil disimpan!")
+            else:
+                errors = result.get("errors")
+                error_message = "\n".join([f"{key}: {value}" for key, value in errors.items()])
+                PopupWarning("Warning", f"Gagal menyimpan wallet!\n{error_message}")
 
     def delete_wallet(self, name):
         """Menghapus wallet"""
@@ -229,5 +219,24 @@ class WalletView(QWidget):
                     lang.get("wallet", {}).get("col4", "")
                     ]
                 )
-            self.btn_edit.setText(_translate("Form", lang.get("wallet", {}).get("col3", "")))
-            self.btn_delete.setText(_translate("Form", lang.get("wallet", {}).get("col4", "")))
+            try:
+                if self.btn_edit:  # Pastikan btn_edit ada
+                    self.btn_edit.setText(_translate("Form", lang.get("wallet", {}).get("col3", "")))
+                else:
+                    # Jika btn_edit ada tapi None atau tidak valid, bisa diberi penanganan khusus
+                    print("btn_edit is None or invalid")
+            except AttributeError:
+                # Menangani jika btn_edit tidak ada sama sekali
+                print("btn_edit is missing")
+
+            try:
+                if self.btn_delete:  # Pastikan btn_delete ada
+                    self.btn_delete.setText(_translate("Form", lang.get("wallet", {}).get("col4", "")))
+                else:
+                    # Jika btn_delete ada tapi None atau tidak valid, bisa diberi penanganan khusus
+                    print("btn_delete is None or invalid")
+            except AttributeError:
+                # Menangani jika btn_delete tidak ada sama sekali
+                print("btn_delete is missing")
+
+

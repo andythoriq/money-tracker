@@ -5,6 +5,7 @@ from PyQt5.QtWidgets import (
     QHeaderView, QSizePolicy
 )
 from PyQt5.QtCore import Qt, QCoreApplication
+from controller.Popup import PopupWarning, PopupSuccess
 from controller.wishlist import Wishlist
 from controller.wallet import Wallet
 
@@ -174,16 +175,17 @@ class WishlistView(QWidget):
         name = self.name_input.text().strip()
         price = self.price_input.value()
 
-        if not name:
-            QMessageBox.warning(self, "Error", "Nama tidak boleh kosong!")
-            return
-
-        self.wishlist_controller.add_wishlist(name, price, False)  # Status default False
-        QMessageBox.information(self, "Sukses", "Wishlist berhasil ditambahkan!")
-
-        self.load_wishlists()  # Muat ulang daftar wishlist
-        self.name_input.clear()
-        self.price_input.setValue(1)
+        result = self.wishlist_controller.add_wishlist(name, price, False)  # Status default False
+        
+        if result.get("valid"):
+            self.load_wishlists()  # Muat ulang daftar wishlist
+            self.name_input.clear()
+            self.price_input.setValue(1)
+            PopupSuccess("Success", "Wishlist berhasil disimpan!")
+        else:
+            errors = result.get("errors")
+            error_message = "\n".join([f"{key}: {value}" for key, value in errors.items()])
+            PopupWarning("Warning", f"Gagal menyimpan wishlist!\n{error_message}")
 
     def show_edit_dialog(self, wishlist_id):
         """Menampilkan popup edit wishlist"""
@@ -232,17 +234,15 @@ class WishlistView(QWidget):
 
     def save_edit(self, dialog, wishlist_id, name, price, status):
         """Menyimpan hasil edit wishlist"""
-        if not name:
-            QMessageBox.warning(self, "Error", "Nama tidak boleh kosong!")
-            return
 
-        success = self.wishlist_controller.edit_wishlist(wishlist_id, name, price, status)
-        if success:
-            QMessageBox.information(self, "Sukses", "Wishlist berhasil diperbarui!")
+        result = self.wishlist_controller.edit_wishlist(wishlist_id, name, price, status)
+        if result.get('valid'):
             self.load_wishlists()
-            dialog.accept()
+            PopupSuccess("Success", "Wishlist berhasil disimpan!")
         else:
-            QMessageBox.warning(self, "Error", "Gagal mengupdate wishlist!")
+            errors = result.get("errors")
+            error_message = "\n".join([f"{key}: {value}" for key, value in errors.items()])
+            PopupWarning("Warning", f"Gagal menyimpan wishlist!\n{error_message}")
 
     def delete_wishlist(self, wishlist_id, name, price):
         """Konfirmasi dan hapus wishlist"""
