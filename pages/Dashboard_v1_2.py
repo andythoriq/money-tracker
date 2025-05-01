@@ -39,6 +39,9 @@ class Dashboard(QWidget):
         theme_handler = Setting(self)
         theme_handler.load_theme(self.config["theme_color"])
 
+        theme_handler = Setting(self)
+        theme_handler.load_theme(self.config["theme_color"])
+
         # Sidebar kiri (HomeSection)
         self.HomeSection = QGroupBox()
 
@@ -188,7 +191,6 @@ class Dashboard(QWidget):
         self.btn_theme.clicked.connect(self.toggle_theme)
 
         self.label = QLabel(self.HomeSection)
-        self.label.setStyleSheet("color: white; background-color: transparent;")
         self.label.setObjectName("label")
 
         self.retranslateView()
@@ -215,7 +217,7 @@ class Dashboard(QWidget):
         self.history_label.setObjectName("Label_1")
 
         self.history_table = QTableWidget()
-        self.history_table.setObjectName("history_table")
+        self.history_table.setObjectName("table")
         self.history_table.setColumnCount(5)
 
 
@@ -226,26 +228,6 @@ class Dashboard(QWidget):
         self.history_table.setColumnWidth(4, 100)  # Dompet
 
         # Table style, untuk kasus ini tidak dapat digunakan pada file style.qss
-        self.history_table.setStyleSheet("""
-            QTableWidget {
-                background-color: #7A9F60;
-                border-radius: 10px;
-                color: white;
-                gridline-color: #98C379;
-            }
-            QTableWidget::item {
-                padding: 5px;
-            }
-            QTableWidget::item:selected {
-                background-color: #6A8B52;
-            }
-            QHeaderView::section {
-                background-color: #7A9F60;
-                color: white;
-                padding: 5px;
-                border: none;
-            }
-        """)
 
         # Sembunyikan header vertikal
         self.history_table.verticalHeader().setVisible(False)
@@ -604,7 +586,6 @@ class Dashboard(QWidget):
 
         # Update the theme color in the config
         self.config["theme_color"] = theme[next_index]
-
 
         theme_handler = Setting(self)
         Setting.save_config(self.config)

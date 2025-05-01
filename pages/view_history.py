@@ -2,7 +2,8 @@ from PyQt5.QtWidgets import (
     QWidget, QVBoxLayout, QPushButton, QTableWidget, 
     QTableWidgetItem, QHBoxLayout, QLabel, QRadioButton, 
     QButtonGroup, QDialog, QFormLayout, QSpinBox, 
-    QComboBox, QLineEdit, QCalendarWidget, QMessageBox
+    QComboBox, QLineEdit, QCalendarWidget, QMessageBox,
+    QHeaderView
 )
 from PyQt5.QtCore import Qt, QCoreApplication
 from datetime import datetime
@@ -29,7 +30,7 @@ class HistoryView(QWidget):
 
         # Title Section
         self.title_label = QLabel("History")
-        self.title_label.setObjectName("tittleLabel")
+        self.title_label.setObjectName("titleLabel")
         main_layout.addWidget(self.title_label)
 
         # Content Container
@@ -85,36 +86,17 @@ class HistoryView(QWidget):
         self.table = QTableWidget()
         self.table.setObjectName("table")
         self.table.setColumnCount(8)
+        self.table.horizontalHeader().setSectionResizeMode(QHeaderView.Interactive)
+        self.table.horizontalHeader().setSectionResizeMode(0, QHeaderView.ResizeToContents)
+        self.table.horizontalHeader().setSectionResizeMode(1, QHeaderView.Stretch)
+        self.table.horizontalHeader().setSectionResizeMode(6, QHeaderView.ResizeToContents)
+        self.table.horizontalHeader().setSectionResizeMode(7, QHeaderView.ResizeToContents)
         self.table.setHorizontalHeaderLabels(["Tanggal", "Jenis", "Jumlah", "Kategori", "Dompet", "Deskripsi", "Edit", "Delete"])
         self.table.setSortingEnabled(True)
         self.table.setEditTriggers(QTableWidget.NoEditTriggers)
-        self.table.setStyleSheet("""
-            QTableWidget {
-                background-color: #7A9F60;
-                border-radius: 10px;
-                color: white;
-                gridline-color: #98C379;
-            }
-            QTableWidget::item {
-                padding: 5px;
-            }
-            QTableWidget::item:selected {
-                background-color: #6A8B52;
-            }
-            QHeaderView::section {
-                background-color: #7A9F60;
-                color: white;
-                padding: 5px;
-                border: none;
-            }
-            QScrollBar {
-                background-color: #7A9F60;
-            }
-        """)
         self.table.horizontalHeader().setStretchLastSection(False)
         self.table.verticalHeader().setVisible(False)
         content_layout.addWidget(self.table)
-        self.setStyleSheet("background-color: #98C379;")
 
         # Label Total
         self.label = QLabel("Total : Rp 0")
@@ -182,36 +164,19 @@ class HistoryView(QWidget):
             self.table.setItem(row, 5, QTableWidgetItem(transaction["desc"]))
 
             # Tombol Edit
-            btn_edit = QPushButton("Edit")
-            btn_edit.setStyleSheet("""
-                QPushButton {
-                    background-color: #4CAF50;
-                    color: white;
-                    border-radius: 5px;
-                    padding: 5px;
-                }
-                QPushButton:hover {
-                    background-color: #45a049;
-                }
-            """)
-            btn_edit.clicked.connect(lambda _, t=transaction: self.open_edit_popup(t))
-            self.table.setCellWidget(row, 6, btn_edit)
+            self.btn_edit = QPushButton("Edit")
+            self.btn_edit.setFixedWidth(80)
+            self.btn_edit.setObjectName("Edit")
+
+            self.btn_edit.clicked.connect(lambda _, t=transaction: self.open_edit_popup(t))
+            self.table.setCellWidget(row, 6, self.btn_edit)
 
             # Tombol Delete
-            btn_delete = QPushButton("Delete")
-            btn_delete.setStyleSheet("""
-                QPushButton {
-                    background-color: #f44336;
-                    color: white;
-                    border-radius: 5px;
-                    padding: 5px;
-                }
-                QPushButton:hover {
-                    background-color: #da190b;
-                }
-            """)
-            btn_delete.clicked.connect(lambda _, t=transaction: self.confirm_delete(t))
-            self.table.setCellWidget(row, 7, btn_delete)
+            self.btn_delete = QPushButton("Delete")
+            self.btn_delete.setFixedWidth(80)
+            self.btn_delete.setObjectName("Delete")
+            self.btn_delete.clicked.connect(lambda _, t=transaction: self.confirm_delete(t))
+            self.table.setCellWidget(row, 7, self.btn_delete)
 
         self.label.setText(f"Total : Rp {self.total}")
 
@@ -267,8 +232,9 @@ class HistoryView(QWidget):
         layout.addRow("Tanggal:", date_input)
 
         # Tombol Simpan
-        btn_save = QPushButton("Simpan")
-        btn_save.setStyleSheet("""
+        self.btn_save = QPushButton("Simpan")
+        self.btn_save.setFixedWidth(80)
+        self.btn_save.setStyleSheet("""
             QPushButton {
                 background-color: #4CAF50;
                 color: white;
@@ -280,8 +246,8 @@ class HistoryView(QWidget):
                 background-color: #45a049;
             }
         """)
-        btn_save.clicked.connect(lambda: self.save_edit(transaction, amount_input, category_input, wallet_input, desc_input, date_input, dialog))
-        layout.addRow(btn_save)
+        self.btn_save.clicked.connect(lambda: self.save_edit(transaction, amount_input, category_input, wallet_input, desc_input, date_input, dialog))
+        layout.addRow(self.btn_save)
 
         dialog.setLayout(layout)
         dialog.exec_()

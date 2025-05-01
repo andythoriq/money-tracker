@@ -59,6 +59,11 @@ QLineEdit {
 #groupBox {
     background-color: #333333;
     border-radius: 25%;
+    color: white;
+    font-family: Inter;
+    font-size: 14px;
+    font-weight: bold;
+    margin-bottom: 5px;
 }
 
 /* Home Section */
@@ -100,6 +105,59 @@ QLineEdit {
     background-color: #666666;
 }
 
+/* tabel */
+#table {
+    background-color: #444444;
+    border-radius: 10px;
+    color: white;
+    gridline-color:rgb(43, 43, 43);
+}
+
+#history_table::item {
+    padding: 5px;
+}
+    
+#history_table::item:selected {
+    background-color: #555555;
+}
+
+QHeaderView::section {
+    background-color: #444444;
+    color: white;
+    padding: 5px;
+    border: none;
+}
+
+QScrollBar {
+    background-color: #444444;
+}
+
+#Edit {
+    background-color: #757575;
+    color: white;
+    border-radius: 5px;
+    padding: 5px;
+    margin-left: 5px; 
+    margin-right: 5px;
+}
+
+#Edit:hover {
+    background-color: #45a049;
+}
+
+#Delete {
+    background-color: #B71C1C;
+    color: white;
+    border-radius: 5px;
+    padding: 5px;
+    margin-left: 5px; 
+    margin-right: 5px;
+}
+
+#Delete:hover {
+    background-color: #da190b;
+}
+
 /* Other Buttons */
 #btn_home {
     background-color: #444444;
@@ -118,7 +176,7 @@ QLineEdit {
 }
 
 /* Title Label */
-#tittleLabel {
+#titleLabel {
     background-color: #333333;
     font: 24pt;
     color: white;
@@ -208,7 +266,7 @@ QLineEdit {
     font-size: 14px;
 }
 
-#wishlist_button {
+#add_button {
     background-color: #444444;
     color: white;
     border-radius: 5px;
@@ -216,11 +274,11 @@ QLineEdit {
     font-size: 14px;
 }
 
-#wishlist_button:hover {
+#add_button:hover {
     background-color: #555555;
 }
 
-#wishlist_button:pressed {
+#add_button:pressed {
     background-color: #666666;
 }
 
@@ -270,12 +328,19 @@ QLineEdit {
 }
 
 /* Outcome Styles */
+#titleLabel[class="OutcomeView"] {
+    background-color: #444444;
+    font: 24pt;
+    color: white;
+    padding: 15px;
+    border-radius: 10px;
+}
+
 #Layout[class="OutcomeView"] {
     background-color: #444444;
     border: none;
     border-radius: 15px;
-    padding: 20px;
-    margin: 10px;
+    padding: 15px;
 }
 
 #form_input[class="OutcomeView"] {

@@ -43,6 +43,11 @@ QLineEdit {
     position: absolute;
     background-color: #98C379;
     border-radius: 25%;
+    color: white;
+    font-family: Inter;
+    font-size: 14px;
+    font-weight: bold;
+    margin-bottom: 5px;
 }
 
 #HomeSection {
@@ -68,6 +73,7 @@ QLineEdit {
 
 #btn_aboutUs {
     text-align: left;
+    color: blue;
 }
 
 #btn_homeSection {
@@ -121,6 +127,66 @@ QLineEdit {
     border-radius: 10px;
 }
 
+/* tabel */
+#table {
+    background-color: #7A9F60;
+    border-radius: 10px;
+    color: white;
+    gridline-color: #98C379;
+}
+
+#history_table::item {
+    padding: 5px;
+}
+    
+#history_table::item:selected {
+    background-color: #6A8B52;
+}
+
+#history_table::section {
+    background-color: #7A9F60;
+    color: white;
+    padding: 5px;
+    border: none;
+}
+
+QHeaderView::section {
+    background-color: #7A9F60;
+    color: white;
+    padding: 5px;
+    border: none;
+}
+
+QScrollBar {
+    background-color: #7A9F60;
+}
+
+#Edit {
+    background-color: #4CAF50;
+    color: white;
+    border-radius: 5px;
+    padding: 5px;
+    margin-left: 5px; 
+    margin-right: 5px;
+}
+
+#Edit:hover {
+    background-color: #45a049;
+}
+
+#Delete {
+    background-color: #f44336;
+    color: white;
+    border-radius: 5px;
+    padding: 5px;
+    margin-left: 5px; 
+    margin-right: 5px;
+}
+
+#Delete:hover {
+    background-color: #da190b;
+}
+
 /* tombol slide yang ada pada layout 1 di home */
 #btn_nextslide {
     background-color: #7A9F60;
@@ -129,33 +195,12 @@ QLineEdit {
     border-radius: 15px;
 }
 
-#btn_nextslide:hover {
+#btn_nextslide::hover {
     background-color: #6A8B52;
 }
 
-#btn_nextslide:pressed {
+#btn_nextslide::pressed {
     background-color: #5C7A46;
-}
-
-#history_table {
-    QTableWidget {
-        background-color: #7A9F60;
-        border-radius: 10px;
-        color: white;
-        gridline-color: #98C379;
-    }
-    QTableWidget::item {
-        padding: 5px;
-    }
-    QTableWidget::item:selected {
-        background-color: #6A8B52;
-    }
-    QHeaderView::section {
-        background-color: #7A9F60;
-        color: white;
-        padding: 5px;
-        border: none;
-    }
 }
 
 /* Wallet View Styles */
@@ -243,7 +288,7 @@ QLineEdit {
     font-size: 14px;
 }
 
-#wishlist_button {
+#add_button {
     background-color: #7A9F60;
     color: white;
     border-radius: 5px;
@@ -251,14 +296,14 @@ QLineEdit {
     font-size: 14px;
 }
 
-#wishlist_button:hover {
+#add_button:hover {
     background-color: #7A9F60;
     border-radius: 5px;
     padding: 5px;
     font-size: 14px;
 }
 
-#wishlist_button:pressed {
+#add_button:pressed {
     background-color: #5C7A46;
     border-radius: 5px;
     padding: 5px;
@@ -458,12 +503,19 @@ QSpinBox::down-arrow {
 /* akhir dari income styling */
 
 /* Outcome styling */
+#titleLabel[class="OutcomeView"] {
+    background: #E06C75;
+    font: 24pt;
+    color: white;
+    padding: 15px;
+    border-radius: 10px;
+}
+
 #Layout[class="OutcomeView"] {
     background: #E06C75;
     border: none;
     border-radius: 15px;
-    padding: 20px;
-    margin: 10px;
+    padding: 15px;
 }
 
 #form_input[class="OutcomeView"] {
@@ -614,105 +666,109 @@ QStackedWidget {
 
 /* Statistic View Styles */
 
-#iconDesignStatistic {
-    QComboBox {
-        background-color: transparent;
-        width: 60px;  /* Only the width for the dropdown arrow */
-        height: 22px;
-        padding: 0px;
-        border: none;  /* Remove border */
-        text-align: center;  /* Ensure nothing is visible in collapsed state */
-    }
+#iconDesign {
+    background-color: transparent;
+    width: 60px;  /* Only the width for the dropdown arrow */
+    height: 22px;
+    padding: 0px;
+    border: none;  /* Remove border */
+    text-align: center;  /* Ensure nothing is visible in collapsed state */
+}
 
-    QComboBox::drop-down {
-        width: 60px;  /* Size of the dropdown arrow */
-    }
+#iconDesign::drop-down {
+    width: 60px;  /* Size of the dropdown arrow */
+}
 
-    QComboBox::down-arrow {
-        image: url(img/icon/database.svg);  /* Ensure this image exists and is correctly loaded */
-        width: 60px;  /* Size of the dropdown arrow */
-        height: 60px;
-    }
+#iconDesign::down-arrow {
+    image: url(img/icon/database.svg);  /* Ensure this image exists and is correctly loaded */
+    width: 60px;  /* Size of the dropdown arrow */
+    height: 60px;
+}
 
-    /* Hide the text area but don't completely remove it */
-    QComboBox::lineEdit {
-        border: none;
-        background: transparent;
-        padding: 100px;
-        color: transparent;  /* Keep the text hidden */
-    }
+/* Hide the text area but don't completely remove it */
+#iconDesign::lineEdit {
+    border: none;
+    background: transparent;
+    padding: 100px;
+    color: transparent;  /* Keep the text hidden */
+}
 
-    /* Display dropdown list items correctly */
-    QComboBox QAbstractItemView {
-        min-width: 150px;  /* Minimum width for dropdown items */
-        max-width: 300px;  /* Ensure items have sufficient width to show full text */
-        font-size: 14px;
-        padding: 100px;
-    }
+/* Display dropdown list items correctly */
+#iconDesign QAbstractItemView {
+    min-width: 150px;  /* Minimum width for dropdown items */
+    max-width: 300px;  /* Ensure items have sufficient width to show full text */
+    font-size: 14px;
+    padding: 100px;
+}
 
-    QComboBox QAbstractItemView::item {
-        padding-left: 10px;  /* Indentation for item text */
-        padding-right: 10px;
-        height: 40px;  /* Height of each item */
-    }
+#iconDesign QAbstractItemView::item {
+    padding-left: 10px;  /* Indentation for item text */
+    padding-right: 10px;
+    height: 40px;  /* Height of each item */
+}
 
-    QComboBox::item:selected {
-        background-color: lightblue;  /* Background when an item is selected */
-        color: black;  /* Text color for selected item */
-    }
+#iconDesign::item:selected {
+    background-color: lightblue;  /* Background when an item is selected */
+    color: black;  /* Text color for selected item */
+}
 
-    QComboBox::editable {
-        background: transparent;
-        border: none;
-        padding: 0px;
-        color: transparent;  /* Hide the text but still keep the arrow visible */
-    }
+#iconDesign::editable {
+    background: transparent;
+    border: none;
+    padding: 0px;
+    color: transparent;  /* Hide the text but still keep the arrow visible */
+}
+
+#sliderType {
+    background-color: #D3D3D3;
+    padding: 5px;
+    border-radius: 5px;"
 }
 
 #textDesignStatistic {
-    QLabel {
-        font-family: 'Arimo';
-        font-size: 16px;             /* Sets font size */
-        color: #FFFFFF;                 /* Sets text color */
-        font-weight: bold;               /* Makes the font extra bold */
-        text-align: center;
-            border: none;
-    }
-
-    #changeValue {
-        font-family: 'Arimo';
-        font-size: 10px;             /* Sets font size */
-        color: #FFFFFF;                 /* Sets text color */
-        font-weight: bold;               /* Makes the font extra bold */
-    }
+    font-family: 'Arimo';
+    font-size: 16px;             /* Sets font size */
+    color: #FFFFFF;                 /* Sets text color */
+    font-weight: bold;               /* Makes the font extra bold */
+    text-align: center;
+    border: none;
 }
 
-#chartDesignStatistic {
-    QFrame    {
-        border: 10px solid #191D24; 
-        padding: 20px; 
-        background-color: #FFFFFF;
-        border-radius: 15px; 
-    }
+#changeValue {
+    font-family: 'Arimo';
+    font-size: 10px;             /* Sets font size */
+    color: #FFFFFF;                 /* Sets text color */
+    font-weight: bold;               /* Makes the font extra bold */
+}
+
+#chartDesign {
+    border: 10px solid #191D24; 
+    padding: 20px; 
+    background-color: #FFFFFF;
+    border-radius: 15px; 
 }
 
 #DesignStatistic {
-    QFrame    {
-        border: 10px solid #191D24; 
-        padding: 20px; 
-        background-color: #FFFFFF;
-        border-radius: 15px; 
-    }
+    border: 10px solid #191D24; 
+    padding: 20px; 
+    background-color: #FFFFFF;
+    border-radius: 15px; 
 }
 
-#buttonDesignStatistic {
-    QPushButton {
-        background-color: #D3D3D3;
-        border-radius: 10px;
-        padding: 5px;
-        font-weight: bold;
-    }
-    QPushButton:hover {
-        background-color: #A9A9A9;
-    }
+#buttonStyle {
+    background-color: #D3D3D3;
+    border-radius: 10px;
+    padding: 5px;
+    font-weight: bold;
+}
+#buttonStyle::hover {
+    background-color: #A9A9A9;
+}
+
+#StatistikDesign {    
+    font-family: 'Arimo';
+    font-size: 20px;
+    font-weight: bold;
+    color: #E06C75;
+    background-color: transparent;
 }

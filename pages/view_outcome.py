@@ -19,14 +19,14 @@ class OutcomeView(QWidget):
 
     def init_ui(self):
         # Main container
-        main_container = QWidget()
-        main_container.setObjectName("container")
-        main_container.setProperty("class", "OutcomeView")
         main_layout = QVBoxLayout()
+        main_layout.setContentsMargins(20, 20, 20, 20)
+        main_layout.setSpacing(20)
         
         # Header
         self.header_label = QLabel("Outcome Baru")
-        self.header_label.setObjectName("Label_1")
+        self.header_label.setObjectName("titleLabel")
+        self.header_label.setProperty("class", "OutcomeView")
         
         # Form container
         form_container = QWidget()
@@ -135,10 +135,10 @@ class OutcomeView(QWidget):
         buttons_container.setLayout(buttons_layout)
 
         form_container.setLayout(form_layout)
+
         main_layout.addWidget(self.header_label)
         main_layout.addWidget(form_container)
         main_layout.addWidget(buttons_container)
-        main_container.setLayout(main_layout)
         self.setLayout(main_layout)
 
     def refresh_inputs(self):

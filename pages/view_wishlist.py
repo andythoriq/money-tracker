@@ -1,84 +1,84 @@
 import os
 from PyQt5.QtWidgets import (
     QWidget, QVBoxLayout, QHBoxLayout, QPushButton, QTableWidget, QTableWidgetItem, 
-    QRadioButton, QLineEdit, QMessageBox, QSpinBox, QComboBox, QLabel, QDialog
+    QRadioButton, QLineEdit, QMessageBox, QSpinBox, QComboBox, QLabel, QDialog, 
+    QHeaderView, QSizePolicy
 )
 from PyQt5.QtCore import Qt, QCoreApplication
 from controller.wishlist import Wishlist
 from controller.wallet import Wallet
 
 class WishlistView(QWidget):
-    def __init__(self, wallet_controller, parent=None):
+    def __init__(self, parent=None):
         super().__init__(parent)
         self.wallet_controller = Wallet()
         self.wishlist_controller = Wishlist(Wallet())
-        self.initUI()
+        self.init_ui()
+        self.setObjectName("HomeSection")
 
-    def initUI(self):
+    def init_ui(self):
         # Main container with dark background
-        main_container = QWidget()
-        main_container.setObjectName("wishlist_container")
-        main_layout = QVBoxLayout(main_container)
+        main_layout = QVBoxLayout()
         main_layout.setContentsMargins(20, 20, 20, 20)
-        main_layout.setSpacing(0)
+        main_layout.setSpacing(20)
 
-        # Title container
-        title_container = QHBoxLayout()
+        # Title Section
         self.title_label = QLabel("Wishlist")
-        self.title_label.setObjectName("Label_1")
-        title_container.addWidget(self.title_label)
-        title_container.addStretch()
-        main_layout.addLayout(title_container)
+        self.title_label.setObjectName("titleLabel")
+        main_layout.addWidget(self.title_label)
 
         # Content container with green background
-        content_container = QWidget()
-        content_container.setObjectName("wishlist_content")
-        content_layout = QVBoxLayout(content_container)
+        content_widget = QWidget()
+        content_widget.setObjectName("Layout")
+        content_layout = QVBoxLayout(content_widget)
         content_layout.setContentsMargins(30, 30, 30, 30)
         content_layout.setSpacing(20)
 
         # Form layout
-        form_layout = QHBoxLayout()
+        form_widget = QWidget()
+        form_widget.setObjectName("groupBox")
+        form_layout = QHBoxLayout(form_widget)
         form_layout.setSpacing(15)
 
         # Name input
         self.name_label = QLabel("Nama:")
-        self.name_label.setObjectName("wishlist_label")
+        self.name_label.setObjectName("form_label")
         form_layout.addWidget(self.name_label)
         
         self.name_input = QLineEdit()
         self.name_input.setObjectName("wishlist_input")
+        self.name_input.setPlaceholderText("Nama Target")
         self.name_input.setFixedWidth(400)
         form_layout.addWidget(self.name_input)
 
         # Price input
         self.price_label = QLabel("Harga:")
-        self.price_label.setObjectName("wishlist_label")
+        self.price_label.setObjectName("form_label")
         form_layout.addWidget(self.price_label)
         
         self.price_input = QSpinBox()
         self.price_input.setObjectName("wishlist_input")
         self.price_input.setRange(0, 100_000_000)
         self.price_input.setSingleStep(50_000)
-        self.price_input.setFixedWidth(400)
+        self.price_input.setPrefix("Rp ")
         form_layout.addWidget(self.price_input)
 
         # Add button
         self.add_button = QPushButton("Tambah Wishlist")
-        self.add_button.setObjectName("wishlist_button")
-        self.add_button.setFixedWidth(175)
+        self.add_button.setObjectName("add_button")
         self.add_button.clicked.connect(self.add_wishlist)
         form_layout.addWidget(self.add_button)
 
         form_layout.addStretch()
-        content_layout.addLayout(form_layout)
-
+        
         # Filter status layout
-        status_layout = QHBoxLayout()
+        status_widget = QWidget()
+        status_widget.setObjectName("groupBox")
+        status_layout = QHBoxLayout(status_widget)
         status_layout.setSpacing(15)
         
         self.filter_label = QLabel("Filter Status:")
-        self.filter_label.setObjectName("wishlist_label")
+        self.filter_label.setObjectName("form_label")
         status_layout.addWidget(self.filter_label)
 
         # Radio buttons
@@ -98,44 +98,39 @@ class WishlistView(QWidget):
         self.unfulfilled_status.toggled.connect(self.load_wishlists)
         self.fulfilled_status.toggled.connect(self.load_wishlists)
 
-        content_layout.addLayout(status_layout)
-
         # Table
         self.wishlist_table = QTableWidget()
-        self.wishlist_table.setObjectName("wishlist_table")
+        self.wishlist_table.setObjectName("table")
         self.wishlist_table.setColumnCount(6)
-        self.wishlist_table.setHorizontalHeaderLabels(["No.", "Nama", "Harga", "Status", "E", "D"])
+        self.wishlist_table.horizontalHeader().setSectionResizeMode(QHeaderView.Interactive)
+        self.wishlist_table.horizontalHeader().setSectionResizeMode(0, QHeaderView.ResizeToContents)
+        self.wishlist_table.horizontalHeader().setSectionResizeMode(1, QHeaderView.Stretch)
+        self.wishlist_table.horizontalHeader().setSectionResizeMode(3, QHeaderView.ResizeToContents)
+        self.wishlist_table.horizontalHeader().setSectionResizeMode(4, QHeaderView.ResizeToContents)
+        self.wishlist_table.horizontalHeader().setSectionResizeMode(5, QHeaderView.ResizeToContents)
+        # self.wishlist_table.setSizePolicy(QSizePolicy.Expanding, QSizePolicy.Expanding)
+        self.wishlist_table.setHorizontalHeaderLabels(["No.", "Nama", "Harga", "Status", "Edit", "Delete"])
         
         # Adjust column widths proportionally
         total_width = self.wishlist_table.viewport().width()
-        self.wishlist_table.setColumnWidth(0, int(total_width * 0.05))  # 5% for No.
-        self.wishlist_table.setColumnWidth(1, int(total_width * 0.69))  # 35% for Nama
-        self.wishlist_table.setColumnWidth(2, int(total_width * 0.35))  # 20% for Harga
-        self.wishlist_table.setColumnWidth(3, int(total_width * 0.34))  # 20% for Status
-        self.wishlist_table.setColumnWidth(4, int(total_width * 0.15))  # 10% for Edit
-        self.wishlist_table.setColumnWidth(5, int(total_width * 0.153))  # 10% for Delete
+        self.wishlist_table.setColumnWidth(0, int(total_width * 0.02))  # 5% for No.
+        self.wishlist_table.setColumnWidth(1, int(total_width * 0.37))  # 35% for Nama
+        self.wishlist_table.setColumnWidth(2, int(total_width * 0.20))  # 20% for Harga
+        self.wishlist_table.setColumnWidth(3, int(total_width * 0.20))  # 20% for Status
+        self.wishlist_table.setColumnWidth(4, int(total_width * 0.10))  # 10% for Edit
+        self.wishlist_table.setColumnWidth(5, int(total_width * 0.10))  # 10% for Delete
 
         self.wishlist_table.verticalHeader().setVisible(False)
         self.wishlist_table.setMinimumHeight(300)  # Set minimum height for table
-        content_layout.addWidget(self.wishlist_table)
-
         self.load_wishlists()
 
-        # Add content container to main layout
-        main_layout.addWidget(content_container)
+        content_layout.addWidget(form_widget)
+        content_layout.addWidget(status_widget)
+        content_layout.addWidget(self.wishlist_table)
 
-        # Back button container at bottom right
-        back_button_container = QHBoxLayout()
-        back_button_container.setContentsMargins(0, 10, 20, 20)
-        back_button_container.addStretch()
-        
-        main_layout.addLayout(back_button_container)
-
-        # Set the main container as the central widget
-        outer_layout = QVBoxLayout()
-        outer_layout.setContentsMargins(0, 0, 0, 0)
-        outer_layout.addWidget(main_container)
-        self.setLayout(outer_layout)
+        # Add content to main layout
+        main_layout.addWidget(content_widget)
+        self.setLayout(main_layout)
 
     def load_wishlists(self):
         """Memuat data wishlist ke tabel berdasarkan filter"""
@@ -162,15 +157,17 @@ class WishlistView(QWidget):
             self.wishlist_table.setItem(row, 3, QTableWidgetItem(status_text))  # Status
 
             # Tombol Edit dan Hapus
-            edit_button = QPushButton("Edit")
-            edit_button.setObjectName("wishlist_button")
-            edit_button.clicked.connect(lambda _, id=wishlist[0]: self.show_edit_dialog(id))
-            self.wishlist_table.setCellWidget(row, 4, edit_button)
+            self.edit_button = QPushButton("Edit")
+            self.edit_button.setFixedWidth(80)
+            self.edit_button.setObjectName("Edit")
+            self.edit_button.clicked.connect(lambda _, id=wishlist[0]: self.show_edit_dialog(id))
+            self.wishlist_table.setCellWidget(row, 4, self.edit_button)
 
-            delete_button = QPushButton("Hapus")
-            delete_button.setObjectName("wishlist_button")
-            delete_button.clicked.connect(lambda _, id=wishlist[0], name=wishlist[1], price=wishlist[2]: self.delete_wishlist(id, name, price))
-            self.wishlist_table.setCellWidget(row, 5, delete_button)
+            self.delete_button = QPushButton("Hapus")
+            self.delete_button.setFixedWidth(80)
+            self.delete_button.setObjectName("Delete")
+            self.delete_button.clicked.connect(lambda _, id=wishlist[0], name=wishlist[1], price=wishlist[2]: self.delete_wishlist(id, name, price))
+            self.wishlist_table.setCellWidget(row, 5, self.delete_button)
 
     def add_wishlist(self):
         """Menambahkan wishlist baru"""
@@ -266,10 +263,10 @@ class WishlistView(QWidget):
         _translate = QCoreApplication.translate
         if lang:
             self.title_label.setText(_translate("Form", lang.get("wishlist", {}).get("Title", "")))
-            self.name_label.setText(_translate("Form", lang.get("wishlist", {}).get("form1", "")))
-            self.price_label.setText(_translate("Form", lang.get("wishlist", {}).get("form2", "")))
-            self.add_button.setText(_translate("Form", lang.get("wishlist", {}).get("btn", "")))
-            self.filter_label.setText(_translate("Form", lang.get("wishlist", {}).get("filter", "")))
+            self.name_label.setText(_translate("Form", lang.get("wishlist", {}).get("form1", "") + ":"))
+            self.price_label.setText(_translate("Form", lang.get("wishlist", {}).get("form2", "") + ":"))
+            self.add_button.setText(_translate("Form", lang.get("wishlist", {}).get("btn1", "")))
+            self.filter_label.setText(_translate("Form", lang.get("wishlist", {}).get("filter", "") + ":"))
             self.all_status.setText(_translate("Form", lang.get("wishlist", {}).get("radbtn1", "")))
             self.fulfilled_status.setText(_translate("Form", lang.get("wishlist", {}).get("radbtn2", "")))
             self.unfulfilled_status.setText(_translate("Form", lang.get("wishlist", {}).get("radbtn3", "")))

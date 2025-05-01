@@ -8,3 +8,4 @@
 8,100000,Gaji Perbulan,BCA,aaa,08/04/2025
 9,200000,Gaji Perbulan,BCA,aaaa,13/04/2025
 10,100000,Gaji Perbulan,BCA,aaa,09/04/2025
+11,150000,Freelance,BCA,wow,30/04/2025

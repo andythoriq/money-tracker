@@ -1,6 +1,6 @@
 from PyQt5.QtWidgets import (
     QWidget, QVBoxLayout, QHBoxLayout, QPushButton,
-    QTableWidget, QTableWidgetItem, QLineEdit, QLabel, QGroupBox, QSpinBox, QMessageBox, QInputDialog, QSizePolicy
+    QTableWidget, QTableWidgetItem, QLineEdit, QLabel, QGroupBox, QSpinBox, QMessageBox, QInputDialog, QSizePolicy, QHeaderView
 )
 from PyQt5.QtCore import Qt, QCoreApplication
 from controller.wallet import Wallet
@@ -14,14 +14,13 @@ class WalletView(QWidget):
 
     def init_ui(self):
         # Main layout
-        self.setMinimumSize(700, 600)
         main_layout = QVBoxLayout()
         main_layout.setContentsMargins(20, 20, 20, 20)
         main_layout.setSpacing(20)
 
         # Title Section
         self.title_label = QLabel("Wallet")
-        self.title_label.setObjectName("tittleLabel")
+        self.title_label.setObjectName("titleLabel")
         main_layout.addWidget(self.title_label)
 
         # Content Container
@@ -47,22 +46,14 @@ class WalletView(QWidget):
 
         # Labels
         self.name_label = QLabel("Nama:")
-        self.name_label.setStyleSheet("background-color:  #7A9F60; color: white; font-size: 14px; padding: 5px; border-radius: 5px;")
+        self.name_label.setObjectName("form_label")
         self.saldo_label = QLabel("Saldo:")
-        self.saldo_label.setStyleSheet("background-color: #7A9F60; color: white; font-size: 14px; padding: 5px; border-radius: 5px;")
+        self.saldo_label.setObjectName("form_label")
 
         # Input fields
         self.input_name = QLineEdit()
         self.input_name.setPlaceholderText("Nama Wallet")
-        self.input_name.setStyleSheet("""
-            QLineEdit {
-                background-color: white;
-                border: 1px solid #7A9F60;
-                border-radius: 5px;
-                padding: 5px;
-                font-size: 14px;
-            }
-        """)
+        self.input_name.setObjectName("wishlist_input")
 
         self.input_amount = QSpinBox()
         self.input_amount.setMinimum(0)
@@ -80,18 +71,7 @@ class WalletView(QWidget):
         """)
 
         self.btn_add = QPushButton("Tambah")
-        self.btn_add.setStyleSheet("""
-            QPushButton {
-                background-color: #4CAF50;
-                color: white;
-                border-radius: 5px;
-                padding: 8px;
-                font-size: 14px;
-            }
-            QPushButton:hover {
-                background-color: #45a049;
-            }
-        """)
+        self.btn_add.setObjectName("add_button")
         self.btn_add.clicked.connect(self.add_wallet)
 
         layout_add_wallet.addWidget(self.name_label)
@@ -105,34 +85,15 @@ class WalletView(QWidget):
 
         # === TABEL WALLET ===
         self.table_wallet = QTableWidget()
-        self.table_wallet.setObjectName("tableWallet")
+        self.table_wallet.setObjectName("table")
         self.table_wallet.setColumnCount(4)
         self.table_wallet.setSizePolicy(QSizePolicy.Expanding, QSizePolicy.Expanding)
+        self.table_wallet.horizontalHeader().setSectionResizeMode(QHeaderView.Interactive)
+        self.table_wallet.horizontalHeader().setSectionResizeMode(0, QHeaderView.Stretch)
+        self.table_wallet.horizontalHeader().setSectionResizeMode(2, QHeaderView.ResizeToContents)
+        self.table_wallet.horizontalHeader().setSectionResizeMode(3, QHeaderView.ResizeToContents)
         self.table_wallet.setHorizontalHeaderLabels(["Nama", "Saldo", "Edit", "Delete"])
-        self.table_wallet.setStyleSheet("""
-            QTableWidget {
-                background-color: #7A9F60;
-                border-radius: 10px;
-                color: white;
-                gridline-color: #98C379;
-            }
-            QTableWidget::item {
-                padding: 5px;
-            }
-            QTableWidget::item:selected {
-                background-color: #6A8B52;
-            }
-            QHeaderView::section {
-                background-color: #7A9F60;
-                color: white;
-                padding: 5px;
-                border: none;
-            }
-            QScrollBar {
-                background-color: #7A9F60;
-            }
-        """)
-        
+
         # Set column widths
         self.table_wallet.horizontalHeader().setStretchLastSection(False)
         self.table_wallet.setColumnWidth(0, 200)  # Nama column
@@ -146,8 +107,6 @@ class WalletView(QWidget):
         main_layout.addWidget(content_widget)
         self.setLayout(main_layout)
         self.load_wallets()
-        # Set stylesheet for the main widget
-        self.setStyleSheet("background-color: #98C379;")
 
     def load_wallets(self):
         """Memuat data wallet ke tabel"""
@@ -160,32 +119,12 @@ class WalletView(QWidget):
 
             self.btn_edit = QPushButton("Edit")
             self.btn_edit.setFixedWidth(80)
-            self.btn_edit.setStyleSheet("""
-                QPushButton {
-                    background-color: #4CAF50;
-                    color: white;
-                    border-radius: 5px;
-                    padding: 5px;
-                }
-                QPushButton:hover {
-                    background-color: #45a049;
-                }
-            """)
+            self.btn_edit.setObjectName("Edit")
             self.btn_edit.clicked.connect(lambda _, n=wallet[0]: self.edit_wallet(n))
 
             self.btn_delete = QPushButton("Hapus")
             self.btn_delete.setFixedWidth(80)
-            self.btn_delete.setStyleSheet("""
-                QPushButton {
-                    background-color: #f44336;
-                    color: white;
-                    border-radius: 5px;
-                    padding: 5px;
-                }
-                QPushButton:hover {
-                    background-color: #da190b;
-                }
-            """)
+            self.btn_delete.setObjectName("Delete")
             self.btn_delete.clicked.connect(lambda _, n=wallet[0]: self.delete_wallet(n))
 
             self.table_wallet.setItem(row, 0, name_item)
@@ -277,10 +216,10 @@ class WalletView(QWidget):
         _translate = QCoreApplication.translate
         if lang:
             self.title_label.setText(_translate("Form", lang.get("wallet", {}).get("Title", "")))
-            self.name_label.setText(_translate("Form", lang.get("wallet", {}).get("form1", "")))
-            self.saldo_label.setText(_translate("Form", lang.get("wallet", {}).get("form2", "")))
+            self.name_label.setText(_translate("Form", lang.get("wallet", {}).get("form1", "") + ":"))
+            self.saldo_label.setText(_translate("Form", lang.get("wallet", {}).get("form2", "") + ":"))
             self.btn_add.setText(_translate("Form", lang.get("wallet", {}).get("btn", "")))
-            self.input_name.setText(_translate("Form", lang.get("wallet", {}).get("desc1", "")))
+            self.input_name.setPlaceholderText(_translate("Form", lang.get("wallet", {}).get("desc1", "")))
             self.group_add_wallet.setTitle(_translate("Form", lang.get("wallet", {}).get("entry", "")))
             self.table_wallet.setHorizontalHeaderLabels(
                 [
