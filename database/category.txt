@@ -1,3 +1,5 @@
 Gaji Perbulan,income
 Pajak,outcome
 Freelance,income
+Kredit Tambahan,income
+Makan,outcome

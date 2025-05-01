@@ -4,3 +4,4 @@
 4,300000,Pajak,BCA,aaaaaa,08/04/2025
 5,100000,Pajak,BCA,aaa,10/04/2025
 6,100000,Pajak,BCA,aaaa,14/04/2025
+7,5000,Makan,BCA,Anjay makan gorengan,22/04/2025
