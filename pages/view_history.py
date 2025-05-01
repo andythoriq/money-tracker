@@ -301,7 +301,7 @@ class HistoryView(QWidget):
             self.btn_delete.clicked.connect(lambda _, t=transaction: self.confirm_delete(t))
             self.table.setCellWidget(row, 7, self.btn_delete)
 
-        self.label.setText(f"Total : Rp {total}")
+        self.label.setText(f"Total : Rp {self.total}")
         # Terapkan filter yang ada
         self.apply_filters()
 
