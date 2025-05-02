@@ -115,18 +115,18 @@ class WalletView(QWidget):
         self.table_wallet.setRowCount(len(wallets))
 
         for row, wallet in enumerate(wallets):
-            name_item = QTableWidgetItem(wallet[0])
-            amount_item = QTableWidgetItem(f"Rp {wallet[1]}")
+            name_item = QTableWidgetItem(wallet.get("name"))
+            amount_item = QTableWidgetItem(f"Rp {wallet.get('amount')}")
 
             self.btn_edit = QPushButton("Edit")
             self.btn_edit.setFixedWidth(80)
             self.btn_edit.setObjectName("Edit")
-            self.btn_edit.clicked.connect(lambda _, n=wallet[0]: self.edit_wallet(n))
+            self.btn_edit.clicked.connect(lambda _, n=wallet.get("name"): self.edit_wallet(n))
 
             self.btn_delete = QPushButton("Hapus")
             self.btn_delete.setFixedWidth(80)
             self.btn_delete.setObjectName("Delete")
-            self.btn_delete.clicked.connect(lambda _, n=wallet[0]: self.delete_wallet(n))
+            self.btn_delete.clicked.connect(lambda _, n=wallet.get("name"): self.delete_wallet(n))
 
             self.table_wallet.setItem(row, 0, name_item)
             self.table_wallet.setItem(row, 1, amount_item)
@@ -138,17 +138,34 @@ class WalletView(QWidget):
         name = self.input_name.text().strip()
         amount = self.input_amount.value()
 
-        
-        result = self.wallet_controller.add_wallet(name, amount)
-        if result.get("valid"):
+        if name:
+            self.wallet_controller.add_wallet(name, amount)
             self.load_wallets()
             self.input_name.clear()
             self.input_amount.setValue(0)
-            PopupSuccess("Success", "Wallet berhasil disimpan!")
         else:
-            errors = result.get("errors")
-            error_message = "\n".join([f"{key}: {value}" for key, value in errors.items()])
-            PopupWarning("Warning", f"Gagal menyimpan wallet!\n{error_message}")
+            msg = QMessageBox()
+            msg.setStyleSheet("""
+                QMessageBox {
+                    background-color: #7A9F60;
+                }
+                QLabel {
+                    color: white;
+                }
+                QPushButton {
+                    background-color: #4CAF50;
+                    color: white;
+                    border-radius: 5px;
+                    padding: 5px;
+                    min-width: 70px;
+                }
+                QPushButton:hover {
+                    background-color: #45a049;
+                }
+            """)
+            msg.setWindowTitle("Error")
+            msg.setText("Nama wallet tidak boleh kosong!")
+            msg.exec_()
 
     def edit_wallet(self, name):
         """Mengedit saldo wallet"""
@@ -156,14 +173,8 @@ class WalletView(QWidget):
         dialog.setObjectName("label")
         new_amount, ok = dialog.getInt(self, "Edit Wallet", f"Saldo baru untuk {name}:", min=0)
         if ok:
-            result = self.wallet_controller.edit_wallet(name, new_amount)
-            if result.get("valid"):
-                self.load_wallets()
-                PopupSuccess("Success", "Wallet berhasil disimpan!")
-            else:
-                errors = result.get("errors")
-                error_message = "\n".join([f"{key}: {value}" for key, value in errors.items()])
-                PopupWarning("Warning", f"Gagal menyimpan wallet!\n{error_message}")
+            self.wallet_controller.edit_wallet(name, new_amount)
+            self.load_wallets()
 
     def delete_wallet(self, name):
         """Menghapus wallet"""

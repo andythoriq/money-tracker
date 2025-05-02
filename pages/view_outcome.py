@@ -157,7 +157,7 @@ class OutcomeView(QWidget):
 
         self.input_category.addItems(category_names)
         for wallet in wallets:
-            self.input_wallet.addItem(f"{wallet[0]} - Rp {wallet[1]}", wallet[0])
+            self.input_wallet.addItem(f"{wallet.get('name')} - Rp {wallet.get('amount')}", wallet.get("name"))
 
     def add_outcome(self):
         """Menambahkan pengeluaran"""

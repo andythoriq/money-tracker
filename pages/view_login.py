@@ -203,6 +203,7 @@ class LoginScreen(QWidget):
             # Tampilkan dashboard melalui stack widget atau tutup login window
             self.hide()  # Sembunyikan login window
             self.dashboard.show()  # Tampilkan dashboard sebagai window terpisah
+            self.close
 
             # Alternatif jika menggunakan stack widget:
             # self.stack.setCurrentIndex(5)  # Asumsi index 5 adalah dashboard

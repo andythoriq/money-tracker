@@ -48,6 +48,8 @@ class HistoryView(QWidget):
         btn_layout.setSpacing(10)
         self.radio_group = QButtonGroup(self)
 
+        self.filter_label = QLabel("Filter Jenis:")
+        self.filter_label.setObjectName("form_label")
         self.radio_all = QRadioButton("Semua")
         self.radio_all.setObjectName("btn_home")
         self.radio_income = QRadioButton("Income")
@@ -149,6 +151,7 @@ class HistoryView(QWidget):
         btn_layout.addWidget(self.radio_all)
         btn_layout.addWidget(self.radio_income)
         btn_layout.addWidget(self.radio_outcome)
+        btn_layout.addWidget(self.filter_label)
         btn_layout.addStretch()
         btn_layout.addWidget(self.search_bar)
         btn_layout.addWidget(self.date_edit)
@@ -241,25 +244,25 @@ class HistoryView(QWidget):
         # Load data income
         for income in self.income_controller.load_incomes():
             transactions.append({
-                "id": income[0],
-                "date": datetime.strptime(income[5], "%d/%m/%Y"),
+                "id": income.get("ID"),
+                "date": datetime.strptime(income.get("date"), "%d/%m/%Y"),
                 "type": "income",
-                "amount": income[1],
-                "category": income[2],
-                "wallet": income[3],
-                "desc": income[4]
+                "amount": income.get("amount"),
+                "category": income.get("category"),
+                "wallet": income.get("wallet"),
+                "desc": income.get("desc")
             })
 
         # Load data outcome
         for outcome in self.outcome_controller.load_outcomes():
             transactions.append({
-                "id": outcome[0],
-                "date": datetime.strptime(outcome[5], "%d/%m/%Y"),
+                "id": outcome.get("ID"),
+                "date": datetime.strptime(outcome.get("date"), "%d/%m/%Y"),
                 "type": "outcome",
-                "amount": outcome[1],
-                "category": outcome[2],
-                "wallet": outcome[3],
-                "desc": outcome[4]
+                "amount": outcome.get("amount"),
+                "category": outcome.get("category"),
+                "wallet": outcome.get("wallet"),
+                "desc": outcome.get("desc")
             })
 
         # Filter transaksi
@@ -288,23 +291,39 @@ class HistoryView(QWidget):
             self.table.setItem(row, 5, QTableWidgetItem(transaction["desc"]))
 
             # Tombol Edit
-            self.btn_edit = QPushButton("Edit")
-            self.btn_edit.setFixedWidth(80)
-            self.btn_edit.setObjectName("Edit")
-
-            self.btn_edit.clicked.connect(lambda _, t=transaction: self.open_edit_popup(t))
-            self.table.setCellWidget(row, 6, self.btn_edit)
+            btn_edit = QPushButton("Edit")
+            btn_edit.setStyleSheet("""
+                QPushButton {
+                    background-color: #4CAF50;
+                    color: white;
+                    border-radius: 5px;
+                    padding: 5px;
+                }
+                QPushButton:hover {
+                    background-color: #45a049;
+                }
+            """)
+            btn_edit.clicked.connect(lambda _, t=transaction: self.open_edit_popup(t))
+            self.table.setCellWidget(row, 6, btn_edit)
 
             # Tombol Delete
-            self.btn_delete = QPushButton("Delete")
-            self.btn_delete.setFixedWidth(80)
-            self.btn_delete.setObjectName("Delete")
-            self.btn_delete.clicked.connect(lambda _, t=transaction: self.confirm_delete(t))
-            self.table.setCellWidget(row, 7, self.btn_delete)
+            btn_delete = QPushButton("Delete")
+            btn_delete.setStyleSheet("""
+                QPushButton {
+                    background-color: #f44336;
+                    color: white;
+                    border-radius: 5px;
+                    padding: 5px;
+                }
+                QPushButton:hover {
+                    background-color: #da190b;
+                }
+            """)
+            btn_delete.clicked.connect(lambda _, t=transaction: self.confirm_delete(t))
+            self.table.setCellWidget(row, 7, btn_delete)
 
         self.label.setText(f"Total : Rp {self.total}")
-        # Terapkan filter yang ada
-        self.apply_filters()
+
 
     def open_edit_popup(self, transaction):
         """Popup Edit Data"""
@@ -343,7 +362,7 @@ class HistoryView(QWidget):
         category_input.setCurrentText(transaction["category"])
 
         wallet_input = QComboBox()
-        wallet_input.addItems(self.wallet_controller.load_wallet_names())
+        wallet_input.addItems(self.wallet_controller.get_wallet_name())
         wallet_input.setCurrentText(transaction["wallet"])
 
         desc_input = QLineEdit(transaction["desc"])
@@ -358,9 +377,8 @@ class HistoryView(QWidget):
         layout.addRow("Tanggal:", date_input)
 
         # Tombol Simpan
-        self.btn_save = QPushButton("Simpan")
-        self.btn_save.setFixedWidth(80)
-        self.btn_save.setStyleSheet("""
+        btn_save = QPushButton("Simpan")
+        btn_save.setStyleSheet("""
             QPushButton {
                 background-color: #4CAF50;
                 color: white;
@@ -372,30 +390,30 @@ class HistoryView(QWidget):
                 background-color: #45a049;
             }
         """)
-        self.btn_save.clicked.connect(lambda: self.save_edit(transaction, amount_input, category_input, wallet_input, desc_input, date_input, dialog))
-        layout.addRow(self.btn_save)
+        btn_save.clicked.connect(lambda: self.save_edit(transaction, amount_input, category_input, wallet_input, desc_input, date_input, dialog))
+        layout.addRow(btn_save)
 
         dialog.setLayout(layout)
         dialog.exec_()
 
     def save_edit(self, transaction, amount, category, wallet, desc, date, dialog):
         """Simpan perubahan edit transaksi"""
-        new_data = [transaction["id"], str(amount.value()), category.currentText(), wallet.currentText(), desc.text(), date.selectedDate().toString("dd/MM/yyyy")]
+        new_data = {
+            "ID": transaction["id"],
+            "amount": amount.value(),
+            "category": category.currentText(),
+            "wallet": wallet.currentText(),
+            "desc": desc.text(),
+            "date": date.selectedDate().toString("dd/MM/yyyy")
+        }
 
         if transaction["type"] == "income":
-            result = self.income_controller.update_income(new_data)
+            self.income_controller.update_income(new_data)
         else:
-            result = self.outcome_controller.update_outcome(new_data)
-
-        if result.get("valid"):
-            self.load_data(transaction["type"])
-            PopupSuccess("Success", "berhasil disimpan!")
-        else:
-            errors = result.get("errors")
-            error_message = "\n".join([f"{key}: {value}" for key, value in errors.items()])
-            PopupWarning("Warning", f"Gagal menyimpan!\n{error_message}")
+            self.outcome_controller.update_outcome(new_data)
 
         dialog.accept()
+        self.load_data(transaction["type"])
 
     def confirm_delete(self, transaction):
         """Konfirmasi Delete"""

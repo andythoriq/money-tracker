@@ -15,7 +15,7 @@ class Statistic:
         self.offset = 0
         self.jenis = "harian"
         self.cur_data = self.generate_data()
-        self.cur_balance = sum(int(income[1]) for income in self.income_controller.load_incomes()) - sum(int(outcome[1]) for outcome in self.outcome_controller.load_outcomes())
+        self.cur_balance = sum(int(income.get("amount")) for income in self.income_controller.load_incomes()) - sum(int(outcome.get("amount")) for outcome in self.outcome_controller.load_outcomes())
         self.net = self.cur_data[4][0] - self.cur_data[4][1]
         self.new_balance = self.cur_balance - self.net
 
@@ -25,8 +25,8 @@ class Statistic:
         outcome_date = []
         if self.outcome_controller.load_outcomes() != []:
             for outcome in self.outcome_controller.load_outcomes():
-                outcome_amount.append(int(outcome[1]))
-                outcome_date.append(outcome[5])
+                outcome_amount.append(int(outcome.get("amount")))
+                outcome_date.append(outcome.get("date"))
         else:
                 outcome_amount.append(0)
                 outcome_date.append("01/01/1900")
@@ -37,8 +37,8 @@ class Statistic:
         
         if self.income_controller.load_incomes() != []:
             for income in self.income_controller.load_incomes():
-                income_amount.append(int(income[1]))
-                income_date.append(income[5])
+                income_amount.append(int(income.get("amount")))
+                income_date.append(income.get("date"))
         else:
                 income_amount.append(0)
                 income_date.append("01/01/1900")

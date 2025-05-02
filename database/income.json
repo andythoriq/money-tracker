@@ -1,1 +1,82 @@
-[]
+[
+    {
+        "ID": 1,
+        "amount": 200000,
+        "category": "Auuuu",
+        "wallet": "AMM",
+        "desc": "Auuu",
+        "date": "01/05/2025"
+    },
+    {
+        "ID": 2,
+        "amount": 200000,
+        "category": "Auuuu",
+        "wallet": "AMM",
+        "desc": "Auuu",
+        "date": "01/05/2025"
+    },
+    {
+        "ID": 3,
+        "amount": 200000,
+        "category": "Auuuu",
+        "wallet": "AMM",
+        "desc": "Auuu",
+        "date": "01/05/2025"
+    },
+    {
+        "ID": 4,
+        "amount": 200000,
+        "category": "Auuuu",
+        "wallet": "AMM",
+        "desc": "Auuu",
+        "date": "01/05/2025"
+    },
+    {
+        "ID": 5,
+        "amount": 200000,
+        "category": "Auuuu",
+        "wallet": "AMM",
+        "desc": "Auuu",
+        "date": "01/05/2025"
+    },
+    {
+        "ID": 6,
+        "amount": 200000,
+        "category": "Auuuu",
+        "wallet": "AMM",
+        "desc": "Auuu",
+        "date": "01/05/2025"
+    },
+    {
+        "ID": 7,
+        "amount": 200000,
+        "category": "AAA",
+        "wallet": "AMM",
+        "desc": "asa",
+        "date": "02/05/2025"
+    },
+    {
+        "ID": 8,
+        "amount": 200000,
+        "category": "AAA",
+        "wallet": "AMM",
+        "desc": "asa",
+        "date": "02/05/2025"
+    },
+    {
+        "ID": 9,
+        "amount": 200000,
+        "category": "AAA",
+        "wallet": "AMM",
+        "desc": "asa",
+        "date": "02/05/2025"
+    },
+    {
+        "ID": 10,
+        "amount": 200000,
+        "category": "AAA",
+        "wallet": "AMM",
+        "desc": "asa",
+        "date": "02/05/2025"
+    }
+]

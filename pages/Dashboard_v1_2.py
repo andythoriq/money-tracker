@@ -215,6 +215,7 @@ class Dashboard(QWidget):
         layout = QVBoxLayout()
         self.history_label = QLabel()
         self.history_label.setObjectName("Label_1")
+        layout.addWidget(self.history_label)
 
         self.history_table = QTableWidget()
         self.history_table.setObjectName("table")
@@ -238,20 +239,20 @@ class Dashboard(QWidget):
         # mengambil data dari income dan outcome controller dan menggunakannya dalam satu list
         for income in self.history_view.income_controller.load_incomes():
             transactions.append({
-                "date": income[5],  # Assuming date is at index 5
+                "date": income.get('date'),
                 "type": "income",
-                "amount": income[1],
-                "category": income[2],
-                "wallet": income[3]
+                "amount": income.get('amount'),
+                "category": income.get('category'),
+                "wallet": income.get('wallet')
             })
 
         for outcome in self.history_view.outcome_controller.load_outcomes():
             transactions.append({
-                "date": outcome[5],  # Assuming date is at index 5
+                "date": outcome.get('date'),
                 "type": "outcome",
-                "amount": outcome[1],
-                "category": outcome[2],
-                "wallet": outcome[3]
+                "amount": outcome.get('amount'),
+                "category": outcome.get('category'),
+                "wallet": outcome.get('wallet')
             })
 
         # menyortir transaksi berdasarkan tanggal
@@ -283,7 +284,7 @@ class Dashboard(QWidget):
         for row, transaction in enumerate(recent_transactions):
             self.history_table.setItem(row, 0, QTableWidgetItem(transaction["date"]))  # Tanggal
             self.history_table.setItem(row, 1, QTableWidgetItem(transaction["type"]))  # Jenis
-            self.history_table.setItem(row, 2, QTableWidgetItem(f"Rp {transaction['amount']}"))  # Jumlah
+            self.history_table.setItem(row, 2, QTableWidgetItem(f"Rp {str(transaction['amount'])}"))  # Jumlah
             self.history_table.setItem(row, 3, QTableWidgetItem(transaction["category"]))  # Kategori
             self.history_table.setItem(row, 4, QTableWidgetItem(transaction["wallet"]))  # Dompet
 
@@ -296,7 +297,6 @@ class Dashboard(QWidget):
             self.stack.setCurrentWidget(self.history_view)
         ))
 
-        layout.addWidget(self.history_label)
         layout.addWidget(self.history_table)
         layout.addWidget(view_all_btn, alignment=QtCore.Qt.AlignRight)
         self.layout_2.setLayout(layout)
@@ -347,13 +347,13 @@ class Dashboard(QWidget):
             if len(wishlist) < 4:  # Periksa apakah data lengkap
                 continue
                 
-            self.wishlist_table.setItem(row, 0, QTableWidgetItem(wishlist[0]))  # No.
-            self.wishlist_table.setItem(row, 1, QTableWidgetItem(wishlist[1]))  # Nama
-            self.wishlist_table.setItem(row, 2, QTableWidgetItem(wishlist[2]))  # Harga
+            self.wishlist_table.setItem(row, 0, QTableWidgetItem(str(wishlist.get('ID'))))
+            self.wishlist_table.setItem(row, 1, QTableWidgetItem(wishlist.get('label')))
+            self.wishlist_table.setItem(row, 2, QTableWidgetItem(str(wishlist.get('price'))))
             
             # Konversi status dari boolean ke text
-            status_text = "Sudah Terpenuhi" if wishlist[3] == "true" else "Belum Terpenuhi"
-            self.wishlist_table.setItem(row, 3, QTableWidgetItem(status_text))  # Status
+            status_text = "Sudah Terpenuhi" if wishlist.get('status') else "Belum Terpenuhi"
+            self.wishlist_table.setItem(row, 3, QTableWidgetItem(status_text))
         
         layout.addWidget(self.wishlist_table)
         self.layout_4.setLayout(layout)
