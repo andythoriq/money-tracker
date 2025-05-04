@@ -3,7 +3,6 @@ from PyQt5.QtWidgets import (
     QWidget, QVBoxLayout, QHBoxLayout, QPushButton, QTableWidget, QTableWidgetItem, 
     QRadioButton, QLineEdit, QMessageBox, QSpinBox, QComboBox, QLabel, QDialog
 )
-from PyQt5.QtCore import Qt, QCoreApplication
 from controller.Popup import PopupWarning, PopupSuccess
 from controller.wishlist import Wishlist
 from controller.wallet import Wallet
@@ -25,9 +24,9 @@ class WishlistView(QWidget):
 
         # Title container
         title_container = QHBoxLayout()
-        self.title_label = QLabel("Wishlist")
-        self.title_label.setObjectName("Label_1")
-        title_container.addWidget(self.title_label)
+        title_label = QLabel("Wishlist")
+        title_label.setObjectName("Label_1")
+        title_container.addWidget(title_label)
         title_container.addStretch()
         main_layout.addLayout(title_container)
 
@@ -43,9 +42,9 @@ class WishlistView(QWidget):
         form_layout.setSpacing(15)
 
         # Name input
-        self.name_label = QLabel("Nama:")
-        self.name_label.setObjectName("wishlist_label")
-        form_layout.addWidget(self.name_label)
+        name_label = QLabel("Nama:")
+        name_label.setObjectName("wishlist_label")
+        form_layout.addWidget(name_label)
         
         self.name_input = QLineEdit()
         self.name_input.setObjectName("wishlist_input")
@@ -53,9 +52,9 @@ class WishlistView(QWidget):
         form_layout.addWidget(self.name_input)
 
         # Price input
-        self.price_label = QLabel("Harga:")
-        self.price_label.setObjectName("wishlist_label")
-        form_layout.addWidget(self.price_label)
+        price_label = QLabel("Harga:")
+        price_label.setObjectName("wishlist_label")
+        form_layout.addWidget(price_label)
         
         self.price_input = QSpinBox()
         self.price_input.setObjectName("wishlist_input")
@@ -65,11 +64,11 @@ class WishlistView(QWidget):
         form_layout.addWidget(self.price_input)
 
         # Add button
-        self.add_button = QPushButton("Tambah Wishlist")
-        self.add_button.setObjectName("wishlist_button")
-        self.add_button.setFixedWidth(175)
-        self.add_button.clicked.connect(self.add_wishlist)
-        form_layout.addWidget(self.add_button)
+        add_button = QPushButton("Tambah Wishlist")
+        add_button.setObjectName("wishlist_button")
+        add_button.setFixedWidth(175)
+        add_button.clicked.connect(self.add_wishlist)
+        form_layout.addWidget(add_button)
 
         form_layout.addStretch()
         content_layout.addLayout(form_layout)
@@ -78,9 +77,9 @@ class WishlistView(QWidget):
         status_layout = QHBoxLayout()
         status_layout.setSpacing(15)
         
-        self.filter_label = QLabel("Filter Status:")
-        self.filter_label.setObjectName("wishlist_label")
-        status_layout.addWidget(self.filter_label)
+        filter_label = QLabel("Filter Status:")
+        filter_label.setObjectName("wishlist_label")
+        status_layout.addWidget(filter_label)
 
         # Radio buttons
         self.all_status = QRadioButton("Semua")
@@ -261,25 +260,3 @@ class WishlistView(QWidget):
 
     def go_back(self):
         self.parent().setCurrentIndex(0)
-
-    def retranslateUi(self, lang=None):
-        _translate = QCoreApplication.translate
-        if lang:
-            self.title_label.setText(_translate("Form", lang.get("wishlist", {}).get("Title", "")))
-            self.name_label.setText(_translate("Form", lang.get("wishlist", {}).get("form1", "")))
-            self.price_label.setText(_translate("Form", lang.get("wishlist", {}).get("form2", "")))
-            self.add_button.setText(_translate("Form", lang.get("wishlist", {}).get("btn", "")))
-            self.filter_label.setText(_translate("Form", lang.get("wishlist", {}).get("filter", "")))
-            self.all_status.setText(_translate("Form", lang.get("wishlist", {}).get("radbtn1", "")))
-            self.fulfilled_status.setText(_translate("Form", lang.get("wishlist", {}).get("radbtn2", "")))
-            self.unfulfilled_status.setText(_translate("Form", lang.get("wishlist", {}).get("radbtn3", "")))
-            self.wishlist_table.setHorizontalHeaderLabels(               
-                [
-                    lang.get("wishlist", {}).get("col1", ""), 
-                    lang.get("wishlist", {}).get("col2", ""), 
-                    lang.get("wishlist", {}).get("col3", ""), 
-                    lang.get("wishlist", {}).get("col4", ""), 
-                    lang.get("wishlist", {}).get("col5", ""), 
-                    lang.get("wishlist", {}).get("col6", ""), 
-                    ]
-                )

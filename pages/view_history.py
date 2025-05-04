@@ -2,9 +2,10 @@ from PyQt5.QtWidgets import (
     QWidget, QVBoxLayout, QPushButton, QTableWidget, 
     QTableWidgetItem, QHBoxLayout, QLabel, QRadioButton, 
     QButtonGroup, QDialog, QFormLayout, QSpinBox, 
-    QComboBox, QLineEdit, QCalendarWidget, QMessageBox
+    QComboBox, QLineEdit, QCalendarWidget, QMessageBox,
+    QDateEdit
 )
-from PyQt5.QtCore import Qt, QCoreApplication
+from PyQt5.QtCore import Qt, QDate
 from datetime import datetime
 from controller.income import Income
 from controller.outcome import Outcome
@@ -29,9 +30,9 @@ class HistoryView(QWidget):
         main_layout.setSpacing(20)
 
         # Title Section
-        self.title_label = QLabel("History")
-        self.title_label.setObjectName("tittleLabel")
-        main_layout.addWidget(self.title_label)
+        title_label = QLabel("History")
+        title_label.setObjectName("tittleLabel")
+        main_layout.addWidget(title_label)
 
         # Content Container
         content_widget = QWidget()
@@ -40,10 +41,15 @@ class HistoryView(QWidget):
         content_layout.setContentsMargins(20, 20, 20, 20)
         content_layout.setSpacing(15)
 
+        # Filter Section
+        filter_container = QWidget()
+        filter_container.setObjectName("groupBox")
+        filter_layout = QVBoxLayout(filter_container)
+        filter_layout.setSpacing(10)
+
         # Radio Button Filter
-        filter_widget = QWidget()
-        filter_widget.setObjectName("groupBox")
-        btn_layout = QHBoxLayout(filter_widget)
+        radio_widget = QWidget()
+        btn_layout = QHBoxLayout(radio_widget)
         btn_layout.setSpacing(10)
         self.radio_group = QButtonGroup(self)
 
@@ -80,7 +86,93 @@ class HistoryView(QWidget):
         btn_layout.addWidget(self.radio_income)
         btn_layout.addWidget(self.radio_outcome)
         btn_layout.addStretch()
-        content_layout.addWidget(filter_widget)
+        filter_layout.addWidget(radio_widget)
+
+        # Search and Date Filter
+        search_date_widget = QWidget()
+        search_date_layout = QHBoxLayout(search_date_widget)
+        search_date_layout.setSpacing(10)
+
+        # Category Search
+        search_container = QWidget()
+        search_layout = QHBoxLayout(search_container)
+        search_layout.setSpacing(5)
+        
+        search_label = QLabel("Cari Kategori:")
+        search_label.setStyleSheet("color: white;")
+        self.search_input = QLineEdit()
+        self.search_input.setPlaceholderText("Masukkan kategori...")
+        self.search_input.setStyleSheet("""
+            QLineEdit {
+                padding: 5px;
+                border-radius: 5px;
+                background-color: white;
+            }
+        """)
+        self.search_input.textChanged.connect(self.load_data)
+        
+        search_layout.addWidget(search_label)
+        search_layout.addWidget(self.search_input)
+        search_date_layout.addWidget(search_container)
+
+        # Date Filter
+        date_container = QWidget()
+        date_layout = QHBoxLayout(date_container)
+        date_layout.setSpacing(5)
+        
+        date_label = QLabel("Tanggal:")
+        date_label.setStyleSheet("color: white;")
+        
+        self.start_date = QDateEdit()
+        self.start_date.setCalendarPopup(True)
+        self.start_date.setDate(QDate.currentDate().addDays(-30))
+        self.start_date.setStyleSheet("""
+            QDateEdit {
+                padding: 5px;
+                border-radius: 5px;
+                background-color: white;
+            }
+        """)
+        
+        self.end_date = QDateEdit()
+        self.end_date.setCalendarPopup(True)
+        self.end_date.setDate(QDate.currentDate())
+        self.end_date.setStyleSheet("""
+            QDateEdit {
+                padding: 5px;
+                border-radius: 5px;
+                background-color: white;
+            }
+        """)
+        
+        self.start_date.dateChanged.connect(self.load_data)
+        self.end_date.dateChanged.connect(self.load_data)
+        
+        date_layout.addWidget(date_label)
+        date_layout.addWidget(self.start_date)
+        date_layout.addWidget(QLabel("sampai"))
+        date_layout.addWidget(self.end_date)
+        search_date_layout.addWidget(date_container)
+
+        # Reset Button
+        self.reset_button = QPushButton("Reset")
+        self.reset_button.setStyleSheet("""
+            QPushButton {
+                background-color: #4CAF50;
+                color: white;
+                border-radius: 5px;
+                padding: 5px 15px;
+                min-width: 80px;
+            }
+            QPushButton:hover {
+                background-color: #45a049;
+            }
+        """)
+        self.reset_button.clicked.connect(self.reset_filters)
+        search_date_layout.addWidget(self.reset_button)
+        
+        filter_layout.addWidget(search_date_widget)
+        content_layout.addWidget(filter_container)
 
         # Tabel Transaksi
         self.table = QTableWidget()
@@ -127,11 +219,11 @@ class HistoryView(QWidget):
         self.setLayout(main_layout)
         self.load_data("all")
 
-    def load_data(self, filter_type):
+    def load_data(self, filter_type=None):
         """Memuat data ke tabel berdasarkan filter"""
         self.table.setRowCount(0)
         transactions = []
-        self.total = 0
+        total = 0
 
         # Load data income
         for income in self.income_controller.load_incomes():
@@ -157,7 +249,7 @@ class HistoryView(QWidget):
                 "desc": outcome.get("desc")
             })
 
-        # Filter transaksi
+        # Filter berdasarkan radio button
         if self.radio_all.isChecked():
             transactions = [t for t in transactions]
         elif filter_type == "income":
@@ -165,15 +257,25 @@ class HistoryView(QWidget):
         elif filter_type == "outcome":
             transactions = [t for t in transactions if t["type"] == "outcome"]
 
+        # Filter berdasarkan kategori
+        search_text = self.search_input.text().lower()
+        if search_text:
+            transactions = [t for t in transactions if search_text in t["category"].lower()]
+
+        # Filter berdasarkan tanggal
+        start_date = self.start_date.date().toPyDate()
+        end_date = self.end_date.date().toPyDate()
+        transactions = [t for t in transactions if start_date <= t["date"].date() <= end_date]
+
         transactions.sort(key=lambda x: x["date"], reverse=True)
 
         # Tampilkan data di tabel
         self.table.setRowCount(len(transactions))
         for row, transaction in enumerate(transactions):
             if transaction["type"] == "income":
-                self.total += int(transaction["amount"])
+                total += int(transaction["amount"])
             else:
-                self.total -= int(transaction["amount"])
+                total -= int(transaction["amount"])
 
             self.table.setItem(row, 0, QTableWidgetItem(transaction["date"].strftime("%d/%m/%Y")))
             self.table.setItem(row, 1, QTableWidgetItem(transaction["type"]))
@@ -214,7 +316,7 @@ class HistoryView(QWidget):
             btn_delete.clicked.connect(lambda _, t=transaction: self.confirm_delete(t))
             self.table.setCellWidget(row, 7, btn_delete)
 
-        self.label.setText(f"Total : Rp {self.total}")
+        self.label.setText(f"Total : Rp {total}")
 
     def open_edit_popup(self, transaction):
         """Popup Edit Data"""
@@ -353,23 +455,17 @@ class HistoryView(QWidget):
             info_msg.setText("Transaksi berhasil dihapus")
             info_msg.exec_()
 
-    def retranslateUi(self, lang=None):
-        _translate = QCoreApplication.translate
-        if lang:
-            self.title_label.setText(_translate("Form", lang.get("history", {}).get("Title", "")))
-            self.radio_all.setText(_translate("Form", lang.get("history", {}).get("radbtn1", "")))
-            self.radio_income.setText(_translate("Form", lang.get("history", {}).get("radbtn2", "")))
-            self.radio_outcome.setText(_translate("Form", lang.get("history", {}).get("radbtn3", "")))
-            self.table.setHorizontalHeaderLabels(
-                [
-                    lang.get("history", {}).get("col1", ""), 
-                    lang.get("history", {}).get("col2", ""), 
-                    lang.get("history", {}).get("col3", ""), 
-                    lang.get("history", {}).get("col4", ""), 
-                    lang.get("history", {}).get("col5", ""), 
-                    lang.get("history", {}).get("col6", ""), 
-                    lang.get("history", {}).get("col7", ""), 
-                    lang.get("history", {}).get("col8", ""), 
-                    ]
-                )
-            self.label.setText(_translate("Form", lang.get("history", {}).get("foot", "") + f"Rp {self.total}"))
+    def reset_filters(self):
+        """Reset semua filter ke kondisi awal"""
+        # Reset radio button
+        self.radio_all.setChecked(True)
+        
+        # Reset search input
+        self.search_input.clear()
+        
+        # Reset date range
+        self.start_date.setDate(QDate.currentDate().addDays(-30))
+        self.end_date.setDate(QDate.currentDate())
+        
+        # Load data tanpa filter
+        self.load_data("all")

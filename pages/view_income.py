@@ -4,7 +4,7 @@ from PyQt5.QtWidgets import (
     QLabel, QHBoxLayout
 )
 from PyQt5.QtGui import QRegExpValidator
-from PyQt5.QtCore import QRegExp, QDate, Qt, QCoreApplication
+from PyQt5.QtCore import QRegExp, QDate, Qt
 from controller.income import Income
 from controller.category import Category
 from controller.wallet import Wallet
@@ -30,8 +30,8 @@ class IncomeView(QWidget):
         main_layout = QVBoxLayout()
         
         # Header
-        self.header_label = QLabel("Income Baru")
-        self.header_label.setObjectName("Label_1")
+        header_label = QLabel("Income Baru")
+        header_label.setObjectName("Label_1")
         
         # Form container
         form_container = QWidget()
@@ -41,15 +41,15 @@ class IncomeView(QWidget):
         # Input jumlah pemasukan container
         amount_container = QWidget()
         amount_layout = QHBoxLayout()
-        self.amount_label = QLabel("Jumlah Pemasukan:")
-        self.amount_label.setObjectName("form_label")
+        amount_label = QLabel("Jumlah Pemasukan:")
+        amount_label.setObjectName("form_label")
         self.input_amount = QSpinBox()
         self.input_amount.setObjectName("form_input")
         self.input_amount.setMinimum(0)
         self.input_amount.setMaximum(1000000000)
         self.input_amount.setPrefix("Rp ")
         self.input_amount.setSingleStep(50000)
-        amount_layout.addWidget(self.amount_label)
+        amount_layout.addWidget(amount_label)
         amount_layout.addWidget(self.input_amount)
         amount_container.setLayout(amount_layout)
 
@@ -58,21 +58,21 @@ class IncomeView(QWidget):
         
         category_container = QWidget()
         category_layout = QVBoxLayout()
-        self.category_label = QLabel("Kategori:")
-        self.category_label.setObjectName("form_label")
+        category_label = QLabel("Kategori:")
+        category_label.setObjectName("form_label")
         self.input_category = QComboBox()
         self.input_category.setObjectName("form_input")
-        category_layout.addWidget(self.category_label)
+        category_layout.addWidget(category_label)
         category_layout.addWidget(self.input_category)
         category_container.setLayout(category_layout)
         
         wallet_container = QWidget()
         wallet_layout = QVBoxLayout()
-        self.wallet_label = QLabel("Dompet yang akan diisi:")
-        self.wallet_label.setObjectName("form_label")
+        wallet_label = QLabel("Dompet yang akan diisi:")
+        wallet_label.setObjectName("form_label")
         self.input_wallet = QComboBox()
         self.input_wallet.setObjectName("form_input")
-        wallet_layout.addWidget(self.wallet_label)
+        wallet_layout.addWidget(wallet_label)
         wallet_layout.addWidget(self.input_wallet)
         wallet_container.setLayout(wallet_layout)
         
@@ -83,26 +83,26 @@ class IncomeView(QWidget):
         # Description container
         desc_container = QWidget()
         desc_layout = QVBoxLayout()
-        self.desc_label = QLabel("Deskripsi:")
-        self.desc_label.setObjectName("form_label")
+        desc_label = QLabel("Deskripsi:")
+        desc_label.setObjectName("form_label")
         self.input_desc = QLineEdit()
         self.input_desc.setObjectName("input_desc")
         self.input_desc.setValidator(QRegExpValidator(QRegExp("[a-zA-Z0-9 ]+")))
         self.input_desc.setAlignment(Qt.AlignCenter)
-        desc_layout.addWidget(self.desc_label)
+        desc_layout.addWidget(desc_label)
         desc_layout.addWidget(self.input_desc)
         desc_container.setLayout(desc_layout)
 
         # Calendar container
         calendar_container = QWidget()
         calendar_layout = QVBoxLayout()
-        self.calendar_label = QLabel("Masukkan Tanggal:")
-        self.calendar_label.setObjectName("form_label")
+        calendar_label = QLabel("Masukan Tanggal:")
+        calendar_label.setObjectName("form_label")
         self.calendar = QCalendarWidget()
         self.calendar.setObjectName("calendar")
         self.calendar.setGridVisible(True)
         self.calendar.setSelectedDate(QDate.currentDate())
-        calendar_layout.addWidget(self.calendar_label)
+        calendar_layout.addWidget(calendar_label)
         calendar_layout.addWidget(self.calendar)
         calendar_container.setLayout(calendar_layout)
 
@@ -130,7 +130,7 @@ class IncomeView(QWidget):
    
         form_container.setLayout(form_layout)
         
-        main_layout.addWidget(self.header_label)
+        main_layout.addWidget(header_label)
         main_layout.addWidget(form_container)
         main_layout.addWidget(buttons_container)
         
@@ -180,15 +180,3 @@ class IncomeView(QWidget):
         """Kembali ke Dashboard"""
         if self.parent():
             self.parent().setCurrentIndex(0)  # Indeks 0 adalah Dashboard
-
-    def retranslateUi(self, lang=None):
-        _translate = QCoreApplication.translate
-        if lang:
-            self.header_label.setText(_translate("Form", lang.get("income", {}).get("Title", "")))
-            self.amount_label.setText(_translate("Form", lang.get("income", {}).get("form1", "")))
-            self.category_label.setText(_translate("Form", lang.get("income", {}).get("form2", "")))
-            self.wallet_label.setText(_translate("Form", lang.get("income", {}).get("form3", "")))
-            self.desc_label.setText(_translate("Form", lang.get("income", {}).get("form4", "")))
-            self.calendar_label.setText(_translate("Form", lang.get("income", {}).get("form5", "")))
-            self.btn_save.setText(_translate("Form", lang.get("income", {}).get("btn1", "")))
-            self.btn_back.setText(_translate("Form", lang.get("income", {}).get("btn2", "")))

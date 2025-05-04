@@ -1,5 +1,4 @@
 from PyQt5.QtWidgets import QWidget, QVBoxLayout, QLabel, QPushButton, QLineEdit, QComboBox, QTableWidget, QTableWidgetItem, QMessageBox, QHBoxLayout
-from PyQt5.QtCore import Qt, QCoreApplication
 from controller.Popup import PopupWarning, PopupSuccess
 from controller.category import Category
 
@@ -17,9 +16,9 @@ class CategoryView(QWidget):
         main_layout.setSpacing(20)
 
         # Title Section
-        self.title_label = QLabel("Category")
-        self.title_label.setObjectName("tittleLabel")
-        main_layout.addWidget(self.title_label)
+        title_label = QLabel("Category")
+        title_label.setObjectName("tittleLabel")
+        main_layout.addWidget(title_label)
 
         # Content Container
         content_widget = QWidget()
@@ -160,9 +159,9 @@ class CategoryView(QWidget):
             self.table.setItem(row_idx, 1, QTableWidgetItem(category_type))
 
             # Tombol Delete
-            self.btn_delete = QPushButton("Delete")
-            self.btn_delete.setFixedWidth(80)
-            self.btn_delete.setStyleSheet("""
+            btn_delete = QPushButton("Delete")
+            btn_delete.setFixedWidth(80)
+            btn_delete.setStyleSheet("""
                 QPushButton {
                     background-color: #f44336;
                     color: white;
@@ -173,8 +172,8 @@ class CategoryView(QWidget):
                     background-color: #da190b;
                 }
             """)
-            self.btn_delete.clicked.connect(lambda _, n=name, t=category_type: self.confirm_delete(n,t))
-            self.table.setCellWidget(row_idx, 2, self.btn_delete)
+            btn_delete.clicked.connect(lambda _, n=name, t=category_type: self.confirm_delete(n, t))
+            self.table.setCellWidget(row_idx, 2, btn_delete)
 
     def confirm_delete(self, name, category_type):
         """Popup konfirmasi sebelum menghapus kategori"""
@@ -206,28 +205,3 @@ class CategoryView(QWidget):
         if result == QMessageBox.Yes:
             self.category_controller.delete_category(name, category_type)
             self.load_categories()
-
-    def retranslateUi(self, lang=None):
-        _translate = QCoreApplication.translate
-        if lang:
-            self.title_label.setText(_translate("Form", lang.get("category", {}).get("Title", "")))
-            self.input_name.setText(_translate("Form", lang.get("category", {}).get("desc", "")))
-            self.input_type.setItemText(0, lang.get("category", {}).get("item1", ""))
-            self.input_type.setItemText(1, lang.get("category", {}).get("item2", ""))
-            self.btn_add.setText(_translate("Form", lang.get("category", {}).get("btn", "")))
-            self.table.setHorizontalHeaderLabels(
-                [
-                    lang.get("category", {}).get("col1", ""), 
-                    lang.get("category", {}).get("col2", ""), 
-                    lang.get("category", {}).get("col3", "")
-                    ]
-                )
-            try:
-                if self.btn_delete:  # Pastikan btn_delete ada
-                    self.btn_delete.setText(_translate("Form", lang.get("category", {}).get("col3", "")))
-                else:
-                    # Jika btn_delete ada tapi None atau tidak valid, bisa diberi penanganan khusus
-                    print("btn_delete is None or invalid")
-            except AttributeError:
-                # Menangani jika btn_delete tidak ada sama sekali
-                print("btn_delete is missing")

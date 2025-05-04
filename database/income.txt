@@ -1,0 +1,10 @@
+1,3000000,Gaji Perbulan,BCA,Gaji Maret,31/03/2025
+2,800000,Gaji Perbulan,BCA,au,10/04/2025
+3,100000,Gaji Perbulan,BCA,a,06/04/2025
+4,200000,Gaji Perbulan,BCA,aa,07/04/2025
+5,600000,Gaji Perbulan,BCA,a,09/04/2025
+6,50000,Freelance,BCA,aaa,08/04/2025
+7,200000,Gaji Perbulan,BCA,sss,11/04/2025
+8,100000,Gaji Perbulan,BCA,aaa,08/04/2025
+9,200000,Gaji Perbulan,BCA,aaaa,13/04/2025
+10,100000,Gaji Perbulan,BCA,aaa,09/04/2025

@@ -102,3 +102,4 @@ class Account:
         """
         accounts = self.load_account()
         return any(acc["email"] == email for acc in accounts)
+

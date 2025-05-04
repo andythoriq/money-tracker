@@ -261,6 +261,9 @@ class Statistic:
     def NamaHariDariTanggal(self, tanggal_list):
         # Mengonversi tanggal dalam format "day/month/year" menjadi objek datetime dan mengambil nama hari
         return [datetime.strptime(tanggal, "%d/%m/%Y").strftime("%A") for tanggal in tanggal_list]
+
+    def NamaBulanDariTanggal(self, tanggal_list):
+        return [datetime.strptime(tanggal, "%d/%m/%Y").strftime("%B") for tanggal in tanggal_list]
     
     def ubahHari(self, offset=0):
         today = datetime.today()
