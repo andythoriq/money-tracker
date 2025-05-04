@@ -22,8 +22,8 @@ class OnboardingScreen(QWidget):
         self.main_menu_widget = QtWidgets.QWidget()  # widget container untuk main menu
         self.init_main_menu()
 
-        # Inisialisasi satu dictionary untuk semua data pengeluaran
-        key_dict = {"key": ""}
+        # Inisialisasi satu dictionary untuk semua data akun
+        key_dict = {"key": ""} # Untuk OTP
         user_data = {
             "email": "",
             "username": "",

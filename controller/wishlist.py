@@ -108,7 +108,7 @@ class Wishlist:
             elif len(wishlist_data.get('label')) < 3:
                 errors["label"] = "harus lebih dari 3 karakter."
             elif len(wishlist_data.get('label')) > 64:
-                errors["label"] = "tidak boleh lebih dari 20 karakter."
+                errors["label"] = "tidak boleh lebih dari 64 karakter."
             elif not wishlist_data.get('label').isalnum():
                 errors["label"] = "hanya boleh mengandung huruf dan angka."
             elif not wishlist_data.get('label')[0].isalpha():
