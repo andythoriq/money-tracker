@@ -22,14 +22,23 @@ class OnboardingScreen(QWidget):
         self.main_menu_widget = QtWidgets.QWidget()  # widget container untuk main menu
         self.init_main_menu()
 
+        # Inisialisasi satu dictionary untuk semua data akun
+        key_dict = {"key": ""} # Untuk OTP
+        user_data = {
+            "email": "",
+            "username": "",
+            "gender": "",
+            "birth_date": "",
+            "phone": "",
+            "password": "",
+        }
+
         # Tambahkan halaman ke stack
-        key_dict = {"key": ""}
-        newuser = {"email": ""}
-        self.otp_backend = Ui_accotp(self.stack, newuser, key_dict)
+        self.otp_backend = Ui_accotp(self.stack, key_dict, user_data)
         self.forget_view = Ui_pemulihan(self.stack)
         self.login_view = LoginScreen(self.stack)
-        self.register_view = RegisterScreen(self.stack)
-        self.register_email = self.register_view.register_email_view(newuser)
+        self.register_view = RegisterScreen(self.stack, user_data)
+        self.register_email = self.register_view.register_email_view(user_data)
         self.register_password = self.register_view.register_password_view()
 
         self.stack.addWidget(self.main_menu_widget)

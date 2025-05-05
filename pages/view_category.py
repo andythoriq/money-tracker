@@ -175,6 +175,8 @@ class CategoryView(QWidget):
             """)
             self.btn_delete.clicked.connect(lambda _, n=name, t=category_type: self.confirm_delete(n,t))
             self.table.setCellWidget(row_idx, 2, self.btn_delete)
+            # btn_delete.clicked.connect(lambda _, n=name, t=category_type: self.confirm_delete(n, t))
+            # self.table.setCellWidget(row_idx, 2, btn_delete)
 
     def confirm_delete(self, name, category_type):
         """Popup konfirmasi sebelum menghapus kategori"""

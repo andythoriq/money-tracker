@@ -217,6 +217,14 @@ class Dashboard(QWidget):
         self.history_table = QTableWidget()
         self.history_table.setObjectName("history_table")
         self.history_table.setColumnCount(5)
+        self.history_label = QLabel("Riwayat Transaksi Minggu Ini")
+        self.history_label.setObjectName("Label_1")
+
+        # layout = QVBoxLayout()
+        # history_table = QTableWidget()
+        # history_table.setObjectName("history_table")
+        # history_table.setColumnCount(5)
+        # history_table.setHorizontalHeaderLabels(["Tanggal", "Jenis", "Jumlah", "Kategori", "Dompet"])
 
 
         self.history_table.setColumnWidth(0, 100)  # Tanggal
@@ -304,6 +312,11 @@ class Dashboard(QWidget):
             self.history_table.setItem(row, 2, QTableWidgetItem(f"Rp {transaction['amount']}"))  # Jumlah
             self.history_table.setItem(row, 3, QTableWidgetItem(transaction["category"]))  # Kategori
             self.history_table.setItem(row, 4, QTableWidgetItem(transaction["wallet"]))  # Dompet
+            # history_table.setItem(row, 0, QTableWidgetItem(transaction["date"]))  # Tanggal
+            # history_table.setItem(row, 1, QTableWidgetItem(transaction["type"]))  # Jenis
+            # history_table.setItem(row, 2, QTableWidgetItem(f"Rp {str(transaction['amount'])}"))  # Jumlah
+            # history_table.setItem(row, 3, QTableWidgetItem(transaction["category"]))  # Kategori
+            # history_table.setItem(row, 4, QTableWidgetItem(transaction["wallet"]))  # Dompet
 
         # Menambahkan tombol "View All" di bawah tabel
         view_all_btn = QPushButton("View All")
@@ -315,7 +328,8 @@ class Dashboard(QWidget):
         ))
 
         layout.addWidget(self.history_label)
-        layout.addWidget(self.history_table)
+        # layout.addWidget(self.history_table)
+        # layout.addWidget(history_table)
         layout.addWidget(view_all_btn, alignment=QtCore.Qt.AlignRight)
         self.layout_2.setLayout(layout)
         self.layout_2.setContentsMargins(0, 0, 0, 0)  # Menghilangkan margin di sekitar layout_2
@@ -373,6 +387,13 @@ class Dashboard(QWidget):
             # Konversi status dari boolean ke text
             status_text = "Sudah Terpenuhi" if wishlist[3] == "true" else "Belum Terpenuhi"
             self.wishlist_table.setItem(row, 3, QTableWidgetItem(status_text))  # Status
+            # wishlist_table.setItem(row, 0, QTableWidgetItem(str(wishlist.get('ID'))))
+            # wishlist_table.setItem(row, 1, QTableWidgetItem(wishlist.get('label')))
+            # wishlist_table.setItem(row, 2, QTableWidgetItem(str(wishlist.get('price'))))
+            
+            # # Konversi status dari boolean ke text
+            # status_text = "Sudah Terpenuhi" if wishlist.get('status') else "Belum Terpenuhi"
+            # wishlist_table.setItem(row, 3, QTableWidgetItem(status_text))
         
         layout.addWidget(self.wishlist_table)
         self.layout_4.setLayout(layout)

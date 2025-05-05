@@ -172,7 +172,7 @@ class WalletView(QWidget):
                     background-color: #45a049;
                 }
             """)
-            btn_edit.clicked.connect(lambda _, n=wallet.get("name"): self.edit_wallet(n))
+            self.btn_edit.clicked.connect(lambda _, n=wallet.get("name"): self.edit_wallet(n))
 
             self.btn_delete = QPushButton("Hapus")
             self.btn_delete.setFixedWidth(80)
@@ -187,7 +187,7 @@ class WalletView(QWidget):
                     background-color: #da190b;
                 }
             """)
-            btn_delete.clicked.connect(lambda _, n=wallet.get("name"): self.delete_wallet(n))
+            self.btn_delete.clicked.connect(lambda _, n=wallet.get("name"): self.delete_wallet(n))
 
             self.table_wallet.setItem(row, 0, name_item)
             self.table_wallet.setItem(row, 1, amount_item)
