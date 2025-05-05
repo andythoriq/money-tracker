@@ -66,7 +66,9 @@ class Otp:
             key_dict["key"] = self.current_otp
             return True
         except Exception as e:
-            print(f"Terjadi kesalahan: {str(e)}")
+            import traceback
+            print("Terjadi kesalahan:")
+            traceback.print_exc()            
             return False
 
     def otpcheck(self, userotp, otpcode):

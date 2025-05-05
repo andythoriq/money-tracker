@@ -1,7 +1,6 @@
 from PyQt5.QtWidgets import (
     QWidget, QVBoxLayout, QLineEdit, QPushButton, 
-    QComboBox, QSpinBox, QFormLayout, QCalendarWidget,
-    QLabel, QHBoxLayout
+    QComboBox, QSpinBox, QFormLayout, QCalendarWidget, QLabel, QHBoxLayout
 )
 from PyQt5.QtGui import QRegExpValidator
 from PyQt5.QtCore import QRegExp, QDate, Qt, QCoreApplication
@@ -18,20 +17,15 @@ class IncomeView(QWidget):
         self.wallet_controller = Wallet()
         self.init_ui()
 
-    def init_income(self):
-        self.setGeometry(340, 0, 1263, 900)
-
-    def init_ui(self):
-        self.setGeometry(340, 0, 1263, 900)
-        
+    def init_ui(self):        
         # Main container
-        main_container = QWidget()
-        main_container.setObjectName("container")
         main_layout = QVBoxLayout()
-        
+        main_layout.setContentsMargins(20, 20, 20, 20)
+        main_layout.setSpacing(20)
+
         # Header
         self.header_label = QLabel("Income Baru")
-        self.header_label.setObjectName("Label_1")
+        self.header_label.setObjectName("titleLabel")
         
         # Form container
         form_container = QWidget()
@@ -53,9 +47,11 @@ class IncomeView(QWidget):
         amount_layout.addWidget(self.input_amount)
         amount_container.setLayout(amount_layout)
 
+        # Category and Wallet container
         category_wallet_container = QWidget()
         category_wallet_layout = QHBoxLayout()
         
+        # Category
         category_container = QWidget()
         category_layout = QVBoxLayout()
         self.category_label = QLabel("Kategori:")
@@ -66,6 +62,7 @@ class IncomeView(QWidget):
         category_layout.addWidget(self.input_category)
         category_container.setLayout(category_layout)
         
+        # Wallet
         wallet_container = QWidget()
         wallet_layout = QVBoxLayout()
         self.wallet_label = QLabel("Dompet yang akan diisi:")
@@ -133,11 +130,6 @@ class IncomeView(QWidget):
         main_layout.addWidget(self.header_label)
         main_layout.addWidget(form_container)
         main_layout.addWidget(buttons_container)
-        
-        main_container.setLayout(main_layout)
-        
-        main_layout = QVBoxLayout()
-        main_layout.addWidget(main_container)
         self.setLayout(main_layout)
 
     def refresh_inputs(self):

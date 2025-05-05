@@ -2,9 +2,10 @@ from PyQt5.QtWidgets import (
     QWidget, QVBoxLayout, QPushButton, QTableWidget, 
     QTableWidgetItem, QHBoxLayout, QLabel, QRadioButton, 
     QButtonGroup, QDialog, QFormLayout, QSpinBox, 
-    QComboBox, QLineEdit, QCalendarWidget, QMessageBox
+    QComboBox, QLineEdit, QCalendarWidget, QMessageBox, 
+    QTableView, QVBoxLayout, QDateEdit, QHeaderView
 )
-from PyQt5.QtCore import Qt, QCoreApplication
+from PyQt5.QtCore import Qt, QSortFilterProxyModel, QDate, QCoreApplication
 from datetime import datetime
 from controller.income import Income
 from controller.outcome import Outcome
@@ -30,7 +31,7 @@ class HistoryView(QWidget):
 
         # Title Section
         self.title_label = QLabel("History")
-        self.title_label.setObjectName("tittleLabel")
+        self.title_label.setObjectName("titleLabel")
         main_layout.addWidget(self.title_label)
 
         # Content Container
@@ -47,12 +48,83 @@ class HistoryView(QWidget):
         btn_layout.setSpacing(10)
         self.radio_group = QButtonGroup(self)
 
+        self.filter_label = QLabel("Filter Jenis:")
+        self.filter_label.setObjectName("form_label")
         self.radio_all = QRadioButton("Semua")
         self.radio_all.setObjectName("btn_home")
         self.radio_income = QRadioButton("Income")
         self.radio_income.setObjectName("btn_home")
         self.radio_outcome = QRadioButton("Outcome")
         self.radio_outcome.setObjectName("btn_home")
+        
+        # Search bar untuk kategori
+        self.search_bar = QLineEdit(self)
+        self.search_bar.setPlaceholderText("Cari kategori...")
+        self.search_bar.setStyleSheet("""
+            QLineEdit {
+                background-color: white;
+                border: 1px solid #7A9F60;
+                border-radius: 5px;
+                padding: 5px;
+                color: black;
+            }
+            QLineEdit:focus {
+                border: 2px solid #4CAF50;
+            }
+        """)
+        self.search_bar.textChanged.connect(self.filter_by_category)
+
+        # Date Edit untuk filter tanggal
+        self.date_edit = QDateEdit()
+        self.date_edit.setCalendarPopup(True)
+        self.date_edit.setDate(QDate.currentDate())
+        self.date_edit.setDisplayFormat("dd/MM/yyyy")
+        self.date_edit.setStyleSheet("""
+            QDateEdit {
+                background-color: white;
+                border: 1px solid #7A9F60;
+                border-radius: 5px;
+                padding: 5px;
+                color: black;
+            }
+            QDateEdit::drop-down {
+                subcontrol-origin: padding;
+                subcontrol-position: top right;
+                width: 20px;
+                border-left-width: 1px;
+                border-left-color: #7A9F60;
+                border-left-style: solid;
+                border-top-right-radius: 5px;
+                border-bottom-right-radius: 5px;
+            }
+            QDateEdit::down-arrow {
+                border: none;
+                width: 16px;
+                height: 16px;
+                image: url(img/down-arrow.png);
+            }
+            QDateEdit::down-arrow:enabled {
+                border: none;
+                width: 16px;
+                height: 16px;
+                image: url(img/icon1.png);
+            }
+            QCalendarWidget {
+                background-color: white;
+                border: 1px solid #7A9F60;
+                border-radius: 5px;
+            }
+            QCalendarWidget QToolButton {
+                background-color: #7A9F60;
+                color: white;
+                border-radius: 5px;
+            }
+            QCalendarWidget QMenu {
+                background-color: white;
+            }
+        """)
+        self.date_edit.dateChanged.connect(self.filter_by_date)
+        self.selected_date = None
 
         for radio in [self.radio_all, self.radio_income, self.radio_outcome]:
             radio.setStyleSheet("""
@@ -79,43 +151,45 @@ class HistoryView(QWidget):
         btn_layout.addWidget(self.radio_all)
         btn_layout.addWidget(self.radio_income)
         btn_layout.addWidget(self.radio_outcome)
+        btn_layout.addWidget(self.filter_label)
         btn_layout.addStretch()
+        btn_layout.addWidget(self.search_bar)
+        btn_layout.addWidget(self.date_edit)
+
+        # Tombol Hapus Filter
+        self.clear_filter_btn = QPushButton("Hapus Filter")
+        self.clear_filter_btn.setStyleSheet("""
+            QPushButton {
+                background-color: #f44336;
+                color: white;
+                border-radius: 5px;
+                padding: 5px 10px;
+                font-size: 12px;
+            }
+            QPushButton:hover {
+                background-color: #da190b;
+            }
+        """)
+        self.clear_filter_btn.clicked.connect(self.clear_filters)
+        btn_layout.addWidget(self.clear_filter_btn)
+
         content_layout.addWidget(filter_widget)
 
         # Tabel Transaksi
         self.table = QTableWidget()
         self.table.setObjectName("table")
         self.table.setColumnCount(8)
+        self.table.horizontalHeader().setSectionResizeMode(QHeaderView.Interactive)
+        self.table.horizontalHeader().setSectionResizeMode(0, QHeaderView.ResizeToContents)
+        self.table.horizontalHeader().setSectionResizeMode(1, QHeaderView.Stretch)
+        self.table.horizontalHeader().setSectionResizeMode(6, QHeaderView.ResizeToContents)
+        self.table.horizontalHeader().setSectionResizeMode(7, QHeaderView.ResizeToContents)
         self.table.setHorizontalHeaderLabels(["Tanggal", "Jenis", "Jumlah", "Kategori", "Dompet", "Deskripsi", "Edit", "Delete"])
         self.table.setSortingEnabled(True)
         self.table.setEditTriggers(QTableWidget.NoEditTriggers)
-        self.table.setStyleSheet("""
-            QTableWidget {
-                background-color: #7A9F60;
-                border-radius: 10px;
-                color: white;
-                gridline-color: #98C379;
-            }
-            QTableWidget::item {
-                padding: 5px;
-            }
-            QTableWidget::item:selected {
-                background-color: #6A8B52;
-            }
-            QHeaderView::section {
-                background-color: #7A9F60;
-                color: white;
-                padding: 5px;
-                border: none;
-            }
-            QScrollBar {
-                background-color: #7A9F60;
-            }
-        """)
         self.table.horizontalHeader().setStretchLastSection(False)
         self.table.verticalHeader().setVisible(False)
         content_layout.addWidget(self.table)
-        self.setStyleSheet("background-color: #98C379;")
 
         # Label Total
         self.label = QLabel("Total : Rp 0")
@@ -126,6 +200,40 @@ class HistoryView(QWidget):
         main_layout.addWidget(content_widget)
         self.setLayout(main_layout)
         self.load_data("all")
+
+    def filter_by_date(self, date):
+        """Filter data berdasarkan tanggal"""
+        self.selected_date = date
+        self.apply_filters()
+
+    def filter_by_category(self):
+        """Filter data berdasarkan kategori"""
+        self.apply_filters()
+
+    def apply_filters(self):
+        """Menerapkan semua filter yang ada"""
+        search_text = self.search_bar.text().lower()
+        
+        for row in range(self.table.rowCount()):
+            category_item = self.table.item(row, 3)  # Kolom kategori
+            date_item = self.table.item(row, 0)      # Kolom tanggal
+            
+            show_row = True
+            
+            # Filter kategori
+            if search_text and category_item:
+                category = category_item.text().lower()
+                show_row = show_row and (search_text in category)
+            
+            # Filter tanggal
+            if self.selected_date and date_item:
+                try:
+                    row_date = datetime.strptime(date_item.text(), "%d/%m/%Y").date()
+                    show_row = show_row and (row_date == self.selected_date.toPyDate())
+                except ValueError:
+                    show_row = False
+            
+            self.table.setRowHidden(row, not show_row)
 
     def load_data(self, filter_type):
         """Memuat data ke tabel berdasarkan filter"""
@@ -216,6 +324,7 @@ class HistoryView(QWidget):
 
         self.label.setText(f"Total : Rp {self.total}")
 
+
     def open_edit_popup(self, transaction):
         """Popup Edit Data"""
         dialog = QDialog(self)
@@ -299,19 +408,12 @@ class HistoryView(QWidget):
         }
 
         if transaction["type"] == "income":
-            result = self.income_controller.update_income(new_data)
+            self.income_controller.update_income(new_data)
         else:
-            result = self.outcome_controller.update_outcome(new_data)
-
-        if result.get("valid"):
-            self.load_data(transaction["type"])
-            PopupSuccess("Success", "berhasil disimpan!")
-        else:
-            errors = result.get("errors")
-            error_message = "\n".join([f"{key}: {value}" for key, value in errors.items()])
-            PopupWarning("Warning", f"Gagal menyimpan!\n{error_message}")
+            self.outcome_controller.update_outcome(new_data)
 
         dialog.accept()
+        self.load_data(transaction["type"])
 
     def confirm_delete(self, transaction):
         """Konfirmasi Delete"""
@@ -352,6 +454,21 @@ class HistoryView(QWidget):
             info_msg.setWindowTitle("Informasi")
             info_msg.setText("Transaksi berhasil dihapus")
             info_msg.exec_()
+
+    def clear_filters(self):
+        """Mengembalikan semua filter ke setelan awal"""
+        # Reset radio button
+        self.radio_all.setChecked(True)
+        
+        # Reset search bar
+        self.search_bar.clear()
+        
+        # Reset date filter
+        self.date_edit.setDate(QDate.currentDate())
+        self.selected_date = None
+        
+        # Tampilkan semua data
+        self.load_data("all")
 
     def retranslateUi(self, lang=None):
         _translate = QCoreApplication.translate

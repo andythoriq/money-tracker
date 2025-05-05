@@ -1,5 +1,6 @@
 import json, os
 
+
 class Account:
     FILE_PATH = "database/account.json"
 
@@ -23,7 +24,7 @@ class Account:
         except FileNotFoundError:
             return []
         except json.JSONDecodeError:
-        # Jika file kosong atau tidak valid, anggap tidak ada akun
+            # Jika file kosong atau tidak valid, anggap tidak ada akun
             return []
 
     def save_accounts(self, accounts):

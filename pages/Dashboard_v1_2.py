@@ -39,6 +39,9 @@ class Dashboard(QWidget):
         theme_handler = Setting(self)
         theme_handler.load_theme(self.config["theme_color"])
 
+        theme_handler = Setting(self)
+        theme_handler.load_theme(self.config["theme_color"])
+
         # Sidebar kiri (HomeSection)
         self.HomeSection = QGroupBox()
 
@@ -188,7 +191,6 @@ class Dashboard(QWidget):
         self.btn_theme.clicked.connect(self.toggle_theme)
 
         self.label = QLabel(self.HomeSection)
-        self.label.setStyleSheet("color: white; background-color: transparent;")
         self.label.setObjectName("label")
 
         self.retranslateView()
@@ -213,9 +215,10 @@ class Dashboard(QWidget):
         layout = QVBoxLayout()
         self.history_label = QLabel()
         self.history_label.setObjectName("Label_1")
+        layout.addWidget(self.history_label)
 
         self.history_table = QTableWidget()
-        self.history_table.setObjectName("history_table")
+        self.history_table.setObjectName("table")
         self.history_table.setColumnCount(5)
         self.history_label = QLabel("Riwayat Transaksi Minggu Ini")
         self.history_label.setObjectName("Label_1")
@@ -234,26 +237,6 @@ class Dashboard(QWidget):
         self.history_table.setColumnWidth(4, 100)  # Dompet
 
         # Table style, untuk kasus ini tidak dapat digunakan pada file style.qss
-        self.history_table.setStyleSheet("""
-            QTableWidget {
-                background-color: #7A9F60;
-                border-radius: 10px;
-                color: white;
-                gridline-color: #98C379;
-            }
-            QTableWidget::item {
-                padding: 5px;
-            }
-            QTableWidget::item:selected {
-                background-color: #6A8B52;
-            }
-            QHeaderView::section {
-                background-color: #7A9F60;
-                color: white;
-                padding: 5px;
-                border: none;
-            }
-        """)
 
         # Sembunyikan header vertikal
         self.history_table.verticalHeader().setVisible(False)
@@ -309,7 +292,7 @@ class Dashboard(QWidget):
         for row, transaction in enumerate(recent_transactions):
             self.history_table.setItem(row, 0, QTableWidgetItem(transaction["date"]))  # Tanggal
             self.history_table.setItem(row, 1, QTableWidgetItem(transaction["type"]))  # Jenis
-            self.history_table.setItem(row, 2, QTableWidgetItem(f"Rp {transaction['amount']}"))  # Jumlah
+            self.history_table.setItem(row, 2, QTableWidgetItem(f"Rp {str(transaction['amount'])}"))  # Jumlah
             self.history_table.setItem(row, 3, QTableWidgetItem(transaction["category"]))  # Kategori
             self.history_table.setItem(row, 4, QTableWidgetItem(transaction["wallet"]))  # Dompet
             # history_table.setItem(row, 0, QTableWidgetItem(transaction["date"]))  # Tanggal
@@ -327,14 +310,11 @@ class Dashboard(QWidget):
             self.stack.setCurrentWidget(self.history_view)
         ))
 
-        layout.addWidget(self.history_label)
-        # layout.addWidget(self.history_table)
-        # layout.addWidget(history_table)
+        layout.addWidget(self.history_table)
         layout.addWidget(view_all_btn, alignment=QtCore.Qt.AlignRight)
         self.layout_2.setLayout(layout)
         self.layout_2.setContentsMargins(0, 0, 0, 0)  # Menghilangkan margin di sekitar layout_2
         self.layout_2.setSizePolicy(QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Expanding)
-
 
     def layout_3_ui(self):
         layout = QVBoxLayout()
@@ -380,20 +360,13 @@ class Dashboard(QWidget):
             if len(wishlist) < 4:  # Periksa apakah data lengkap
                 continue
                 
-            self.wishlist_table.setItem(row, 0, QTableWidgetItem(wishlist[0]))  # No.
-            self.wishlist_table.setItem(row, 1, QTableWidgetItem(wishlist[1]))  # Nama
-            self.wishlist_table.setItem(row, 2, QTableWidgetItem(wishlist[2]))  # Harga
+            self.wishlist_table.setItem(row, 0, QTableWidgetItem(str(wishlist.get('ID'))))
+            self.wishlist_table.setItem(row, 1, QTableWidgetItem(wishlist.get('label')))
+            self.wishlist_table.setItem(row, 2, QTableWidgetItem(str(wishlist.get('price'))))
             
             # Konversi status dari boolean ke text
-            status_text = "Sudah Terpenuhi" if wishlist[3] == "true" else "Belum Terpenuhi"
-            self.wishlist_table.setItem(row, 3, QTableWidgetItem(status_text))  # Status
-            # wishlist_table.setItem(row, 0, QTableWidgetItem(str(wishlist.get('ID'))))
-            # wishlist_table.setItem(row, 1, QTableWidgetItem(wishlist.get('label')))
-            # wishlist_table.setItem(row, 2, QTableWidgetItem(str(wishlist.get('price'))))
-            
-            # # Konversi status dari boolean ke text
-            # status_text = "Sudah Terpenuhi" if wishlist.get('status') else "Belum Terpenuhi"
-            # wishlist_table.setItem(row, 3, QTableWidgetItem(status_text))
+            status_text = "Sudah Terpenuhi" if wishlist.get('status') else "Belum Terpenuhi"
+            self.wishlist_table.setItem(row, 3, QTableWidgetItem(status_text))
         
         layout.addWidget(self.wishlist_table)
         self.layout_4.setLayout(layout)
@@ -626,7 +599,6 @@ class Dashboard(QWidget):
 
         # Update the theme color in the config
         self.config["theme_color"] = theme[next_index]
-
 
         theme_handler = Setting(self)
         Setting.save_config(self.config)

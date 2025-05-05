@@ -17,9 +17,16 @@ class StatisticView(QWidget):
 
     def setupUi(self):
         # Main vertical layout
-        self.mainLayout = QVBoxLayout(self)
-        self.setLayout(self.mainLayout)
+        self.main_layout = QVBoxLayout(self)
+        self.main_layout.setContentsMargins(20, 20, 20, 20)
+        self.main_layout.setSpacing(20)
+        self.setLayout(self.main_layout)
         
+        # Title Section
+        self.title_label = QLabel("Statistic")
+        self.title_label.setObjectName("titleLabel")
+        self.main_layout.addWidget(self.title_label)
+
         # Create menu option widget
         self.menuOption = QtWidgets.QWidget(self)
         self.menuOption.setObjectName("menuOption")
@@ -29,7 +36,7 @@ class StatisticView(QWidget):
         self.menuOption.setLayout(self.menuLayout)
         
         # Add menu option to main layout
-        self.mainLayout.addWidget(self.menuOption)
+        self.main_layout.addWidget(self.menuOption)
         
         # Setup plot widget
         self.plot_widget = PlotWidget()
@@ -41,17 +48,17 @@ class StatisticView(QWidget):
         
         # Income frame
         self.Income = QFrame()
-        self.Income.setObjectName("Income")
+        self.Income.setObjectName("Layout")
         self.Income.setFrameShape(QtWidgets.QFrame.StyledPanel)
         self.Income.setFrameShadow(QtWidgets.QFrame.Raised)
         self.incomeLayout = QVBoxLayout(self.Income)
         
         self.incomeInfo = QLabel()
-        self.incomeInfo.setObjectName("incomeInfo")
+        self.incomeInfo.setObjectName("form_label")
         self.incomeInfo.setAlignment(Qt.AlignCenter)
         
         self.IncomeValue = QLabel()
-        self.IncomeValue.setObjectName("IncomeValue")
+        self.IncomeValue.setObjectName("form_label")
         self.IncomeValue.setAlignment(Qt.AlignCenter)
         
         self.incomeLayout.addWidget(self.incomeInfo)
@@ -60,17 +67,17 @@ class StatisticView(QWidget):
         
         # Outcome frame
         self.Outcome = QFrame()
-        self.Outcome.setObjectName("Outcome")
+        self.Outcome.setObjectName("Layout")
         self.Outcome.setFrameShape(QtWidgets.QFrame.StyledPanel)
         self.Outcome.setFrameShadow(QtWidgets.QFrame.Raised)
         self.outcomeLayout = QVBoxLayout(self.Outcome)
         
         self.outcomeInfo = QLabel()
-        self.outcomeInfo.setObjectName("outcomeInfo")
+        self.outcomeInfo.setObjectName("form_label")
         self.outcomeInfo.setAlignment(Qt.AlignCenter)
         
         self.outcomeValue = QLabel()
-        self.outcomeValue.setObjectName("outcomeValue")
+        self.outcomeValue.setObjectName("form_label")
         self.outcomeValue.setAlignment(Qt.AlignCenter)
         
         self.outcomeLayout.addWidget(self.outcomeInfo)
@@ -85,22 +92,18 @@ class StatisticView(QWidget):
         
         # Statistics frame
         self.Statistic = QFrame()
-        self.Statistic.setObjectName("Statistic")
+        self.Statistic.setObjectName("Layout")
         self.statisticLayout = QVBoxLayout(self.Statistic)
         
         # Statistic header layout
         self.statisticHeaderLayout = QHBoxLayout()
         
         self.statisticInfo = QLabel()
-        self.statisticInfo.setObjectName("statisticInfo")
+        self.statisticInfo.setObjectName("form_label")
         self.statisticInfo.setTextFormat(QtCore.Qt.RichText)
         
         self.statisticOption = QComboBox()
-        self.statisticOption.setObjectName("statisticOption")
-        # self.statisticOption.addItem("")
-        # self.statisticOption.addItem("")
-        # self.statisticOption.addItem("")
-        # self.statisticOption.addItem("")
+        self.statisticOption.setObjectName("iconDesign")
         self.statisticOption.addItem("")  # separator
         self.statisticOption.addItem("")
         
@@ -115,18 +118,16 @@ class StatisticView(QWidget):
         self.sliderLayout = QHBoxLayout()
         
         self.prevButton = QPushButton()
-        self.prevButton.setObjectName("prevButton")
+        self.prevButton.setObjectName("buttonStyle")
         self.prevButton.setMaximumWidth(40)
         
         self.sliderType = QComboBox()
         self.sliderType.setObjectName("sliderType")
-        self.sliderType.addItem("")
-        self.sliderType.addItem("")
-        self.sliderType.addItem("")
-        self.sliderType.addItem("")
+        for _ in range(4):
+            self.sliderType.addItem("")
         
         self.nextButton = QPushButton()
-        self.nextButton.setObjectName("nextButton")
+        self.nextButton.setObjectName("buttonStyle")
         self.nextButton.setMaximumWidth(40)
         
         self.sliderLayout.addStretch()
@@ -153,20 +154,18 @@ class StatisticView(QWidget):
         
         # Pie chart frame
         self.pieChart = QFrame()
-        self.pieChart.setObjectName("pieChart")
+        self.pieChart.setObjectName("Layout")
         self.pieChartLayout = QVBoxLayout(self.pieChart)
         
         # Pie chart header layout
         self.pieChartHeaderLayout = QHBoxLayout()
         
         self.chartInfo = QLabel()
-        self.chartInfo.setObjectName("chartInfo")
+        self.chartInfo.setObjectName("form_label")
         self.chartInfo.setTextFormat(QtCore.Qt.RichText)
         
         self.pieChartOption = QComboBox()
-        self.pieChartOption.setObjectName("pieChartOption")
-        # self.pieChartOption.addItem("")
-        # self.pieChartOption.addItem("")
+        self.pieChartOption.setObjectName("iconDesign")
         self.pieChartOption.addItem("")
         self.pieChartOption.addItem("")
         
@@ -188,23 +187,23 @@ class StatisticView(QWidget):
         
         # Summary frame
         self.Summary = QFrame()
-        self.Summary.setObjectName("Summary")
+        self.Summary.setObjectName("Layout")
         self.Summary.setFrameShape(QtWidgets.QFrame.StyledPanel)
         self.Summary.setFrameShadow(QtWidgets.QFrame.Raised)
         self.summaryLayout = QVBoxLayout(self.Summary)
         
         # Summary header
         self.summaryInfo = QLabel()
-        self.summaryInfo.setObjectName("summaryInfo")
+        self.summaryInfo.setObjectName("form_label")
         self.summaryInfo.setAlignment(Qt.AlignCenter)
         self.summaryLayout.addWidget(self.summaryInfo)
         
         # Previous balance section
         self.prevBalanceLayout = QVBoxLayout()
         self.prevBalance = QLabel()
-        self.prevBalance.setObjectName("prevBalance")
+        self.prevBalance.setObjectName("form_label")
         self.prevValue = QLabel()
-        self.prevValue.setObjectName("prevValue")
+        self.prevValue.setObjectName("form_label")
         self.prevValue.setAlignment(Qt.AlignRight)
         self.prevBalanceLayout.addWidget(self.prevBalance)
         self.prevBalanceLayout.addWidget(self.prevValue)
@@ -215,9 +214,9 @@ class StatisticView(QWidget):
         # New balance section
         self.newBalanceLayout = QVBoxLayout()
         self.newBalance = QLabel()
-        self.newBalance.setObjectName("newBalance")
+        self.newBalance.setObjectName("form_label")
         self.newValue = QLabel()
-        self.newValue.setObjectName("newValue")
+        self.newValue.setObjectName("form_label")
         self.newValue.setAlignment(Qt.AlignRight)
         self.newBalanceLayout.addWidget(self.newBalance)
         self.newBalanceLayout.addWidget(self.newValue)
@@ -228,7 +227,7 @@ class StatisticView(QWidget):
         # Change value
         self.changeValueLayout = QHBoxLayout()
         self.changeValue = QLabel()
-        self.changeValue.setObjectName("changeValue")
+        self.changeValue.setObjectName("form_label")
         self.changeValue.setAlignment(Qt.AlignCenter)
         self.changeValueLayout.addStretch()
         self.changeValueLayout.addWidget(self.changeValue)
@@ -248,7 +247,6 @@ class StatisticView(QWidget):
         
         # Set up event handlers and UI elements
         self.retranslateUi()
-        self.styleSheet(self)
         self.statistic_controller.generate_statistics(self.plot_widget)
         self.update_label()
         
@@ -263,187 +261,6 @@ class StatisticView(QWidget):
         self.pieChartOption.installEventFilter(self)
         
         QtCore.QMetaObject.connectSlotsByName(self)
-
-    def retranslateUi(self, lang=None):
-        _translate = QtCore.QCoreApplication.translate
-        if lang:
-            #self.btn_income.setText(_translate("Form", lang.get("statistic", {}).get("Title", "Statistic")))
-            self.incomeInfo.setText(_translate("Form", lang.get("statistic", {}).get("head1", "<html>Jumlah <br>Income</html>")))
-            self.outcomeInfo.setText(_translate("Form", lang.get("statistic", {}).get("head2", "<html>Jumlah <br>Outcome</html>")))
-            self.statisticInfo.setText(_translate("Form", lang.get("statistic", {}).get("head3", "Statistic")))
-            self.chartInfo.setText(_translate("Form", lang.get("statistic", {}).get("head4", "Category Chart")))
-            self.summaryInfo.setText(_translate("Form", lang.get("statistic", {}).get("head5", "<html>QuickView <br>Summary<html>")))
-            self.newBalance.setText(_translate("Form", lang.get("statistic", {}).get("desc1", "New Balance")))
-            self.prevBalance.setText(_translate("Form", lang.get("statistic", {}).get("desc2", "Previous Balance")))
-
-        else:
-            self.incomeInfo.setText(_translate("Statistik", "<html>Jumlah <br>Income</html>"))
-            self.outcomeInfo.setText(_translate("Statistik", "<html>Jumlah <br>Outcome</html>"))
-            
-            self.statisticOption.setItemText(1, _translate("Statistik", "~~~~~~~"))
-            self.statisticOption.setItemText(0, _translate("Statistik", "Save Graphic"))
-            
-            self.prevButton.setText(_translate("Statistik", "<"))
-            self.nextButton.setText(_translate("Statistik", ">"))
-            
-            self.sliderType.setItemText(0, _translate("Statistik", "Daily"))
-            self.sliderType.setItemText(1, _translate("Statistik", "Weekly"))
-            self.sliderType.setItemText(2, _translate("Statistik", "Monthly"))
-            self.sliderType.setItemText(3, _translate("Statistik", "Yearly"))
-            
-            self.statisticInfo.setText(_translate("Statistik", "Statistic"))
-            self.summaryInfo.setText(_translate("Statistik", "<html>QuickView <br>Summary<html>"))
-            self.newBalance.setText(_translate("Statistik", "New Balance"))
-            self.prevBalance.setText(_translate("Statistik", "Previous Balance"))
-
-            self.pieChartOption.setItemText(0, _translate("Statistik", "~~~~~~~~"))
-            self.pieChartOption.setItemText(1, _translate("Statistik", "Save Graphic"))
-            
-            self.chartInfo.setText(_translate("Statistik", "Category Chart"))
-
-    def styleSheet(self, Statistik):
-        iconDesign = """
-            QComboBox {
-                background-color: transparent;
-                width: 60px;  /* Only the width for the dropdown arrow */
-                height: 22px;
-                padding: 0px;
-                border: none;  /* Remove border */
-                text-align: center;  /* Ensure nothing is visible in collapsed state */
-            }
-
-            QComboBox::drop-down {
-                width: 60px;  /* Size of the dropdown arrow */
-            }
-
-            QComboBox::down-arrow {
-                image: url(img/icon/database.svg);  /* Ensure this image exists and is correctly loaded */
-                width: 60px;  /* Size of the dropdown arrow */
-                height: 60px;
-            }
-
-            /* Hide the text area but don't completely remove it */
-            QComboBox::lineEdit {
-                border: none;
-                background: transparent;
-                padding: 10px;
-                color: transparent;  /* Keep the text hidden */
-            }
-
-            /* Display dropdown list items correctly */
-            QComboBox QAbstractItemView {
-                min-width: 60px;  /* Minimum width for dropdown items */
-                max-width: 300px;  /* Ensure items have sufficient width to show full text */
-                font-size: 14px;
-                padding: 10px;
-            }
-
-            QComboBox QAbstractItemView::item {
-                padding-left: 10px;  /* Indentation for item text */
-                padding-right: 10px;
-                height: 40px;  /* Height of each item */
-            }
-
-            QComboBox::item:selected {
-                background-color: lightblue;  /* Background when an item is selected */
-                color: black;  /* Text color for selected item */
-            }
-
-            QComboBox::editable {
-                background: transparent;
-                border: none;
-                padding: 0px;
-                color: transparent;  /* Hide the text but still keep the arrow visible */
-            }
-        """
-        
-        textDesign = """
-            QLabel {
-            font-family: 'Arimo';
-            font-size: 16px;             /* Sets font size */
-            color: #FFFFFF;                 /* Sets text color */
-            font-weight: bold;               /* Makes the font extra bold */
-            text-align: center;
-             border: none;
-            }
-
-            #changeValue {
-            font-family: 'Arimo';
-            font-size: 10px;             /* Sets font size */
-            color: #FFFFFF;                 /* Sets text color */
-            font-weight: bold;               /* Makes the font extra bold */
-            }
-        """
-
-        chartDesign = """
-            #Statistic, #pieChart    {
-            border: 10px solid #191D24; 
-            padding: 20px; 
-            background-color: #FFFFFF;
-            border-radius: 15px; 
-            }
-        """
-
-        frameDesign = """
-            QFrame    {
-            background-color: #90B774;
-            border-radius: 15px; 
-            border: 1px solid #7A9E5D; /* Optional: Adds a border with a slightly darker green */
-            }
-        """
-        
-        StatistikDesign = """
-            QLabel {    
-            font-family: 'Arimo';
-            font-size: 20px;
-            font-weight: bold;
-            color: #E06C75;
-            background-color: transparent;
-            }
-        """
-
-        buttonStyle = """
-            QPushButton {
-                background-color: #D3D3D3;
-                border-radius: 10px;
-                padding: 5px;
-                font-weight: bold;
-            }
-            QPushButton:hover {
-                background-color: #A9A9A9;
-            }
-        """
-
-        self.incomeInfo.setStyleSheet(textDesign)
-        self.outcomeInfo.setStyleSheet(textDesign)
-        self.summaryInfo.setStyleSheet(textDesign)
-
-        self.IncomeValue.setStyleSheet(textDesign)
-        self.outcomeValue.setStyleSheet(textDesign)
-
-        self.prevBalance.setStyleSheet(textDesign)
-        self.newBalance.setStyleSheet(textDesign)
-
-        self.prevValue.setStyleSheet(textDesign)
-        self.newValue.setStyleSheet(textDesign)
-
-        self.changeValue.setStyleSheet(textDesign)
-
-        self.Statistic.setStyleSheet(chartDesign)
-        self.prevButton.setStyleSheet(buttonStyle)
-        self.nextButton.setStyleSheet(buttonStyle)
-        self.sliderType.setStyleSheet("background-color: #D3D3D3; padding: 5px; border-radius: 5px;")
-        self.pieChart.setStyleSheet(chartDesign)
-
-        self.statisticInfo.setStyleSheet(StatistikDesign)
-        self.chartInfo.setStyleSheet(StatistikDesign)
-
-        self.Summary.setStyleSheet(frameDesign)
-        self.Income.setStyleSheet(frameDesign)
-        self.Outcome.setStyleSheet(frameDesign)
-
-        self.statisticOption.setStyleSheet(iconDesign)
-        self.pieChartOption.setStyleSheet(iconDesign)
 
     def eventFilter(self, obj, event):
         # Memastikan hanya ComboBox yang scroll yang diblokir
@@ -506,3 +323,40 @@ class StatisticView(QWidget):
             self.changeValue.setStyleSheet("color: #FF0000;")
         else:
             self.changeValue.setStyleSheet("color: #00FF00;")
+
+    def retranslateUi(self, lang=None):
+        _translate = QtCore.QCoreApplication.translate
+        if lang:
+            self.title_label.setText(_translate("Form", lang.get("statistic", {}).get("Title", "Statistic")))
+            self.incomeInfo.setText(_translate("Form", lang.get("statistic", {}).get("head1", "<html>Jumlah <br>Income</html>")))
+            self.outcomeInfo.setText(_translate("Form", lang.get("statistic", {}).get("head2", "<html>Jumlah <br>Outcome</html>")))
+            self.statisticInfo.setText(_translate("Form", lang.get("statistic", {}).get("head3", "Statistic")))
+            self.chartInfo.setText(_translate("Form", lang.get("statistic", {}).get("head4", "Category Chart")))
+            self.summaryInfo.setText(_translate("Form", lang.get("statistic", {}).get("head5", "<html>QuickView <br>Summary<html>")))
+            self.newBalance.setText(_translate("Form", lang.get("statistic", {}).get("desc1", "New Balance")))
+            self.prevBalance.setText(_translate("Form", lang.get("statistic", {}).get("desc2", "Previous Balance")))
+
+        else:
+            self.incomeInfo.setText(_translate("Statistik", "<html>Jumlah <br>Income</html>"))
+            self.outcomeInfo.setText(_translate("Statistik", "<html>Jumlah <br>Outcome</html>"))
+            
+            self.statisticOption.setItemText(0, _translate("Statistik", ""))
+            self.statisticOption.setItemText(1, _translate("Statistik", "Save Graphic"))
+            
+            self.prevButton.setText(_translate("Statistik", "<"))
+            self.nextButton.setText(_translate("Statistik", ">"))
+            
+            self.sliderType.setItemText(0, _translate("Statistik", "Daily"))
+            self.sliderType.setItemText(1, _translate("Statistik", "Weekly"))
+            self.sliderType.setItemText(2, _translate("Statistik", "Monthly"))
+            self.sliderType.setItemText(3, _translate("Statistik", "Yearly"))
+            
+            self.statisticInfo.setText(_translate("Statistik", "Statistic"))
+            self.summaryInfo.setText(_translate("Statistik", "<html>QuickView <br>Summary<html>"))
+            self.newBalance.setText(_translate("Statistik", "New Balance"))
+            self.prevBalance.setText(_translate("Statistik", "Previous Balance"))
+
+            self.pieChartOption.setItemText(0, _translate("Statistik", ""))
+            self.pieChartOption.setItemText(1, _translate("Statistik", "Save Graphic"))
+            
+            self.chartInfo.setText(_translate("Statistik", "Category Chart"))

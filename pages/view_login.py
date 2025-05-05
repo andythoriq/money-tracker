@@ -4,6 +4,7 @@ from controller.account import Account
 from pages.Dashboard_v1_2 import Dashboard
 import hashlib
 
+
 class LoginScreen(QWidget):
     def __init__(self, stack):
         super().__init__()
