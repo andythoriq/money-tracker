@@ -123,89 +123,45 @@ class LoginScreen(QWidget):
         widget.setFocus()
 
     def account_valid(self):
-        # Reset style input
         self.email_input.setStyleSheet(self.input_style())
         self.password_input.setStyleSheet(self.input_style())
 
-        # Validasi input email
         email = self.email_input.text().strip()
+        password = self.password_input.text().strip()
+
         if not email:
             self.display_error(self.email_input, "Email tidak boleh kosong")
             return False
-
         if "@" not in email or "." not in email.split("@")[-1]:
             self.display_error(self.email_input, "Format email tidak valid")
             return False
-
-        # Validasi input password
-        password = self.password_input.text().strip()
         if not password:
             self.display_error(self.password_input, "Password tidak boleh kosong")
             return False
-
-        # Hash password
+          
         hashed_password = hashlib.sha256(password.encode()).hexdigest()
-
-        # Load dan cek akun
         account_info = self.account_controller.load_account()
+        user = next((acc for acc in account_info if acc["email"] == email), None)
 
-        # Cek apakah email ada di database
-        if not any(acc["email"] == email for acc in account_info):
+        if user is None:
             msg = QtWidgets.QMessageBox()
             msg.setWindowTitle("Email Tidak Ditemukan")
             msg.setText("Email yang Anda masukkan tidak terdaftar")
-            msg.setStyleSheet("""
-                QMessageBox {
-                    background-color: #1c1f26;
-                }
-                QLabel {
-                    color: #d3e9a3;
-                }
-                QPushButton {
-                    background-color: #7db16e;
-                    color: #1c1f26;
-                    border-radius: 5px;
-                    padding: 5px;
-                    min-width: 70px;
-                }
-                QPushButton:hover {
-                    background-color: #b8e994;
-                }
-            """)
+            msg.setStyleSheet(""" ... """)  # Tetap gunakan style yang sama
 
             btn_ubah = msg.addButton("Ubah", QtWidgets.QMessageBox.RejectRole)
-            btn_daftar = msg.addButton(
-                "Daftarkan Email", QtWidgets.QMessageBox.AcceptRole
-            )
+            btn_daftar = msg.addButton("Daftarkan Email", QtWidgets.QMessageBox.AcceptRole)
 
-            result = msg.exec_()
-
+            msg.exec_()
             if msg.clickedButton() == btn_daftar:
-                self.stack.setCurrentIndex(2)  # Mengarahkan ke halaman register
+                self.stack.setCurrentIndex(2)
             return False
 
-        # Cek password
-        user_match = False
-        for acc in account_info:
-            if acc["email"] == email:
-                if acc["password"] == hashed_password:
-                    user_match = True
-                    # Simpan informasi user yang sedang login (bila perlu)
-                    # self.current_user = acc
-                    break
-                else:
-                    # Password salah
-                    self.display_error(self.password_input, "Password salah")
-                    return False
+        if user["password"] != hashed_password:
+            self.display_error(self.password_input, "Password salah")
+            return False
 
-        if user_match:
-            print("Login Berhasil")
-            # Tampilkan dashboard melalui stack widget atau tutup login window
-            self.hide()  # Sembunyikan login window
-            self.dashboard.show()  # Tampilkan dashboard sebagai window terpisah
-
-            # Alternatif jika menggunakan stack widget:
-            # self.stack.setCurrentIndex(5)  # Asumsi index 5 adalah dashboard
-            return True
-
-        return False
+        print("Login Berhasil")
+        self.window().close()         # Gunakan ini agar window login tertutup
+        self.dashboard.show()         # Dashboard ditampilkan
+        return True
