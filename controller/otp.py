@@ -62,11 +62,13 @@ class Otp:
             smtp.quit()
 
             self.last_otp_time = time.time()
-            self.otp_expiry = self.last_otp_time + 300
+            self.otp_expiry = self.last_otp_time + 300  # OTP berlaku selama 5 menit
             key_dict["key"] = self.current_otp
             return True
         except Exception as e:
-            print(f"Terjadi kesalahan: {str(e)}")
+            import traceback
+            print("Terjadi kesalahan:")
+            traceback.print_exc()            
             return False
 
     def otpcheck(self, userotp, otpcode):
@@ -81,3 +83,6 @@ class Otp:
         if userotp == otpcode:
             print("Kode OTP Benar!")
             return True
+        else:
+            print("Kode OTP Salah!")
+            return False

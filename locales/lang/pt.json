@@ -1,0 +1,107 @@
+{
+    "dashboard": {
+      "btn1": "Editar Receita",
+      "btn2": "Editar Despesa",
+      "btn3": "Carteira",
+      "btn4": "Histórico",
+      "btn5": "Estatísticas",
+      "btn6": "Categoria",
+      "btn7": "Lista de Desejos",
+      "layout2": "Histórico de Transações desta semana!",
+      "l2col1": "Data",
+      "l2col2": "Tipo",
+      "l2col3": "Valor",
+      "l2col4": "Categoria",
+      "l2col5": "Carteira",
+      "layout3": "Suas informações financeiras para esta semana",
+      "layout4": "Lista de Desejos",
+      "l4col1": "Nº",
+      "l4col2": "Nome",
+      "l4col3": "Preço",
+      "l4col4": "Status"
+    },
+    "income": {
+      "Title": "Nova Receita",
+      "form1": "Valor da Receita:",
+      "form2": "Categoria:",
+      "form3": "Carteira a ser creditada:",
+      "form4": "Descrição:",
+      "form5": "Informe a Data:",
+      "btn1": "Salvar",
+      "btn2": "Voltar"
+    },
+    "outcome": {
+      "Title": "Nova Despesa",
+      "form1": "Valor da Despesa:",
+      "form2": "Categoria:",
+      "form3": "Carteira a ser debitada:",
+      "form4": "Descrição:",
+      "form5": "Informe a Data:",
+      "btn1": "Salvar",
+      "btn2": "Voltar"
+    },
+    "wallet": {
+      "Title": "Carteira",
+      "entry": "Adicionar Carteira",
+      "form1": "Nome",
+      "desc1": "Nome da Carteira",
+      "form2": "Saldo",
+      "btn": "Adicionar",
+      "col1": "Nome",
+      "col2": "Saldo",
+      "col3": "Editar",
+      "col4": "Excluir"
+    },
+    "history": {
+      "Title": "Histórico",
+      "radbtn1": "Todos",
+      "radbtn2": "Receita",
+      "radbtn3": "Despesa",
+      "col1": "Data",
+      "col2": "Tipo",
+      "col3": "Valor",
+      "col4": "Categoria",
+      "col5": "Carteira",
+      "col6": "Descrição",
+      "col7": "Editar",
+      "col8": "Excluir",
+      "foot": "Total"
+    },
+    "statistic": {
+      "Title": "Estatísticas",
+      "head1": "Total de Receitas",
+      "head2": "Total de Despesas",
+      "head3": "Estatísticas",
+      "head4": "Gráfico por Categoria",
+      "head5": "Resumo Rápido",
+      "desc1": "Novo Saldo",
+      "desc2": "Saldo Anterior"
+    },
+    "category": {
+      "Title": "Categoria",
+      "desc": "Nome da Categoria",
+      "item1": "Receita",
+      "item2": "Despesa",
+      "btn": "Adicionar Categoria",
+      "col1": "Nome",
+      "col2": "Tipo",
+      "col3": "Excluir"
+    },
+    "wishlist": {
+      "Title": "Lista de Desejos",
+      "form1": "Nome",
+      "form2": "Preço",
+      "btn1": "Adicionar à Lista de Desejos",
+      "filter": "Filtrar por Status",
+      "radbtn1": "Todos",
+      "radbtn2": "Realizado",
+      "radbtn3": "Não Realizado",
+      "col1": "Nº",
+      "col2": "Nome",
+      "col3": "Preço",
+      "col4": "Status",
+      "col5": "Editar",
+      "col6": "Excluir"
+    }
+  }
+  

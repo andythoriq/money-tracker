@@ -1,0 +1,107 @@
+{
+    "dashboard": {
+      "btn1": "Geliri Düzenle",
+      "btn2": "Gideri Düzenle",
+      "btn3": "Cüzdan",
+      "btn4": "Geçmiş",
+      "btn5": "İstatistik",
+      "btn6": "Kategori",
+      "btn7": "İstek Listesi",
+      "layout2": "Bu Haftaki İşlem Geçmişi!",
+      "l2col1": "Tarih",
+      "l2col2": "Tür",
+      "l2col3": "Miktar",
+      "l2col4": "Kategori",
+      "l2col5": "Cüzdan",
+      "layout3": "Bu haftaki finansal bilgilerin",
+      "layout4": "İstek Listesi",
+      "l4col1": "No",
+      "l4col2": "Ad",
+      "l4col3": "Fiyat",
+      "l4col4": "Durum"
+    },
+    "income": {
+      "Title": "Yeni Gelir",
+      "form1": "Gelir Miktarı:",
+      "form2": "Kategori:",
+      "form3": "Doldurulacak Cüzdan:",
+      "form4": "Açıklama:",
+      "form5": "Tarih Girin:",
+      "btn1": "Kaydet",
+      "btn2": "Geri"
+    },
+    "outcome": {
+      "Title": "Yeni Gider",
+      "form1": "Gider Miktarı:",
+      "form2": "Kategori:",
+      "form3": "Çekilecek Cüzdan:",
+      "form4": "Açıklama:",
+      "form5": "Tarih Girin:",
+      "btn1": "Kaydet",
+      "btn2": "Geri"
+    },
+    "wallet": {
+      "Title": "Cüzdan",
+      "entry": "Cüzdan Ekle",
+      "form1": "Ad",
+      "desc1": "Cüzdan Adı",
+      "form2": "Bakiye",
+      "btn": "Ekle",
+      "col1": "Ad",
+      "col2": "Bakiye",
+      "col3": "Düzenle",
+      "col4": "Sil"
+    },
+    "history": {
+      "Title": "Geçmiş",
+      "radbtn1": "Hepsi",
+      "radbtn2": "Gelir",
+      "radbtn3": "Gider",
+      "col1": "Tarih",
+      "col2": "Tür",
+      "col3": "Miktar",
+      "col4": "Kategori",
+      "col5": "Cüzdan",
+      "col6": "Açıklama",
+      "col7": "Düzenle",
+      "col8": "Sil",
+      "foot": "Toplam"
+    },
+    "statistic": {
+      "Title": "İstatistik",
+      "head1": "Toplam Gelir",
+      "head2": "Toplam Gider",
+      "head3": "İstatistik",
+      "head4": "Kategori Grafiği",
+      "head5": "Hızlı Bakış Özeti",
+      "desc1": "Yeni Bakiye",
+      "desc2": "Önceki Bakiye"
+    },
+    "category": {
+      "Title": "Kategori",
+      "desc": "Kategori Adı",
+      "item1": "Gelir",
+      "item2": "Gider",
+      "btn": "Kategori Ekle",
+      "col1": "Ad",
+      "col2": "Tür",
+      "col3": "Sil"
+    },
+    "wishlist": {
+      "Title": "İstek Listesi",
+      "form1": "Ad",
+      "form2": "Fiyat",
+      "btn1": "İstek Listesine Ekle",
+      "filter": "Duruma Göre Filtrele",
+      "radbtn1": "Hepsi",
+      "radbtn2": "Tamamlandı",
+      "radbtn3": "Tamamlanmadı",
+      "col1": "No",
+      "col2": "Ad",
+      "col3": "Fiyat",
+      "col4": "Durum",
+      "col5": "Düzenle",
+      "col6": "Sil"
+    }
+  }
+  

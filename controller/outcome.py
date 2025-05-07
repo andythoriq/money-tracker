@@ -28,54 +28,33 @@ class Outcome:
 
     def add_outcome(self, amount, category, wallet, desc, date):
         """Menambah outcome baru & update saldo wallet."""
-        result = self.validate_outcome_data({
-            "amount": amount,
-            "category": category,
-            "wallet": wallet,
-            "desc": desc,
-            "date": date
-        }, False)
-        if not result.get("valid"):
-            return result  # Stop execution if validation fails
-
         outcomes = self.load_outcomes()
-        outcomes.append({
-            "ID": len(outcomes) + 1,
-            "amount": amount,
-            "category": category,
-            "wallet": wallet,
-            "desc": desc,
-            "date": date
-        })
-        self.save_outcomes(outcomes)
-        return result  # Return True if outcome is successfully added
+        if self.wallet_controller.update_balance(wallet, int(amount), "outcome"):
+            new_id = len(outcomes) + 1
+            outcomes.append({
+                "ID": new_id,
+                "amount": amount,
+                "category": category,
+                "wallet": wallet,
+                "desc": desc,
+                "date": date
+            })
+            self.save_outcomes(outcomes)
+            return True
+        return False
 
     def update_outcome(self, updated_outcome):
         """Mengupdate data outcome."""
         outcomes = self.load_outcomes()
         for i, outcome in enumerate(outcomes):
             if outcome["ID"] == updated_outcome["ID"]:
-                result = self.validate_outcome_data({
-                    "amount": updated_outcome['amount'],
-                    "category": updated_outcome['category'],
-                    "wallet": updated_outcome['wallet'],
-                    "desc": updated_outcome['desc'],
-                    "date": updated_outcome['date']
-                }, True)
-
-                if not result.get("valid"):
-                    return result # Stop execution if validation fails
-
-                #update balance
                 old_amount = int(outcome["amount"])
                 new_amount = int(updated_outcome["amount"])
                 self.wallet_controller.update_balance(outcome["wallet"], -old_amount, "outcome")
                 self.wallet_controller.update_balance(updated_outcome["wallet"], new_amount, "outcome")
-                
                 outcomes[i] = updated_outcome
-                self.save_outcomes(outcomes)
-                return result  # Return True if outcome is successfully updated
-        return False
+                break
+        self.save_outcomes(outcomes)
 
     def delete_outcome(self, id):
         """Menghapus outcome dengan id."""
@@ -87,27 +66,3 @@ class Outcome:
         outcomes = [outcome for outcome in outcomes if outcome["ID"] != int(id)]
         self.save_outcomes(outcomes)
         return True
-
-    def validate_outcome_data(self, outcome_data, is_edit):
-        """
-        Validate outcome data to ensure it meets the required criteria.
-        :param outcome_data: Dictionary containing outcome data.
-        :return: Dictionary with validation result and error messages.
-        """
-        required_fields = ['amount', 'category', 'wallet', 'desc', 'date']
-        errors = {}
-        
-        for field in required_fields:
-            if field not in outcome_data or not outcome_data[field]:
-                errors[field] = f"tidak boleh kosong"
-
-        if outcome_data.get('amount') > 9_999_999_999:
-            errors["amount"] = "Jumlah saldo tidak boleh lebih dari 9.999.999.999."
-
-        if not errors and not is_edit:
-            wallet = outcome_data['wallet']
-            amount = int(outcome_data['amount'])
-            if not self.wallet_controller.update_balance(wallet, amount, "outcome"):
-                errors['wallet'] = "Gagal memperbarui saldo wallet"
-
-        return {"valid": True} if not errors else {"valid": False, "errors": errors}

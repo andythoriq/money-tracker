@@ -3,7 +3,7 @@ from PyQt5.QtWidgets import (
     QComboBox, QSpinBox, QFormLayout, QCalendarWidget, QLabel, QHBoxLayout
 )
 from PyQt5.QtGui import QRegExpValidator
-from PyQt5.QtCore import QRegExp, QDate, Qt
+from PyQt5.QtCore import QRegExp, QDate, Qt, QCoreApplication
 from controller.outcome import Outcome
 from controller.category import Category
 from controller.wallet import Wallet
@@ -19,14 +19,14 @@ class OutcomeView(QWidget):
 
     def init_ui(self):
         # Main container
-        main_container = QWidget()
-        main_container.setObjectName("container")
-        main_container.setProperty("class", "OutcomeView")
         main_layout = QVBoxLayout()
+        main_layout.setContentsMargins(20, 20, 20, 20)
+        main_layout.setSpacing(20)
         
         # Header
-        header_label = QLabel("Outcome Baru")
-        header_label.setObjectName("Label_1")
+        self.header_label = QLabel("Outcome Baru")
+        self.header_label.setObjectName("titleLabel")
+        self.header_label.setProperty("class", "OutcomeView")
         
         # Form container
         form_container = QWidget()
@@ -37,8 +37,8 @@ class OutcomeView(QWidget):
         # Input jumlah pengeluaran container
         amount_container = QWidget()
         amount_layout = QHBoxLayout()
-        amount_label = QLabel("Jumlah Pengeluaran:")
-        amount_label.setObjectName("form_label")
+        self.amount_label = QLabel("Jumlah Pengeluaran:")
+        self.amount_label.setObjectName("form_label")
         self.input_amount = QSpinBox()
         self.input_amount.setObjectName("form_input")
         self.input_amount.setProperty("class", "OutcomeView")
@@ -46,7 +46,7 @@ class OutcomeView(QWidget):
         self.input_amount.setMaximum(1000000000)
         self.input_amount.setPrefix("Rp ")
         self.input_amount.setSingleStep(50000)
-        amount_layout.addWidget(amount_label)
+        amount_layout.addWidget(self.amount_label)
         amount_layout.addWidget(self.input_amount)
         amount_container.setLayout(amount_layout)
 
@@ -57,24 +57,24 @@ class OutcomeView(QWidget):
         # Category
         category_container = QWidget()
         category_layout = QVBoxLayout()
-        category_label = QLabel("Kategori:")
-        category_label.setObjectName("form_label")
+        self.category_label = QLabel("Kategori:")
+        self.category_label.setObjectName("form_label")
         self.input_category = QComboBox()
         self.input_category.setObjectName("form_input")
         self.input_category.setProperty("class", "OutcomeView")
-        category_layout.addWidget(category_label)
+        category_layout.addWidget(self.category_label)
         category_layout.addWidget(self.input_category)
         category_container.setLayout(category_layout)
         
         # Wallet
         wallet_container = QWidget()
         wallet_layout = QVBoxLayout()
-        wallet_label = QLabel("Sumber Pengeluaran:")
-        wallet_label.setObjectName("form_label")
+        self.wallet_label = QLabel("Sumber Pengeluaran:")
+        self.wallet_label.setObjectName("form_label")
         self.input_wallet = QComboBox()
         self.input_wallet.setObjectName("form_input")
         self.input_wallet.setProperty("class", "OutcomeView")
-        wallet_layout.addWidget(wallet_label)
+        wallet_layout.addWidget(self.wallet_label)
         wallet_layout.addWidget(self.input_wallet)
         wallet_container.setLayout(wallet_layout)
         
@@ -85,28 +85,28 @@ class OutcomeView(QWidget):
         # Description container
         desc_container = QWidget()
         desc_layout = QVBoxLayout()
-        desc_label = QLabel("Deskripsi:")
-        desc_label.setObjectName("form_label")
+        self.desc_label = QLabel("Deskripsi:")
+        self.desc_label.setObjectName("form_label")
         self.input_desc = QLineEdit()
         self.input_desc.setObjectName("input_desc")
         self.input_desc.setProperty("class", "OutcomeView")
         self.input_desc.setValidator(QRegExpValidator(QRegExp("[a-zA-Z0-9 ]+")))
         self.input_desc.setAlignment(Qt.AlignCenter)
-        desc_layout.addWidget(desc_label)
+        desc_layout.addWidget(self.desc_label)
         desc_layout.addWidget(self.input_desc)
         desc_container.setLayout(desc_layout)
 
         # Calendar container
         calendar_container = QWidget()
         calendar_layout = QVBoxLayout()
-        calendar_label = QLabel("Masukan Tanggal:")
-        calendar_label.setObjectName("form_label")
+        self.calendar_label = QLabel("Masukan Tanggal:")
+        self.calendar_label.setObjectName("form_label")
         self.calendar = QCalendarWidget()
         self.calendar.setObjectName("calendar")
         self.calendar.setProperty("class", "OutcomeView")
         self.calendar.setGridVisible(True)
         self.calendar.setSelectedDate(QDate.currentDate())
-        calendar_layout.addWidget(calendar_label)
+        calendar_layout.addWidget(self.calendar_label)
         calendar_layout.addWidget(self.calendar)
         calendar_container.setLayout(calendar_layout)
 
@@ -135,10 +135,10 @@ class OutcomeView(QWidget):
         buttons_container.setLayout(buttons_layout)
 
         form_container.setLayout(form_layout)
-        main_layout.addWidget(header_label)
+
+        main_layout.addWidget(self.header_label)
         main_layout.addWidget(form_container)
         main_layout.addWidget(buttons_container)
-        main_container.setLayout(main_layout)
         self.setLayout(main_layout)
 
     def refresh_inputs(self):
@@ -181,3 +181,15 @@ class OutcomeView(QWidget):
         """Kembali ke Dashboard"""
         if self.parent():
             self.parent().setCurrentIndex(0)  # Indeks 0 adalah Dashboard
+
+    def retranslateUi(self, lang=None):
+        _translate = QCoreApplication.translate
+        if lang:
+            self.header_label.setText(_translate("Form", lang.get("outcome", {}).get("Title", "")))
+            self.amount_label.setText(_translate("Form", lang.get("outcome", {}).get("form1", "")))
+            self.category_label.setText(_translate("Form", lang.get("outcome", {}).get("form2", "")))
+            self.wallet_label.setText(_translate("Form", lang.get("outcome", {}).get("form3", "")))
+            self.desc_label.setText(_translate("Form", lang.get("outcome", {}).get("form4", "")))
+            self.calendar_label.setText(_translate("Form", lang.get("outcome", {}).get("form5", "")))
+            self.btn_save.setText(_translate("Form", lang.get("outcome", {}).get("btn1", "")))
+            self.btn_back.setText(_translate("Form", lang.get("outcome", {}).get("btn2", "")))

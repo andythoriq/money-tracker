@@ -1,4 +1,5 @@
 import hashlib, re
+from typing import TypeVarTuple
 from PyQt5 import QtWidgets, QtGui, QtCore
 from PyQt5.QtWidgets import (
     QApplication,
@@ -9,6 +10,7 @@ from PyQt5.QtWidgets import (
     QLineEdit,
     QCheckBox,
     QHBoxLayout,
+    QMessageBox,
 )
 from PyQt5.QtGui import QFont, QColor, QPalette, QRegExpValidator
 from PyQt5.QtCore import Qt, QRegExp
@@ -16,14 +18,14 @@ from controller.account import Account
 
 
 class RegisterScreen(QtWidgets.QWidget):
-    def __init__(self, stack):
+    def __init__(self, stack, user_data):
         super().__init__()
         self.stack = stack
+        self.user_data = user_data
         self.account_controller = Account()
         self.init_ui()
 
     def init_ui(self):
-
         self.setStyleSheet("background-color: #1c1f26;")
         layout = QtWidgets.QVBoxLayout()
         layout.setAlignment(QtCore.Qt.AlignTop)
@@ -112,7 +114,12 @@ class RegisterScreen(QtWidgets.QWidget):
             font-weight: bold;
         """)
         self.btn_lanjut.setEnabled(False)
-        self.btn_lanjut.clicked.connect(lambda: (self.validate_input_register, self.stack.setCurrentIndex(self.stack.currentIndex() + 1)))
+        self.btn_lanjut.clicked.connect(
+            lambda: (
+                self.validate_input_register,
+                self.stack.setCurrentIndex(self.stack.currentIndex() + 1),
+            )
+        )
         layout.addWidget(self.btn_lanjut)
 
         # Link sudah punya akun
@@ -127,7 +134,7 @@ class RegisterScreen(QtWidgets.QWidget):
 
         self.setLayout(layout)
 
-    def register_email_view(self):
+    def register_email_view(self, newuser):
         """Menampilkan halaman pendaftaran"""
         widget = QtWidgets.QWidget()
         layoutHbox = QtWidgets.QHBoxLayout()
@@ -165,7 +172,6 @@ class RegisterScreen(QtWidgets.QWidget):
             step.setStyleSheet(
                 "border: 2px solid #c1c1c1; border-radius: 15px; color: #c1c1c1; background-color: transparent;"
             )
-            # step.setContentsMargins(0,30,100,30)
         self.step1.setStyleSheet(
             "border: 2px solid #7db16e; border-radius: 15px; color: #7db16e; background-color: transparent;"
         )
@@ -243,7 +249,10 @@ class RegisterScreen(QtWidgets.QWidget):
         """)
         self.continue_button.setEnabled(False)
         self.continue_button.clicked.connect(
-            lambda: self.stack.setCurrentIndex(self.stack.currentIndex() + 1)
+            lambda: (
+                self.stack.setCurrentIndex(self.stack.currentIndex() + 1),
+                self.passemail(newuser),
+            )
         )
         layout.addWidget(self.continue_button)
 
@@ -261,6 +270,10 @@ class RegisterScreen(QtWidgets.QWidget):
         widget.setLayout(layout)
 
         return widget
+
+    def passemail(self, user_data):
+        """Menyimpan email ke dalam dictionary user_data"""
+        user_data["email"] = self.email_input.text().strip()
 
     def register_password_view(self):
         """Menampilkan halaman pembuatan password"""
@@ -381,7 +394,9 @@ class RegisterScreen(QtWidgets.QWidget):
             font-weight: bold;
         """)
         self.continue_button_password.setEnabled(False)
-        self.continue_button_password.clicked.connect(lambda: self.stack.setCurrentIndex(self.stack.currentIndex() + 1))
+        self.continue_button_password.clicked.connect(
+            lambda: self.stack.setCurrentIndex(self.stack.currentIndex() + 1)
+        )
         layout.addWidget(self.continue_button_password)
 
         layout.addSpacing(30)
@@ -402,11 +417,13 @@ class RegisterScreen(QtWidgets.QWidget):
         """Validasi password"""
         password = self.password_input.text().strip()
         password_confirm = self.password_confirm_input.text().strip()
-        is_password_valid = (bool(re.search(r'[A-Z]', password)) and 
-                             bool(re.search(r'[A-Z]', password_confirm)) and 
-                             bool(re.search(r'[0-9]', password)) and 
-                             bool(re.search(r'[0-9]', password_confirm)) and 
-                             password == password_confirm)
+        is_password_valid = (
+            bool(re.search(r"[A-Z]", password))
+            and bool(re.search(r"[A-Z]", password_confirm))
+            and bool(re.search(r"[0-9]", password))
+            and bool(re.search(r"[0-9]", password_confirm))
+            and password == password_confirm
+        )
 
         if not len(password) >= 8:
             self.password_warning.setText("Password minimal 8 karakter")
@@ -423,9 +440,13 @@ class RegisterScreen(QtWidgets.QWidget):
             """)
 
         if not is_password_valid:
-            self.password_warning.setText("Password harus terdiri dari huruf kapital dan angka")
+            self.password_warning.setText(
+                "Password harus terdiri dari huruf kapital dan angka"
+            )
             self.password_warning.show()
-            self.password_confirm_warning.setText("Password harus terdiri dari huruf kapital dan angka")
+            self.password_confirm_warning.setText(
+                "Password harus terdiri dari huruf kapital dan angka"
+            )
             self.password_confirm_warning.show()
             self.continue_button_password.setEnabled(False)
             self.continue_button_password.setStyleSheet("""
@@ -439,7 +460,9 @@ class RegisterScreen(QtWidgets.QWidget):
         if password != password_confirm:
             self.password_warning.setText("Password dan konfirmasi password harus sama")
             self.password_warning.show()
-            self.password_confirm_warning.setText("Password dan konfirmasi password harus sama")
+            self.password_confirm_warning.setText(
+                "Password dan konfirmasi password harus sama"
+            )
             self.password_confirm_warning.show()
             self.continue_button_password.setEnabled(False)
             self.continue_button_password.setStyleSheet("""
@@ -449,8 +472,8 @@ class RegisterScreen(QtWidgets.QWidget):
                 border-radius: 20px;
                 font-weight: bold;
             """)
-        
-        if (len(password) >= 8 and is_password_valid and password == password_confirm):
+
+        if len(password) >= 8 and is_password_valid and password == password_confirm:
             self.password_warning.hide()
             self.password_confirm_warning.hide()
             self.continue_button_password.setEnabled(True)
@@ -461,6 +484,7 @@ class RegisterScreen(QtWidgets.QWidget):
                 border-radius: 20px;
                 font-weight: bold;
             """)
+            self.user_data["password"] = password
 
     def email_valid(self):
         """Validasi email"""
@@ -476,8 +500,8 @@ class RegisterScreen(QtWidgets.QWidget):
                 border-radius: 20px;
                 font-weight: bold;
             """)
-            
-        if  self.account_controller.check_email_exists(email):
+
+        if self.account_controller.check_email_exists(email):
             self.email_input_warning.setText("Email sudah terdaftar")
             self.email_input_warning.show()
             self.continue_button.setStyleSheet("""
@@ -487,8 +511,10 @@ class RegisterScreen(QtWidgets.QWidget):
                 border-radius: 20px;
                 font-weight: bold;
             """)
-        
-        if not self.account_controller.check_email_exists(email) and ("@" in email and "." in email.split("@")[-1]):
+
+        if not self.account_controller.check_email_exists(email) and (
+            "@" in email and "." in email.split("@")[-1]
+        ):
             self.email_input_warning.setAlignment(QtCore.Qt.AlignLeft)
             self.email_input_warning.hide()
             self.continue_button.setEnabled(True)
@@ -500,14 +526,24 @@ class RegisterScreen(QtWidgets.QWidget):
                 font-weight: bold;
             """)
 
-
     def validate_input_register(self):
         """Validasi input"""
-        
         input_gender = self.radio_laki.isChecked() or self.radio_perempuan.isChecked()
 
-        if (self.input_nama.text() and self.date_edit.text() and self.input_hp.text() and input_gender):
+        # Simpan data ke dictionary
+        self.user_data["username"] = self.input_nama.text().strip()
+        self.user_data["gender"] = (
+            "Laki-laki" if self.radio_laki.isChecked() else "Perempuan"
+        )
+        self.user_data["birth_date"] = self.date_edit.text()
+        self.user_data["phone"] = self.input_hp.text().strip()
 
+        if (
+            self.user_data["username"]
+            and self.user_data["birth_date"]
+            and self.user_data["phone"]
+            and input_gender
+        ):
             # Semua field terisi
             self.btn_lanjut.setStyleSheet("""
                 background-color: qlineargradient(x1:0, y1:0, x2:1, y2:0, stop:0 #7db16e, stop:1 #b8e994);
@@ -528,23 +564,35 @@ class RegisterScreen(QtWidgets.QWidget):
                 font-weight: bold;
             """)
 
-    def add_account(self):
+    def add_account(self, user_data):
         """Menambahkan akun baru"""
-        email = self.email_input.text().strip()
-        username = self.input_nama.text().strip
-        gender = "Laki-laki" if self.radio_laki.isChecked() else "Perempuan"
-        birth_date = self.date_edit.text()
-        phone_number = self.input_hp.text().strip()
-        created_at = QtCore.QDate.currentDate().toString("yyyy-MM-dd")
+        email = user_data["email"]
+        username = user_data["username"]
+        gender = user_data["gender"]
+        birth_date = user_data["birth_date"]
+        phone_number = user_data["phone"]
 
         # Hash password using SHA-256
-        password = hashlib.sha256(
-            (self.password_input.text().strip()).encode()
-        ).hexdigest()
+        password = hashlib.sha256(user_data["password"].encode()).hexdigest()
 
-        self.account_controller.add_account(
-            email, username, password, gender, birth_date, phone_number, created_at
+        # Panggil controller untuk menambahkan akun
+        success = self.account_controller.add_account(
+            email, username, password, gender, birth_date, phone_number
         )
+
+        if success:
+            # Jika berhasil, kembali ke halaman login
+            print("Berhasil membuat akun")
+            self.user_data.clear()
+            self.stack.setCurrentIndex(0)
+        else:
+            # Jika gagal, tampilkan pesan error
+            QtWidgets.QMessageBox.warning(
+                self,
+                "Error",
+                "Gagal membuat akun. Email mungkin sudah terdaftar.",
+                QtWidgets.QMessageBox.Ok,
+            )
 
     def input_style(self):
         return """
