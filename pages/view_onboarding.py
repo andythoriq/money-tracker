@@ -39,8 +39,8 @@ class OnboardingScreen(QWidget):
         self.register_view = RegisterScreen(self.stack, user_data)
         self.register_email = self.register_view.register_email_view(user_data)
         self.register_password = self.register_view.register_password_view()
-        self.forgetPass_view = PemulihanScreen(self.stack, key_dict)
-        # self.forgetPass_password_view = self.forgetPass_view.new_password_UI()
+        self.forgetPass_view = PemulihanScreen(self.stack, key_dict, user_data)
+        self.forgetPass_password_view = self.forgetPass_view.new_password_UI()
 
         self.stack.addWidget(self.main_menu_widget)
         self.stack.addWidget(self.login_view)
@@ -49,7 +49,7 @@ class OnboardingScreen(QWidget):
         self.stack.addWidget(self.register_password)
         self.stack.addWidget(self.otp_backend)
         self.stack.addWidget(self.forgetPass_view)
-        # self.stack.addWidget(self.forgetPass_password_view)
+        self.stack.addWidget(self.forgetPass_password_view)
 
         # Layout utama window
         main_layout = QtWidgets.QVBoxLayout(self)
