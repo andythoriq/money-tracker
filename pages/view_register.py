@@ -1,5 +1,4 @@
 import hashlib, re
-from typing import TypeVarTuple
 from PyQt5 import QtWidgets, QtGui, QtCore
 from PyQt5.QtWidgets import (
     QApplication,
