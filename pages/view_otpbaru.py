@@ -1,4 +1,6 @@
 from PyQt5 import QtCore, QtGui, QtWidgets
+from PyQt5.QtCore import Qt
+
 from controller.otp import Otp
 from controller.account import Account
 from pages.view_register import RegisterScreen
@@ -44,6 +46,24 @@ class Ui_accotp(QtWidgets.QWidget):
 
         header_layout.addStretch()
         main_layout.addLayout(header_layout)
+
+        # Progress bar
+        progress_layout = QtWidgets.QHBoxLayout()
+        self.step1 = QtWidgets.QLabel("✔")
+        self.step2 = QtWidgets.QLabel("✔")
+        self.step3 = QtWidgets.QLabel("✔")
+
+        for step in [self.step1, self.step2, self.step3]:
+            step.setAlignment(Qt.AlignCenter)
+            step.setFixedSize(30, 30)
+            step.setStyleSheet(
+                "border: 2px solid #7db16e; border-radius: 15px; color: #7db16e; background-color: transparent;"
+            )
+        
+        progress_layout.addWidget(self.step1)
+        progress_layout.addWidget(self.step2)
+        progress_layout.addWidget(self.step3)
+        main_layout.addLayout(progress_layout)
 
         # Judul
         title_label = QtWidgets.QLabel("Kode telah dikirim!")

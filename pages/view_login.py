@@ -80,7 +80,7 @@ class LoginScreen(QWidget):
         layout.addWidget(btn_login)
         layout.addSpacing(10)
 
-        # Lupa Password & Daftar
+        # Halaman Lupa Password 
         footer_layout = QtWidgets.QHBoxLayout()
 
         lupa_password = QtWidgets.QLabel(
@@ -90,8 +90,9 @@ class LoginScreen(QWidget):
         lupa_password.setOpenExternalLinks(False)
         footer_layout.addWidget(lupa_password)
         lupa_password.setAlignment(QtCore.Qt.AlignLeft)
-        lupa_password.mousePressEvent = lambda event: self.stack.setCurrentIndex(4)
+        lupa_password.mousePressEvent = lambda event: self.stack.setCurrentIndex(6)
 
+        # Halaman Daftar
         register_page = QtWidgets.QLabel(
             "<a href='#' style='color:#b8e994;'>Belum Punya Akun</a>"
         )
