@@ -5,6 +5,8 @@ from PyQt5.QtWidgets import (
     QHeaderView, QSizePolicy
 )
 from PyQt5.QtCore import Qt, QCoreApplication
+from components.MoneyLineEdit import MoneyLineEdit
+from utils.number_formatter import NumberFormat
 from controller.Popup import PopupWarning, PopupSuccess
 from controller.wishlist import Wishlist
 from controller.wallet import Wallet
@@ -57,11 +59,11 @@ class WishlistView(QWidget):
         self.price_label.setObjectName("form_label")
         form_layout.addWidget(self.price_label)
         
-        self.price_input = QSpinBox()
+        self.price_input = MoneyLineEdit(locale_str='id_ID')
         self.price_input.setObjectName("wishlist_input")
-        self.price_input.setRange(0, 100_000_000)
-        self.price_input.setSingleStep(50_000)
-        self.price_input.setPrefix("Rp ")
+        # self.price_input.setRange(0, 100_000_000)
+        # self.price_input.setSingleStep(50_000)
+        # self.price_input.setPrefix("Rp ")
         form_layout.addWidget(self.price_input)
 
         # Add button
@@ -151,7 +153,7 @@ class WishlistView(QWidget):
 
             self.wishlist_table.setItem(row, 0, QTableWidgetItem(str(wishlist.get("ID"))))    # ID
             self.wishlist_table.setItem(row, 1, QTableWidgetItem(wishlist.get("label")))  # Nama
-            self.wishlist_table.setItem(row, 2, QTableWidgetItem(str(wishlist.get("price")))) # Harga
+            self.wishlist_table.setItem(row, 2, QTableWidgetItem(NumberFormat.getFormattedMoney(wishlist.get("price")))) # Harga
             
             # Konversi status dari boolean ke text
             status_text = "Sudah Terpenuhi" if wishlist.get("status") else "Belum Terpenuhi"
@@ -172,14 +174,14 @@ class WishlistView(QWidget):
     def add_wishlist(self):
         """Menambahkan wishlist baru"""
         name = self.name_input.text().strip()
-        price = self.price_input.value()
+        price = self.price_input.get_value()
 
         result = self.wishlist_controller.add_wishlist(name, price, False)  # Status default False
         
         if result.get("valid"):
             self.load_wishlists()  # Muat ulang daftar wishlist
             self.name_input.clear()
-            self.price_input.setValue(1)
+            self.price_input.set_value(1)
             PopupSuccess("Success", "Wishlist berhasil disimpan!")
         else:
             errors = result.get("errors")
@@ -205,12 +207,10 @@ class WishlistView(QWidget):
         layout.addWidget(name_label)
         layout.addWidget(name_input)
 
-        # Harga
+        # Harga (pakai MoneyLineEdit)
         price_label = QLabel("Harga:")
-        price_input = QSpinBox()
-        price_input.setRange(1, 10_000_000)
-        price_input.setSingleStep(50_000)
-        price_input.setValue(int(wishlist.get("price")))
+        price_input = MoneyLineEdit(locale_str="id_ID")
+        price_input.set_value(int(wishlist.get("price")))
         layout.addWidget(price_label)
         layout.addWidget(price_input)
 
@@ -225,8 +225,13 @@ class WishlistView(QWidget):
 
         # Tombol Simpan
         save_button = QPushButton("Simpan")
-        save_button.clicked.connect(lambda: self.save_edit(dialog, wishlist_id, name_input.text(), price_input.value(), 
-                                                         True if status_input.currentText() == "Sudah Terpenuhi" else False))
+        save_button.clicked.connect(lambda: self.save_edit(
+            dialog,
+            wishlist_id,
+            name_input.text(),
+            price_input.get_value(),
+            True if status_input.currentText() == "Sudah Terpenuhi" else False
+        ))
         layout.addWidget(save_button)
 
         dialog.setLayout(layout)

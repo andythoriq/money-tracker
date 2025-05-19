@@ -1,9 +1,10 @@
 from PyQt5.QtWidgets import (
     QWidget, QVBoxLayout, QLineEdit, QPushButton, 
-    QComboBox, QSpinBox, QFormLayout, QCalendarWidget, QLabel, QHBoxLayout
+    QComboBox, QFormLayout, QCalendarWidget, QLabel, QHBoxLayout
 )
 from PyQt5.QtGui import QRegExpValidator
 from PyQt5.QtCore import QRegExp, QDate, Qt, QCoreApplication
+from components.MoneyLineEdit import MoneyLineEdit
 from controller.income import Income
 from controller.category import Category
 from controller.wallet import Wallet
@@ -37,12 +38,12 @@ class IncomeView(QWidget):
         amount_layout = QHBoxLayout()
         self.amount_label = QLabel("Jumlah Pemasukan:")
         self.amount_label.setObjectName("form_label")
-        self.input_amount = QSpinBox()
-        self.input_amount.setObjectName("form_input")
-        self.input_amount.setMinimum(0)
-        self.input_amount.setMaximum(1000000000)
-        self.input_amount.setPrefix("Rp ")
-        self.input_amount.setSingleStep(50000)
+        self.input_amount = MoneyLineEdit(locale_str='id_ID')
+        self.input_amount.set_value(0)
+        # self.input_amount.set_value(0)
+        # self.input_amount.set_value(0)
+        # self.input_amount.set_value(0)
+        # self.input_amount.set_value(0)
         amount_layout.addWidget(self.amount_label)
         amount_layout.addWidget(self.input_amount)
         amount_container.setLayout(amount_layout)
@@ -134,7 +135,7 @@ class IncomeView(QWidget):
 
     def refresh_inputs(self):
         """Menghapus input setelah menyimpan"""
-        self.input_amount.setValue(0)
+        self.input_amount.set_value(0)
         self.input_desc.clear()
         self.calendar.setSelectedDate(QDate.currentDate())  # Reset tanggal ke hari ini
 
@@ -152,7 +153,7 @@ class IncomeView(QWidget):
 
     def add_income(self):
         """Menambahkan pemasukan"""
-        amount = self.input_amount.value()
+        amount = self.input_amount.get_value()
         category = self.input_category.currentText().strip()
         wallet = self.input_wallet.currentData()
         desc = self.input_desc.text().strip()

@@ -1,8 +1,11 @@
 from PyQt5.QtWidgets import (
     QWidget, QVBoxLayout, QHBoxLayout, QPushButton,
-    QTableWidget, QTableWidgetItem, QLineEdit, QLabel, QGroupBox, QSpinBox, QMessageBox, QInputDialog, QSizePolicy, QHeaderView
+    QTableWidget, QTableWidgetItem, QLineEdit, QLabel, QGroupBox,
+    QMessageBox, QInputDialog, QSizePolicy, QHeaderView, QDialog
 )
 from PyQt5.QtCore import Qt, QCoreApplication
+from components.MoneyLineEdit import MoneyLineEdit
+from utils.number_formatter import NumberFormat
 from controller.Popup import PopupWarning, PopupSuccess
 from controller.wallet import Wallet
 
@@ -56,11 +59,11 @@ class WalletView(QWidget):
         self.input_name.setPlaceholderText("Nama Wallet")
         self.input_name.setObjectName("wishlist_input")
 
-        self.input_amount = QSpinBox()
-        self.input_amount.setMinimum(0)
-        self.input_amount.setMaximum(1000000000)
-        self.input_amount.setPrefix("Rp ")
-        self.input_amount.setSingleStep(50000)
+        self.input_amount = MoneyLineEdit(locale_str='id_ID')
+        # self.input_amount.setMinimum(0)
+        # self.input_amount.setMaximum(1000000000)
+        # self.input_amount.setPrefix("Rp ")
+        # self.input_amount.setSingleStep(50000)
         self.input_amount.setStyleSheet("""
             QSpinBox {
                 background-color: white;
@@ -116,12 +119,14 @@ class WalletView(QWidget):
 
         for row, wallet in enumerate(wallets):
             name_item = QTableWidgetItem(wallet.get("name"))
-            amount_item = QTableWidgetItem(f"Rp {wallet.get('amount')}")
+            amount_item = QTableWidgetItem(f"Rp {NumberFormat.getFormattedMoney(wallet.get('amount'))}")
 
             self.btn_edit = QPushButton("Edit")
             self.btn_edit.setFixedWidth(80)
             self.btn_edit.setObjectName("Edit")
-            self.btn_edit.clicked.connect(lambda _, n=wallet.get("name"): self.edit_wallet(n))
+            self.btn_edit.clicked.connect(
+                lambda _, n=wallet.get("name"), a=wallet.get("amount"): self.edit_wallet(n, a)
+            )
 
             self.btn_delete = QPushButton("Hapus")
             self.btn_delete.setFixedWidth(80)
@@ -136,27 +141,67 @@ class WalletView(QWidget):
     def add_wallet(self):
         """Menambah wallet baru"""
         name = self.input_name.text().strip()
-        amount = self.input_amount.value()
+        amount = self.input_amount.get_value()
 
         
         result = self.wallet_controller.add_wallet(name, amount)
         if result.get("valid"):
             self.load_wallets()
             self.input_name.clear()
-            self.input_amount.setValue(0)
+            self.input_amount.set_value(0)
             PopupSuccess("Success", "Wallet berhasil disimpan!")
         else:
             errors = result.get("errors")
             error_message = "\n".join([f"{key}: {value}" for key, value in errors.items()])
             PopupWarning("Warning", f"Gagal menyimpan wallet!\n{error_message}") 
 
-    def edit_wallet(self, name):
+    # def edit_wallet(self, name):
+    #     """Mengedit saldo wallet"""
+    #     dialog = QInputDialog(self)
+    #     dialog.setObjectName("label")
+    #     new_amount, ok = dialog.getInt(self, "Edit Wallet", f"Saldo baru untuk {name}:", min=0)
+    #     if ok:
+    #         result = self.wallet_controller.edit_wallet(name, new_amount)
+    #         if result.get("valid"):
+    #             self.load_wallets()
+    #             PopupSuccess("Success", "Wallet berhasil disimpan!")
+    #         else:
+    #             errors = result.get("errors")
+    #             error_message = "\n".join([f"{key}: {value}" for key, value in errors.items()])
+    #             PopupWarning("Warning", f"Gagal menyimpan wallet!\n{error_message}")
+
+    def edit_wallet(self, name, amount):
         """Mengedit saldo wallet"""
-        dialog = QInputDialog(self)
-        dialog.setObjectName("label")
-        new_amount, ok = dialog.getInt(self, "Edit Wallet", f"Saldo baru untuk {name}:", min=0)
-        if ok:
+        dialog = QDialog(self)
+        dialog.setWindowTitle("Edit Wallet")
+        layout = QVBoxLayout()
+
+        label = QLabel(f"Saldo baru untuk {name}:")
+        money_input = MoneyLineEdit(locale_str="id_ID")
+        money_input.set_value(amount)
+        
+
+        # Tombol OK & Batal
+        btn_ok = QPushButton("Simpan")
+        btn_cancel = QPushButton("Batal")
+
+        btn_layout = QHBoxLayout()
+        btn_layout.addWidget(btn_cancel)
+        btn_layout.addWidget(btn_ok)
+
+        layout.addWidget(label)
+        layout.addWidget(money_input)
+        layout.addLayout(btn_layout)
+        dialog.setLayout(layout)
+
+        # Event tombol
+        btn_ok.clicked.connect(dialog.accept)
+        btn_cancel.clicked.connect(dialog.reject)
+
+        if dialog.exec_() == QDialog.Accepted:
+            new_amount = money_input.get_value()
             result = self.wallet_controller.edit_wallet(name, new_amount)
+
             if result.get("valid"):
                 self.load_wallets()
                 PopupSuccess("Success", "Wallet berhasil disimpan!")
