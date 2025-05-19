@@ -65,11 +65,8 @@ class Otp:
             self.otp_expiry = self.last_otp_time + 300  # OTP berlaku selama 5 menit
             key_dict["key"] = self.current_otp
             return True
-        except Exception as e:
-            import traceback
-            print("Terjadi kesalahan:")
-            traceback.print_exc()            
-            return False
+        except smtplib.SMTPException as e:
+            print(f"SMTP error occurred: {e}")
 
     def otpcheck(self, userotp, otpcode):
         if self.is_otp_expired():

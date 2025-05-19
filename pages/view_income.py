@@ -167,7 +167,7 @@ class IncomeView(QWidget):
             errors = result.get("errors")
             error_message = "\n".join([f"{key}: {value}" for key, value in errors.items()])
             PopupWarning("Warning", f"Gagal menyimpan pemasukkan!\n{error_message}")
-
+            
     def go_back(self):
         """Kembali ke Dashboard"""
         if self.parent():

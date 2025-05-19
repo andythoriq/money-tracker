@@ -66,3 +66,27 @@ class Income:
         incomes = [income for income in incomes if income["ID"] != int(id)]
         self.save_incomes(incomes)
         return True
+    
+    def validate_income_data(self, income_data, is_edit):
+        """
+        Validate income data to ensure it meets the required criteria.
+        :param income_data: Dictionary containing income data.
+        :return: Dictionary with validation result and error messages.
+        """
+        required_fields = ['amount', 'category', 'wallet', 'desc', 'date']
+        errors = {}
+        
+        for field in required_fields:
+            if field not in income_data or not income_data[field]:
+                errors[field] = f"tidak boleh kosong"
+
+        if income_data.get('amount') > 9_999_999_999:
+            errors["amount"] = "Jumlah saldo tidak boleh lebih dari 9.999.999.999."
+
+        if not errors and not is_edit:
+            wallet = income_data['wallet']
+            amount = int(income_data['amount'])
+            if not self.wallet_controller.update_balance(wallet, amount, "income"):
+                errors['wallet'] = "Gagal memperbarui saldo wallet"
+
+        return {"valid": True} if not errors else {"valid": False, "errors": errors}
