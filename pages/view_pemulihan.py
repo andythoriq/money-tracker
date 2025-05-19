@@ -10,16 +10,18 @@
 
 from PyQt5 import QtCore, QtGui, QtWidgets
 from controller.otp import Otp
+from controller.account import Account
 
 
-class Ui_pemulihan(QtWidgets.QWidget):
-    def __init__(self, stack):
+class PemulihanScreen(QtWidgets.QWidget):
+    def __init__(self, stack, key_dict):
         super().__init__()
         self.stack = stack
+        self.key_dict = key_dict
         self.otp_backend = Otp()
-        self.setupUi()
+        self.pemulihan_Ui()
 
-    def setupUi(self):
+    def pemulihan_Ui(self):
         self.setGeometry(0, 0, 360, 640)
         self.setStyleSheet("background-color: #1c1f26; color: #d3e9a3;")
         
@@ -31,6 +33,7 @@ class Ui_pemulihan(QtWidgets.QWidget):
         # Header
         header_layout = QtWidgets.QHBoxLayout()
         
+        # Tombol Kembali
         self.back_button = QtWidgets.QPushButton("←")
         self.back_button.setStyleSheet("""
             QPushButton {
@@ -97,6 +100,7 @@ class Ui_pemulihan(QtWidgets.QWidget):
                 padding: 8px;
             }
         """)
+        self.otp_input.textChanged.connect(self.recover_password)
         self.otp_input.setPlaceholderText("Masukkan kode OTP")
         otp_layout.addWidget(self.otp_input)
         
@@ -118,7 +122,7 @@ class Ui_pemulihan(QtWidgets.QWidget):
         self.timer_label.hide()
         main_layout.addWidget(self.timer_label)
         
-        # Tombol
+        # Tombol Lanjut
         button_layout = QtWidgets.QHBoxLayout()
         
         self.send_otp_button = QtWidgets.QPushButton("Kirim Kode")
@@ -136,9 +140,10 @@ class Ui_pemulihan(QtWidgets.QWidget):
         button_layout.addStretch()
         
         self.recover_button = QtWidgets.QPushButton("Pulihkan Password")
+        self.recover_button.setEnabled(False)
         self.recover_button.setStyleSheet("""
             QPushButton {
-                background-color: qlineargradient(x1:0, y1:0, x2:1, y2:0, stop:0 #7db16e, stop:1 #b8e994);
+                background-color: #7db16e;
                 color: #1c1f26;
                 border: none;
                 border-radius: 5px;
@@ -146,7 +151,7 @@ class Ui_pemulihan(QtWidgets.QWidget):
                 font-weight: bold;
             }
         """)
-        self.recover_button.clicked.connect(self.recover_password)
+        self.recover_button.clicked.connect(self.stack.setCurrentIndex(self.stack.currentIndex() + 1))
         button_layout.addWidget(self.recover_button)
         
         main_layout.addLayout(button_layout)
@@ -157,6 +162,40 @@ class Ui_pemulihan(QtWidgets.QWidget):
         # Timer
         self.timer = QtCore.QTimer()
         self.timer.timeout.connect(self.update_cooldown)
+
+    def new_password_UI(self):
+        self.setGeometry(0, 0, 360, 640)
+        self.setStyleSheet("background-color: #1c1f26; color: #d3e9a3;")
+        
+        # Layout utama
+        main_layout = QtWidgets.QVBoxLayout()
+        main_layout.setContentsMargins(20, 20, 20, 20)
+        main_layout.setSpacing(20)
+        
+        # Header
+        header_layout = QtWidgets.QHBoxLayout()
+        
+        # Tombol Kembali
+        self.back_button = QtWidgets.QPushButton("←")
+        self.back_button.setStyleSheet("""
+            QPushButton {
+                background-color: transparent;
+                color: #d3e9a3;
+                font-size: 20px;
+                border: none;
+            }
+        """)
+        self.back_button.clicked.connect(lambda: self.stack.setCurrentIndex(self.stack.currentIndex() - 1))
+        header_layout.addWidget(self.back_button)
+        
+        header_layout.addStretch()
+        main_layout.addLayout(header_layout)
+        
+        # Judul
+        title_label = QtWidgets.QLabel("Pemulihan Password")
+        title_label.setStyleSheet("font-size: 24px; font-weight: bold;")
+        title_label.setAlignment(QtCore.Qt.AlignCenter)
+        main_layout.addWidget(title_label)
 
     def update_cooldown(self):
         cooldown_active, remaining_time = self.otp_backend.is_cooldown_active()
@@ -181,15 +220,19 @@ class Ui_pemulihan(QtWidgets.QWidget):
         email = self.email_input.text()
         otp = self.otp_input.text()
         if email and otp:
-            #pemulihan password
-            pass
-
-
-if __name__ == "__main__":
-    import sys
-    app = QtWidgets.QApplication
-    Form = QtWidgets.QWidget()
-    ui = Ui_pemulihan()
-    ui.setupUi()
-    Form.show()
-    sys.exit(app.exec_())
+            result = self.otp_backend.otpcheck(otp, self.key_dict["key"])
+            if result:
+                # Lanjutkan ke halaman pemulihan password
+                self.recover_button.setStyleSheet("""
+                    QPushButton {
+                        background-color: qlineargradient(x1:0, y1:0, x2:1, y2:0, stop:0 #7db16e, stop:1 #b8e994);
+                        color: #1c1f26;
+                        border: none;
+                        border-radius: 5px;
+                        padding: 10px;
+                        font-weight: bold;
+                    }
+                """)
+                self.recover_button.setEnabled(True)
+            else:
+                QtWidgets.QMessageBox.warning(self, "Error", "Kode OTP tidak valid.")
