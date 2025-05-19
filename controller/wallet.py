@@ -80,3 +80,33 @@ class Wallet:
         wallets = self.load_wallets()
         name = [line.get('name') for line in wallets]  # Ambil hanya nama wallet
         return name
+    
+    def validate_wallet_data(self, wallet_data, is_edit):
+        """
+        Validate wallet data to ensure it meets the required criteria.
+        :param wallet_data: Dictionary containing wallet data.
+        :return: Dictionary with validation result and error messages.
+        """
+        errors = {}
+        
+        if not isinstance(wallet_data.get('amount'), (int, float)) or wallet_data.get('amount') < 0:
+            errors["amount"] = "Jumlah saldo harus berupa angka positif."
+
+        if wallet_data.get('amount') > 9_999_999_999:
+            errors["amount"] = "Jumlah saldo tidak boleh lebih dari 9.999.999.999."
+
+        if not is_edit:
+            if not wallet_data.get('name'):
+                errors["name"] = "wallet tidak boleh kosong."
+            elif wallet_data.get('name') in self.get_wallet_name():
+                errors["name"] = "wallet sudah ada."
+            elif len(wallet_data.get('name')) < 3:
+                errors["name"] = "wallet harus lebih dari 3 karakter."
+            elif len(wallet_data.get('name')) > 20:
+                errors["name"] = "wallet tidak boleh lebih dari 20 karakter."
+            elif not wallet_data.get('name').isalnum():
+                errors["name"] = "wallet hanya boleh mengandung huruf dan angka."
+            elif not wallet_data.get('name')[0].isalpha():
+                errors["name"] = "wallet harus diawali dengan huruf."
+
+        return {"valid": not bool(errors), "errors": errors}

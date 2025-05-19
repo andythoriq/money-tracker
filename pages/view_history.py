@@ -408,12 +408,17 @@ class HistoryView(QWidget):
         }
 
         if transaction["type"] == "income":
-            self.income_controller.update_income(new_data)
+            result = self.income_controller.update_income(new_data)
         else:
-            self.outcome_controller.update_outcome(new_data)
+            result = self.outcome_controller.update_outcome(new_data)
 
-        dialog.accept()
-        self.load_data(transaction["type"])
+        if result.get("valid"):
+            self.load_data(transaction["type"])
+            PopupSuccess("Success", "berhasil disimpan!")
+        else:
+            errors = result.get("errors")
+            error_message = "\n".join([f"{key}: {value}" for key, value in errors.items()])
+            PopupWarning("Warning", f"Gagal menyimpan!\n{error_message}")
 
     def confirm_delete(self, transaction):
         """Konfirmasi Delete"""
