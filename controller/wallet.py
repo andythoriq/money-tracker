@@ -28,17 +28,30 @@ class Wallet:
     def add_wallet(self, name, amount):
         """Menambah wallet baru."""
         wallets = self.load_wallets()
+
+        # validasi
+        result = self.validate_wallet_data({'name': name, 'amount': amount}, is_edit=False)
+        if not result.get("valid"):
+            return result
+
         wallets.append({"name": name, "amount": amount})
         self.save_wallets(wallets)
+        return result
 
     def edit_wallet(self, name, new_amount):
         """Mengedit saldo wallet."""
         wallets = self.load_wallets()
         for wallet in wallets:
             if wallet["name"] == name:
+
+                # validasi
+                result = self.validate_wallet_data({'name': name, 'amount': new_amount}, is_edit=True)
+                if not result.get("valid"):
+                    return result # Stop execution if validation fails
+
                 wallet["amount"] = new_amount
                 self.save_wallets(wallets)
-                return True
+                return result  
         return False
 
     def delete_wallet(self, name):

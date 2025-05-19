@@ -419,6 +419,8 @@ class HistoryView(QWidget):
             errors = result.get("errors")
             error_message = "\n".join([f"{key}: {value}" for key, value in errors.items()])
             PopupWarning("Warning", f"Gagal menyimpan!\n{error_message}")
+        
+        dialog.accept()
 
     def confirm_delete(self, transaction):
         """Konfirmasi Delete"""

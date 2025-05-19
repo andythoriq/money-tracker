@@ -29,29 +29,45 @@ class Wishlist:
 
     def add_wishlist(self, label, price, status):
         """Menambah wishlist baru dengan ID."""
-        new_id = str(len(self.wishlists) + 1)
+
+        # validasi
+        result = self.validate_wishlist({
+            "label": label,
+            "price": price,
+            "status": status
+        })
+
+        if not result.get("valid"):
+            return result
+
         self.wishlists.append({
-            "ID": new_id,
+            "ID": len(self.wishlists) + 1,
             "label": label,
             "price": price,
             "status": status
         })
         self.save_wishlists()
-        return new_id
+        return result
 
     def edit_wishlist(self, wishlist_id, label, price, status):
         """Mengedit wishlist berdasarkan ID."""
-        updated = False
         for wishlist in self.wishlists:
             if wishlist["ID"] == wishlist_id:
+                result = self.validate_wishlist({
+                    "label": label,
+                    "price": price,
+                    "status": status
+                })
+                if not result.get("valid"):
+                    return result # Stop execution if validation fails
+
                 wishlist["label"] = label
                 wishlist["price"] = price
                 wishlist["status"] = status
-                updated = True
-                break
-        if updated:
-            self.save_wishlists()
-        return updated
+
+                self.save_wishlists()
+                return result
+        return False
 
     def delete_wishlist(self, wishlist_id):
         """Menghapus wishlist berdasarkan ID."""

@@ -28,33 +28,53 @@ class Income:
 
     def add_income(self, amount, category, wallet, desc, date):
         """Menambah income baru & update saldo wallet."""
+        result = self.validate_income_data({
+            "amount": amount,
+            "category": category,
+            "wallet": wallet,
+            "desc": desc,
+            "date": date
+        }, False)
+        if not result.get("valid"):
+            return result  # Stop execution if validation fails
+
         incomes = self.load_incomes()
-        if self.wallet_controller.update_balance(wallet, int(amount), "income"):
-            new_id = len(incomes) + 1
-            incomes.append({
-                "ID": new_id,
-                "amount": amount,
-                "category": category,
-                "wallet": wallet,
-                "desc": desc,
-                "date": date
-            })
-            self.save_incomes(incomes)
-            return True
-        return False
+        incomes.append({
+            "ID": len(incomes) + 1,
+            "amount": amount,
+            "category": category,
+            "wallet": wallet,
+            "desc": desc,
+            "date": date
+        })
+        self.save_incomes(incomes)
+        return result  # Return True if income is successfully added
 
     def update_income(self, updated_income):
         """Mengupdate data income."""
         incomes = self.load_incomes()
         for i, income in enumerate(incomes):
             if income["ID"] == updated_income["ID"]:
+                result = self.validate_income_data({
+                    "amount": updated_income['amount'],
+                    "category": updated_income['category'],
+                    "wallet": updated_income['wallet'],
+                    "desc": updated_income['desc'],
+                    "date": updated_income['date']
+                }, True)
+
+                if not result.get("valid"):
+                    return result # Stop execution if validation fails
+
                 old_amount = int(income["amount"])
                 new_amount = int(updated_income["amount"])
                 self.wallet_controller.update_balance(income["wallet"], -old_amount, "income")
                 self.wallet_controller.update_balance(updated_income["wallet"], new_amount, "income")
+                
                 incomes[i] = updated_income
-                break
-        self.save_incomes(incomes)
+                self.save_incomes(incomes)
+                return result  # Return True if income is successfully updated
+        return False
 
     def delete_income(self, id):
         """Menghapus income dengan id."""

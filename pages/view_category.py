@@ -117,10 +117,6 @@ class CategoryView(QWidget):
             error_message = "\n".join([f"{key}: {value}" for key, value in errors.items()])
             PopupWarning("Warning", f"Gagal menyimpan wallet!\n{error_message}")
 
-        self.category_controller.add_category(name, category_type)
-        self.input_name.clear()
-        self.load_categories()
-
     def load_categories(self):
         """Memuat ulang data kategori ke tabel"""
         self.table.setRowCount(0)

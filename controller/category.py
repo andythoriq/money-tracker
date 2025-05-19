@@ -14,14 +14,16 @@ class Category:
 
     def add_category(self, name, category_type):
         """Menambahkan kategori baru."""
-        if category_type == 0:
-            category_type = "income"
-        else:
-            category_type = "outcome"
-
         categories = self.load_categories()
+
+        #validasi
+        result = self.validate_category_data({'name': name, 'type': category_type})
+        if result.get("valid") is False:
+            return result
+
         categories.append({"name": name, "type": category_type})
         self.save_categories(categories)
+        return result
 
     def delete_category(self, name, category_type):
         """Menghapus kategori berdasarkan nama."""
