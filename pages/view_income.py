@@ -4,6 +4,7 @@ from PyQt5.QtWidgets import (
 )
 from PyQt5.QtGui import QRegExpValidator
 from PyQt5.QtCore import QRegExp, QDate, Qt, QCoreApplication
+from utils.number_formatter import NumberFormat
 from components.MoneyLineEdit import MoneyLineEdit
 from controller.income import Income
 from controller.category import Category
@@ -149,7 +150,7 @@ class IncomeView(QWidget):
 
         self.input_category.addItems(category_names)
         for wallet in wallets:
-            self.input_wallet.addItem(f"{wallet.get('name')} - Rp {wallet.get('amount')}", wallet.get("name"))
+            self.input_wallet.addItem(f"{wallet.get('name')} - Rp {NumberFormat.getFormattedMoney(wallet.get('amount'))}", wallet.get("name"))
 
     def add_income(self):
         """Menambahkan pemasukan"""

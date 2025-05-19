@@ -2,6 +2,7 @@ import os
 from PyQt5.QtWidgets import QWidget, QPushButton, QVBoxLayout, QLabel, QStackedWidget, QGroupBox, QHBoxLayout, QTableWidget, QTableWidgetItem, QComboBox
 from PyQt5 import QtGui, QtCore, QtWidgets
 from pyqtgraph import PlotWidget
+from utils.number_formatter import NumberFormat
 from pages.view_wallet import WalletView
 from pages.view_income import IncomeView
 from pages.view_outcome import OutcomeView
@@ -292,7 +293,7 @@ class Dashboard(QWidget):
         for row, transaction in enumerate(recent_transactions):
             self.history_table.setItem(row, 0, QTableWidgetItem(transaction["date"]))  # Tanggal
             self.history_table.setItem(row, 1, QTableWidgetItem(transaction["type"]))  # Jenis
-            self.history_table.setItem(row, 2, QTableWidgetItem(f"Rp {str(transaction['amount'])}"))  # Jumlah
+            self.history_table.setItem(row, 2, QTableWidgetItem(f"Rp {NumberFormat.getFormattedMoney(transaction['amount'])}"))  # Jumlah
             self.history_table.setItem(row, 3, QTableWidgetItem(transaction["category"]))  # Kategori
             self.history_table.setItem(row, 4, QTableWidgetItem(transaction["wallet"]))  # Dompet
             # history_table.setItem(row, 0, QTableWidgetItem(transaction["date"]))  # Tanggal
@@ -362,7 +363,7 @@ class Dashboard(QWidget):
                 
             self.wishlist_table.setItem(row, 0, QTableWidgetItem(str(wishlist.get('ID'))))
             self.wishlist_table.setItem(row, 1, QTableWidgetItem(wishlist.get('label')))
-            self.wishlist_table.setItem(row, 2, QTableWidgetItem(str(wishlist.get('price'))))
+            self.wishlist_table.setItem(row, 2, QTableWidgetItem(f"Rp {NumberFormat.getFormattedMoney(wishlist.get('price'))}"))
             
             # Konversi status dari boolean ke text
             status_text = "Sudah Terpenuhi" if wishlist.get('status') else "Belum Terpenuhi"
