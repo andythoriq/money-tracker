@@ -13,7 +13,7 @@ from controller.otp import Otp
 from controller.account import Account
 # from pages.view_register import RegisterScreen
 from PyQt5.QtGui import QFont
-import re
+import re, hashlib
 
 
 class PemulihanScreen(QtWidgets.QWidget):
@@ -36,7 +36,7 @@ class PemulihanScreen(QtWidgets.QWidget):
         # Layout utama
         main_layout = QtWidgets.QVBoxLayout()
         main_layout.setContentsMargins(20, 20, 20, 20)
-        main_layout.setSpacing(20)
+        main_layout.setSpacing(10)
         
         # Header
         header_layout = QtWidgets.QHBoxLayout()
@@ -77,15 +77,7 @@ class PemulihanScreen(QtWidgets.QWidget):
         email_layout.addWidget(email_label)
         
         self.email_input = QtWidgets.QLineEdit()
-        self.email_input.setStyleSheet("""
-            QLineEdit {
-                background-color: #2c2f36;
-                color: #d3e9a3;
-                border: 1px solid #3c3f46;
-                border-radius: 5px;
-                padding: 8px;
-            }
-        """)
+        self.email_input.setStyleSheet(self.input_style())
         self.email_input.setPlaceholderText("Masukkan email terdaftar")
         self.email_input_warning = QtWidgets.QLabel()
         self.email_input_warning.setStyleSheet("color: #ff0000; font-size: 12px;")
@@ -104,15 +96,7 @@ class PemulihanScreen(QtWidgets.QWidget):
         otp_layout.addWidget(otp_label)
         
         self.otp_input = QtWidgets.QLineEdit()
-        self.otp_input.setStyleSheet("""
-            QLineEdit {
-                background-color: #2c2f36;
-                color: #d3e9a3;
-                border: 1px solid #3c3f46;
-                border-radius: 5px;
-                padding: 8px;
-            }
-        """)
+        self.otp_input.setStyleSheet(self.input_style())
         self.otp_input.setPlaceholderText("Masukkan kode OTP")
         self.otp_input_warning = QtWidgets.QLabel()
         self.otp_input_warning.setStyleSheet("color: #ff0000; font-size: 12px;")
@@ -168,7 +152,7 @@ class PemulihanScreen(QtWidgets.QWidget):
                 font-weight: bold;
             }
         """)
-        self.recover_button.clicked.connect(self.validate_otp)
+        self.recover_button.clicked.connect(lambda: self.stack.setCurrentIndex(self.stack.currentIndex() + 1))
         button_layout.addWidget(self.recover_button)
         
         main_layout.addLayout(button_layout)
@@ -265,7 +249,7 @@ class PemulihanScreen(QtWidgets.QWidget):
         layout.addSpacing(10)
 
         # Continue button
-        self.continue_button_password = QtWidgets.QPushButton("Lanjutkan")
+        self.continue_button_password = QtWidgets.QPushButton("Pulihkan Password")
         self.continue_button_password.setStyleSheet("""
             background-color: #2c2f36;
             color: #d3e9a3;
@@ -273,13 +257,12 @@ class PemulihanScreen(QtWidgets.QWidget):
             border-radius: 20px;
             font-weight: bold;
         """)
-        self.continue_button_password.setEnabled(False)
-        self.continue_button_password.clicked.connect(
-            lambda: self.stack.setCurrentIndex(self.stack.currentIndex() + 1)
-        )
+        self.continue_button_password.clicked.connect(self.change_password)
         layout.addWidget(self.continue_button_password)
 
         layout.addSpacing(30)
+
+        layout.addStretch()
 
         widget.setLayout(layout)
 
@@ -343,17 +326,12 @@ class PemulihanScreen(QtWidgets.QWidget):
         password_confirm = self.password_confirm_input.text().strip()
         is_password_valid = (
             bool(re.search(r"[A-Z]", password))
-            and bool(re.search(r"[A-Z]", password_confirm))
             and bool(re.search(r"[0-9]", password))
-            and bool(re.search(r"[0-9]", password_confirm))
-            and password == password_confirm
         )
 
         if not len(password) >= 8:
             self.password_warning.setText("Password minimal 8 karakter")
             self.password_warning.show()
-            self.password_confirm_warning.setText("Password minimal 8 karakter")
-            self.password_confirm_warning.show()
             self.continue_button_password.setEnabled(False)
             self.continue_button_password.setStyleSheet("""
                 background-color: #2c2f36;
@@ -368,10 +346,6 @@ class PemulihanScreen(QtWidgets.QWidget):
                 "Password harus terdiri dari huruf kapital dan angka"
             )
             self.password_warning.show()
-            self.password_confirm_warning.setText(
-                "Password harus terdiri dari huruf kapital dan angka"
-            )
-            self.password_confirm_warning.show()
             self.continue_button_password.setEnabled(False)
             self.continue_button_password.setStyleSheet("""
                 background-color: #2c2f36;
@@ -381,9 +355,7 @@ class PemulihanScreen(QtWidgets.QWidget):
                 font-weight: bold;
             """)
 
-        if not password and password != password_confirm:
-            self.password_warning.setText("Password dan konfirmasi password harus sama")
-            self.password_warning.show()
+        if password and password_confirm and password != password_confirm:
             self.password_confirm_warning.setText(
                 "Password dan konfirmasi password harus sama"
             )
@@ -396,6 +368,9 @@ class PemulihanScreen(QtWidgets.QWidget):
                 border-radius: 20px;
                 font-weight: bold;
             """)
+        
+        if len(password) >= 8 and is_password_valid:
+            self.password_warning.hide()
 
         if len(password) >= 8 and is_password_valid and password == password_confirm:
             self.password_warning.hide()
@@ -409,6 +384,25 @@ class PemulihanScreen(QtWidgets.QWidget):
                 font-weight: bold;
             """)
             self.user_data["password"] = password
+
+    def change_password(self):
+        """Mengubah password"""
+        email = self.email_input.text()
+        password = self.password_input.text()
+        password = hashlib.sha256(password.encode()).hexdigest()
+
+        if email and password:
+            # Mengubah password di database
+            if self.account_controller.update_account(email, password):
+                print("Password berhasil diubah!")
+                self.stack.setCurrentIndex(1)
+            else:
+                self.password_warning.setText("Gagal mengubah password!")
+                self.password_warning.show()
+                return
+
+        else: 
+            return
 
     def input_style(self):
         return """

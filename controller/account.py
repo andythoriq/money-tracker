@@ -77,22 +77,21 @@ class Account:
         with open(self.FILE_PATH, "w") as file:
             json.dump(new_accounts, file)
 
-    def update_account(self, email, new_password, new_email):
+    def update_account(self, email, new_password):
         """
         Mengupdate akun berdasarkan email pengguna
         :param email: email pengguna yang ingin diupdate
         :param new_password: Kata sandi baru
-        :param new_email: Alamat email baru
         """
         accounts = self.load_account()
         for acc in accounts:
             if acc["email"] == email:
                 acc["password"] = new_password
-                acc["email"] = new_email
                 break
 
         with open(self.FILE_PATH, "w") as file:
             json.dump(accounts, file)
+            return True
 
     def check_email_exists(self, email):
         """
