@@ -324,7 +324,7 @@ class HistoryView(QWidget):
             btn_delete.clicked.connect(lambda _, t=transaction: self.confirm_delete(t))
             self.table.setCellWidget(row, 7, btn_delete)
 
-        self.label.setText(f"Total : Rp {self.total}")
+        self.label.setText(f"Total : Rp {NumberFormat.getFormattedMoney(self.total)}")
 
 
     def open_edit_popup(self, transaction):
