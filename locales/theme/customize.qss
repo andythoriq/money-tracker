@@ -1,0 +1,28 @@
+#QWidgetLayout, #Layout, #QFrameLayout, QScrollBar, #form_label, #groupBox {
+    background-color: $saved_color;
+}
+
+#titleLabel {
+    background-color: $saved_color;
+    font: 24pt;
+    color: white;
+    padding: 15px;
+    border-radius: 10px;
+}
+
+QPushButton {
+    background-color: $base_color_darker130;
+}
+
+#container, #HomeSection, QStackedWidget, #table {
+    background-color: $base_color_lighter150;
+}
+
+QPushButton:hover, #table::section {
+    background-color: $base_color_darker140;
+    gridline-color: $base_color_darker140;
+}
+
+QPushButton:focus, #table::item:selected, QHeaderView::section {
+    background-color: $base_color_darker150;
+}
