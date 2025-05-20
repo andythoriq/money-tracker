@@ -11,7 +11,7 @@ from pages.view_category import CategoryView
 from pages.view_wishlist import WishlistView
 from controller.Popup import PopupAboutUs
 from controller.Sliding import SlidingWalletWidget
-from controller.setting import Setting
+from controller.setting import SettingsWindow, Setting
 
 
 class Dashboard(QWidget):
@@ -28,6 +28,7 @@ class Dashboard(QWidget):
 
         # Stack untuk menyimpan berbagai halaman
         self.stack = QStackedWidget()
+        self.stack.setObjectName("Tumpukan")
 
         self.container = QGroupBox()
         self.container.setObjectName("container")
@@ -171,8 +172,7 @@ class Dashboard(QWidget):
         self.aboutUs = QPushButton(self.HomeSection)
         self.aboutUs.setIcon(QtGui.QIcon("../money-tracker/img/icon/aboutUs.png"))
         self.aboutUs.setIconSize(QtCore.QSize(55, 61))
-        self.aboutUs.setStyleSheet("background-color: transparent;")
-        self.aboutUs.setObjectName("btn_aboutUs")
+        self.aboutUs.setObjectName("btn_dash")
         self.aboutUs.clicked.connect(lambda: PopupAboutUs(self.aboutUs))
 
         self.language = QComboBox(self.HomeSection)
@@ -184,11 +184,10 @@ class Dashboard(QWidget):
 
         self.btn_theme = QPushButton(self.HomeSection)
         self.btn_theme.setCheckable(True)
-        self.btn_theme.setIcon(QtGui.QIcon("../money-tracker/img/icon/moon.svg"))
+        self.btn_theme.setIcon(QtGui.QIcon("../money-tracker/img/icon/Setting.svg"))
         self.btn_theme.setIconSize(QtCore.QSize(48, 48))
-        self.btn_theme.setStyleSheet("background-color: transparent;")
-        self.btn_theme.setObjectName("btn_theme")
-        self.btn_theme.clicked.connect(self.toggle_theme)
+        self.btn_theme.setObjectName("btn_dash")
+        self.btn_theme.clicked.connect(self.open_settings)
 
         self.label = QLabel(self.HomeSection)
         self.label.setObjectName("label")
@@ -289,16 +288,16 @@ class Dashboard(QWidget):
             self.history_table.setItem(row, 4, QTableWidgetItem(transaction["wallet"]))  # Dompet
 
         # Menambahkan tombol "View All" di bawah tabel
-        view_all_btn = QPushButton("View All")
-        view_all_btn.setObjectName("btn_slidenext")
-        view_all_btn.clicked.connect(lambda: (
+        self.view_all_btn = QPushButton("View All")
+        self.view_all_btn.setObjectName("btn_slidenext")
+        self.view_all_btn.clicked.connect(lambda: (
             self.history_view.load_data("all"),
             self.history_view.radio_all.setChecked(True),
             self.stack.setCurrentWidget(self.history_view)
         ))
 
         layout.addWidget(self.history_table)
-        layout.addWidget(view_all_btn, alignment=QtCore.Qt.AlignRight)
+        layout.addWidget(self.view_all_btn, alignment=QtCore.Qt.AlignRight)
         self.layout_2.setLayout(layout)
         self.layout_2.setContentsMargins(0, 0, 0, 0)  # Menghilangkan margin di sekitar layout_2
         self.layout_2.setSizePolicy(QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Expanding)
@@ -325,7 +324,7 @@ class Dashboard(QWidget):
         layout.addWidget(self.title)
         
         self.wishlist_table = QTableWidget()
-        self.wishlist_table.setObjectName("wishlist_table")
+        self.wishlist_table.setObjectName("table")
         self.wishlist_table.setColumnCount(4)
         
         self.wishlist_table.setColumnWidth(0, 50)   # No.
@@ -576,22 +575,6 @@ class Dashboard(QWidget):
             button_layout4_height
         )
 
-    def toggle_theme(self):
-        theme = ["dark", "light", "mono"]
-        current_theme_color = self.config["theme_color"]
-
-        # Find the current theme's index and get the next one (wrap around using modulo)
-        current_index = theme.index(current_theme_color)
-        next_index = (current_index + 1) % len(theme)
-
-        # Update the theme color in the config
-        self.config["theme_color"] = theme[next_index]
-
-        theme_handler = Setting(self)
-        Setting.save_config(self.config)
-        theme_handler.toggle_icon(self.btn_theme)
-        theme_handler.load_theme(self.config["theme_color"])
-
     def change_language(self):
         """Mengubah bahasa UI berdasarkan bahasa yang dipilih"""
         self.config["language"] = self.language.currentText()
@@ -631,6 +614,7 @@ class Dashboard(QWidget):
                 self.language_data.get("dashboard", {}).get("l2col5", "Dompet")
                 ]
                 )
+            self.view_all_btn.setText(_translate("Form", self.language_data.get("dashboard", {}).get("l2btn", "")))
             self.statistic_label.setText(_translate("Form", self.language_data.get("dashboard", {}).get("layout3", "Informasi keuanganmu untuk minggu ini")))
             self.title.setText(_translate("Form", self.language_data.get("dashboard", {}).get("layout4", "Wishlist")))
             self.wishlist_table.setHorizontalHeaderLabels(
@@ -652,3 +636,7 @@ class Dashboard(QWidget):
             self.btn_category.setText(_translate("Form", " Category"))
             self.btn_wishlist.setText(_translate("Form", " Wishlist"))
             self.label.setText(_translate("Form", "v1.2"))
+
+    def open_settings(self):
+        self.settings_window = SettingsWindow(self)
+        self.settings_window.exec_()  # Gunakan show() kalau ingin non-modal

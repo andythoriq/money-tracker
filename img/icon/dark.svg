@@ -1,0 +1,16 @@
+<svg width="512" height="512" viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Ikon Daun dengan Tulang Bercabang">
+  <!-- Latar belakang gelap -->
+  <rect width="64" height="64" rx="12" fill="#0E1E28"></rect>
+
+  <!-- Daun hijau -->
+  <path d="M40 8C28 12 16 24 20 44C21 48 24 52 28 54C34 55 44 48 50 36C54 28 52 18 48 12C46 9 43 6 40 8Z" fill="#6ECB63"></path>
+
+  <!-- Tulang utama -->
+  <path d="M24 48 C28 38, 36 30, 44 24" stroke="#0E1E28" stroke-width="2.5" stroke-linecap="round" fill="none"></path>
+
+  <!-- Cabang tulang 1 -->
+  <path d="M32 38 C33 37, 36 34, 38 32" stroke="#0E1E28" stroke-width="1.5" stroke-linecap="round" fill="none"></path>
+
+  <!-- Cabang tulang 2 -->
+  <path d="M30 42 C31 41, 34 38, 36 36" stroke="#0E1E28" stroke-width="1.5" stroke-linecap="round" fill="none"></path>
+</svg>

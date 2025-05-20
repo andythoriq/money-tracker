@@ -89,8 +89,8 @@
     },
     "wishlist": {
       "Title": "Wishlist",
-      "form1": "Name",
-      "form2": "Price",
+      "form1": "Name:",
+      "form2": "Price:",
       "btn1": "Add to Wishlist",
       "filter": "Filter Status",
       "radbtn1": "All",

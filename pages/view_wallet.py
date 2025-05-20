@@ -26,7 +26,7 @@ class WalletView(QWidget):
 
         # Content Container
         content_widget = QWidget()
-        content_widget.setObjectName("Layout")
+        content_widget.setObjectName("QWidgetLayout")
         content_layout = QVBoxLayout(content_widget)
         content_layout.setContentsMargins(20, 20, 20, 20)
         content_layout.setSpacing(15)
@@ -54,22 +54,15 @@ class WalletView(QWidget):
         # Input fields
         self.input_name = QLineEdit()
         self.input_name.setPlaceholderText("Nama Wallet")
-        self.input_name.setObjectName("wishlist_input")
+        self.input_name.setObjectName("input")
 
         self.input_amount = QSpinBox()
         self.input_amount.setMinimum(0)
         self.input_amount.setMaximum(1000000000)
         self.input_amount.setPrefix("Rp ")
         self.input_amount.setSingleStep(50000)
-        self.input_amount.setStyleSheet("""
-            QSpinBox {
-                background-color: white;
-                border: 1px solid #7A9F60;
-                border-radius: 5px;
-                padding: 5px;
-                font-size: 14px;
-            }
-        """)
+        self.input_amount.setObjectName("input")
+
 
         self.btn_add = QPushButton("Tambah")
         self.btn_add.setObjectName("add_button")

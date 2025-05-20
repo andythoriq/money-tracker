@@ -1,37 +1,13 @@
 [
     {
-        "ID": "1",
-        "label": "Anoma",
-        "price": 400000,
+        "ID": 2,
+        "label": "asa",
+        "price": 2000000,
         "status": true
     },
     {
-        "ID": "2",
-        "label": "mali",
-        "price": 50000,
-        "status": false
-    },
-    {
-        "ID": "3",
-        "label": "aku",
-        "price": 0,
-        "status": false
-    },
-    {
-        "ID": "4",
-        "label": "10000",
-        "price": 0,
-        "status": false
-    },
-    {
-        "ID": "5",
-        "label": "An",
-        "price": 100001,
-        "status": false
-    },
-    {
-        "ID": "6",
-        "label": "100",
+        "ID": 3,
+        "label": "asas",
         "price": 100000,
         "status": false
     }

@@ -1,10 +1,10 @@
 [
     {
-        "name": "AUUUU",
+        "name": "AAA",
         "type": "outcome"
     },
     {
-        "name": "AAA",
-        "type": "income"
+        "name": "III",
+        "type": "outcome"
     }
 ]

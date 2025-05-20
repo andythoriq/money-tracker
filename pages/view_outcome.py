@@ -30,7 +30,7 @@ class OutcomeView(QWidget):
         
         # Form container
         form_container = QWidget()
-        form_container.setObjectName("Layout")
+        form_container.setObjectName("QWidgetLayout")
         form_container.setProperty("class", "OutcomeView")
         form_layout = QFormLayout()
         

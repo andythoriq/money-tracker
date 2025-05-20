@@ -2,7 +2,7 @@ QMainWindow {
     background-color: #FFFFFF;
 }
 
-QPushButton {
+QPushButton:enabled {
     background-color: #64B5F6;
     color: #FFFFFF;
     border-radius: 5px;
@@ -35,7 +35,7 @@ QLineEdit {
     border: none;
 }
 
-#Layout {
+#QWidgetLayout, #Layout, #QFrameLayout {
     background: #BBDEFB;
     border: none;
     border-radius: 15px;
@@ -119,6 +119,29 @@ QLineEdit {
     background-color: #64B5F6;
 }
 
+#btn_dash {
+    background-color: transparent;
+}
+
+QMessageBox#PopupAboutUs {
+    background-color:#e8e8e9;
+}
+QLabel#PopupAboutUs {
+    color: black;
+    background-color: #e8e8e9;
+}
+QPushButton#PopupAboutUs {
+    background-color: #BBDEFB;
+    color: white;
+    border: none;
+    padding: 8px 20px;
+    border-radius: 5px;
+    font-size: 14px;
+}
+QPushButton#PopupAboutUs:hover {
+    background-color: #64B5F6;
+}
+
 /* Title label pada setiap pages */
 #titleLabel {
     background-color: #BBDEFB;
@@ -130,7 +153,7 @@ QLineEdit {
 
 /* tombol slide yang ada pada layout 1 di home */
 #btn_nextslide {
-    background-color: #BBDEFB;
+    background-color: #64B5F6;
     padding: 5px;
     color: #333333;
     border-radius: 15px;
@@ -275,7 +298,7 @@ QScrollBar {
     padding: 5px;
 }
 
-#wishlist_input {
+#input {
     background-color: #FFFFFF;
     border: 1px solid #CCCCCC;
     border-radius: 5px;
@@ -300,24 +323,24 @@ QScrollBar {
     background-color: #2196F3;
 }
 
-#wishlist_radio {
+#radio_button {
     color: #333333;
     font-size: 14px;
     spacing: 5px;
 }
 
-#wishlist_radio::indicator {
+#radio_button::indicator {
     width: 15px;
     height: 15px;
 }
 
-#wishlist_radio::indicator:checked {
+#radio_button::indicator:checked {
     background-color: #64B5F6;
     border: 2px solid #FFFFFF;
     border-radius: 7px;
 }
 
-#wishlist_radio::indicator:unchecked {
+#radio_button::indicator:unchecked {
     background-color: #FFFFFF;
     border: 2px solid #64B5F6;
     border-radius: 7px;
@@ -326,6 +349,97 @@ QScrollBar {
 #wishlist_label {
     color: #333333;
     font-size: 14px;
+}
+
+/* History View Styles */
+QLineEdit#search_bar {
+    background-color: white;
+    border: 1px solid #BBDEFB;
+    border-radius: 5px;
+    padding: 5px;
+    color: black;
+}
+QLineEdit#search_bar::focus {
+    border: 2px solid #64B5F6;
+}
+
+
+QMessageBox#confirm_delete {
+    background-color: #BBDEFB;
+}
+QLabel#confirm_delete {
+    color: white;
+}
+QPushButton#confirm_delete {
+    background-color: #64B5F6;
+    color: white;
+    border-radius: 5px;
+    padding: 5px;
+    min-width: 70px;
+}
+QPushButton#confirm_delete:hover {
+    background-color: #42A5F5;
+}
+
+QDateEdit#date_edit {
+    background-color: white;
+    border: 1px solid #BBDEFB;
+    border-radius: 5px;
+    padding: 5px;
+    color: black;
+}
+QDateEdit#date_edit::drop-down {
+    subcontrol-origin: padding;
+    subcontrol-position: top right;
+    width: 20px;
+    border-left-width: 1px;
+    border-left-color: #BBDEFB;
+    border-left-style: solid;
+    border-top-right-radius: 5px;
+    border-bottom-right-radius: 5px;
+}
+QDateEdit#date_edit::down-arrow {
+    border: none;
+    width: 16px;
+    height: 16px;
+    image: url(img/down-arrow.png);
+}
+QDateEdit#date_edit::down-arrow:enabled {
+    border: none;
+    width: 16px;
+    height: 16px;
+    image: url(img/icon1.png);
+}
+QCalendarWidget#date_edit {
+    background-color: white;
+    border: 1px solid #BBDEFB;
+    border-radius: 5px;
+}
+QCalendarWidget#date_edit QToolButton {
+    background-color: #BBDEFB;
+    color: white;
+    border-radius: 5px;
+}
+QCalendarWidget#date_edit QMenu {
+    background-color: white;
+}
+
+#edit_popup {
+    background-color: #BBDEFB;
+}
+QLabel#edit_popup {
+    color: white;
+    font-size: 14px;
+}
+QSpinBox#edit_popup, QComboBox#edit_popup, QLineEdit#edit_popup {
+    background-color: white;
+    border: 1px solid #BBDEFB;
+    border-radius: 5px;
+    padding: 5px;
+}
+QCalendarWidget#edit_popup {
+    background-color: white;
+    border-radius: 5px;
 }
 
 /* Styling Income View */
@@ -501,7 +615,7 @@ QSpinBox::down-arrow {
     border-radius: 10px;
 }
 
-#Layout[class="OutcomeView"] {
+#QWidgetLayout[class="OutcomeView"] {
     background: #FFCDD2;
     border: none;
     padding: 15px;
@@ -539,7 +653,7 @@ QSpinBox::down-arrow {
 }
 
 #calendar[class="OutcomeView"] QToolButton {
-    color: #FFFFFF;
+    color: #000000;
     background-color: #EF9A9A;
     border-radius: 5px;
     padding: 5px;
@@ -656,6 +770,57 @@ QStackedWidget {
     background-color: #FFFFFF;
 }
 
+/* Category View Styles */
+#catInput {
+    background-color: #FFFFFF;
+    border: 1px solid #CCCCCC;
+    border-radius: 5px;
+    padding: 5px;
+    font-size: 14px;
+    color: #333333;
+}
+#catInput::drop-down {
+    border: none;
+}
+#catInput::down-arrow {
+    image: none;
+    border-width: 0px;
+}
+
+/* Category View Styles */
+#catInput {
+    background-color: white;
+    border: 1px solid #64B5F6;
+    border-radius: 5px;
+    padding: 5px;
+    font-size: 14px;
+}
+#catInput::drop-down {
+    border: none;
+}
+#catInput::down-arrow {
+    image: none;
+    border-width: 0px;
+}
+
+QMessageBox#popup_delete {
+    background-color: #BBDEFB;
+}
+QLabel#popup_delete {
+    color: black;
+}
+QPushButton#popup_delete {
+    background-color: #64B5F6;
+    color: white;
+    border-radius: 5px;
+    padding: 5px;
+    min-width: 70px;
+}
+QPushButton#popup_delete:hover {
+    background-color: #42A5F5;
+}
+
+
 /* Statistic View Styles */
 #iconDesignStatistic {
     QComboBox {
@@ -710,40 +875,11 @@ QStackedWidget {
     }
 }
 
-#textDesignStatistic {
-    QLabel {
-        font-family: 'Arimo';
-        font-size: 16px;
-        color: #333333;
-        font-weight: bold;
-        text-align: center;
-        border: none;
-    }
-
-    #changeValue {
-        font-family: 'Arimo';
-        font-size: 10px;
-        color: #666666;
-        font-weight: bold;
-    }
-}
-
-#chartDesignStatistic {
-    QFrame {
-        border: 10px solid #B0BEC5;
-        padding: 20px;
-        background-color: #FFFFFF;
-        border-radius: 15px;
-    }
-}
-
-#DesignStatistic {
-    QFrame {
-        border: 10px solid #B0BEC5;
-        padding: 20px;
-        background-color: #FFFFFF;
-        border-radius: 15px;
-    }
+#changeValue {
+    font-family: 'Arimo';
+    font-size: 10px;
+    color: #666666;
+    font-weight: bold;
 }
 
 #buttonDesignStatistic {

@@ -1,4 +1,5 @@
 import json
+# from controller.setting import Translation
 
 class Wishlist:
     FILE_PATH = "database/wishlist.json"
@@ -29,29 +30,45 @@ class Wishlist:
 
     def add_wishlist(self, label, price, status):
         """Menambah wishlist baru dengan ID."""
-        new_id = str(len(self.wishlists) + 1)
+
+        # validasi
+        result = self.validate_wishlist({
+            "label": label,
+            "price": price,
+            "status": status
+        })
+
+        if not result.get("valid"):
+            return result
+
         self.wishlists.append({
-            "ID": new_id,
+            "ID": len(self.wishlists) + 1,
             "label": label,
             "price": price,
             "status": status
         })
         self.save_wishlists()
-        return new_id
+        return result
 
     def edit_wishlist(self, wishlist_id, label, price, status):
         """Mengedit wishlist berdasarkan ID."""
-        updated = False
         for wishlist in self.wishlists:
             if wishlist["ID"] == wishlist_id:
+                result = self.validate_wishlist({
+                    "label": label,
+                    "price": price,
+                    "status": status
+                })
+                if not result.get("valid"):
+                    return result # Stop execution if validation fails
+
                 wishlist["label"] = label
                 wishlist["price"] = price
                 wishlist["status"] = status
-                updated = True
-                break
-        if updated:
-            self.save_wishlists()
-        return updated
+
+                self.save_wishlists()
+                return result
+        return False
 
     def delete_wishlist(self, wishlist_id):
         """Menghapus wishlist berdasarkan ID."""
@@ -72,3 +89,30 @@ class Wishlist:
         if saldo_wallet is None:
             return []
         return [wishlist for wishlist in self.wishlists if wishlist["price"] <= saldo_wallet]
+    
+    def validate_wishlist(self, wishlist_data):
+        required_fields = ['label', 'price']
+        errors = {}
+        
+        for field in required_fields:
+            if field not in wishlist_data or not wishlist_data[field]:
+                errors[field] = f"tidak boleh kosong"
+
+        if not errors:
+            if wishlist_data.get('price') < 0:
+                errors["price"] = "Jumlah saldo tidak boleh kurang dari 0."
+            elif wishlist_data.get('price') > 9_999_999_999:
+                errors["price"] = "Jumlah saldo tidak boleh lebih dari 9.999.999.999."
+
+            if not wishlist_data.get('label'):
+                errors["label"] = "tidak boleh kosong."
+            elif len(wishlist_data.get('label')) < 3:
+                errors["label"] = "harus lebih dari 3 karakter."
+            elif len(wishlist_data.get('label')) > 64:
+                errors["label"] = "tidak boleh lebih dari 20 karakter."
+            elif not wishlist_data.get('label').isalnum():
+                errors["label"] = "hanya boleh mengandung huruf dan angka."
+            elif not wishlist_data.get('label')[0].isalpha():
+                errors["label"] = "harus diawali dengan huruf."
+        
+        return {"valid": True} if not errors else {"valid": False, "errors": errors}

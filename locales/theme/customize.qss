@@ -1,5 +1,6 @@
 #QWidgetLayout, #Layout, #QFrameLayout, QScrollBar, #form_label, #groupBox {
     background-color: $saved_color;
+    border-radius: 10px;
 }
 
 #titleLabel {
@@ -10,8 +11,13 @@
     border-radius: 10px;
 }
 
-QPushButton {
+QPushButton:enabled {
     background-color: $base_color_darker130;
+}
+
+QPushButton:disabled {
+    background-color: #cccccc;
+    border: 6px solid $saved_color;
 }
 
 #container, #HomeSection, QStackedWidget, #table {

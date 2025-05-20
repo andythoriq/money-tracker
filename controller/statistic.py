@@ -6,6 +6,7 @@ from pyqtgraph import TextItem, BarGraphItem
 from datetime import datetime, timedelta
 from pyqtgraph.Qt import QtWidgets
 import calendar
+# from controller.setting import Translation
 
 class Statistic:
     def __init__(self):

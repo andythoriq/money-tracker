@@ -23,7 +23,7 @@ class CategoryView(QWidget):
 
         # Content Container
         content_widget = QWidget()
-        content_widget.setObjectName("Layout")
+        content_widget.setObjectName("QWidgetLayout")
         content_layout = QVBoxLayout(content_widget)
         content_layout.setContentsMargins(20, 20, 20, 20)
         content_layout.setSpacing(15)
@@ -39,7 +39,7 @@ class CategoryView(QWidget):
         self.name_label.setObjectName("form_label")
 
         self.input_name = QLineEdit()
-        self.input_name.setObjectName("wishlist_input")
+        self.input_name.setObjectName("input")
         self.input_name.setPlaceholderText("Category Name")
         self.input_name.setFixedWidth(400)
 
@@ -48,22 +48,7 @@ class CategoryView(QWidget):
 
         self.input_type = QComboBox()
         self.input_type.addItems(["income", "outcome"])
-        self.input_type.setStyleSheet("""
-            QComboBox {
-                background-color: white;
-                border: 1px solid #7A9F60;
-                border-radius: 5px;
-                padding: 5px;
-                font-size: 14px;
-            }
-            QComboBox::drop-down {
-                border: none;
-            }
-            QComboBox::down-arrow {
-                image: none;
-                border-width: 0px;
-            }
-        """)
+        self.input_type.setObjectName("catInput")
 
         self.btn_add = QPushButton("Add Category")
         self.btn_add.setObjectName("add_button")
@@ -105,35 +90,19 @@ class CategoryView(QWidget):
         """Menambahkan kategori baru"""
         name = self.input_name.text().strip()
         category_type = self.input_type.currentIndex()
+        type = ["income", "outcome"]
+        category_type = type[category_type]
 
-        if not name:
-            msg = QMessageBox()
-            msg.setStyleSheet("""
-                QMessageBox {
-                    background-color: #98C379;
-                }
-                QLabel {
-                    color: white;
-                }
-                QPushButton {
-                    background-color: #4CAF50;
-                    color: white;
-                    border-radius: 5px;
-                    padding: 5px;
-                    min-width: 70px;
-                }
-                QPushButton:hover {
-                    background-color: #45a049;
-                }
-            """)
-            msg.setWindowTitle("Warning")
-            msg.setText("Category name cannot be empty!")
-            msg.exec_()
-            return
+        result = self.category_controller.add_category(name, category_type)
 
-        self.category_controller.add_category(name, category_type)
-        self.input_name.clear()
-        self.load_categories()
+        if result.get("valid"):
+            self.input_name.clear()
+            self.load_categories()
+            PopupSuccess("Success", "Category berhasil disimpan!")
+        else:
+            errors = result.get("errors")
+            error_message = "\n".join([f"{key}: {value}" for key, value in errors.items()])
+            PopupWarning("Warning", f"Gagal menyimpan wallet!\n{error_message}")
 
     def load_categories(self):
         """Memuat ulang data kategori ke tabel"""
@@ -151,30 +120,14 @@ class CategoryView(QWidget):
             # Tombol Delete
             self.btn_delete = QPushButton("Delete")
             self.btn_delete.setFixedWidth(80)
-            self.btn_delete.setObjectName("Delete")            
+            self.btn_delete.setObjectName("Delete")  
+            self.btn_delete.clicked.connect(lambda _, n=name, t=category_type: self.confirm_delete(n,t))
             self.table.setCellWidget(row_idx, 2, self.btn_delete)
 
     def confirm_delete(self, name, category_type):
         """Popup konfirmasi sebelum menghapus kategori"""
         msg = QMessageBox()
-        msg.setStyleSheet("""
-            QMessageBox {
-                background-color: #98C379;
-            }
-            QLabel {
-                color: white;
-            }
-            QPushButton {
-                background-color: #4CAF50;
-                color: white;
-                border-radius: 5px;
-                padding: 5px;
-                min-width: 70px;
-            }
-            QPushButton:hover {
-                background-color: #45a049;
-            }
-        """)
+        msg.setObjectName("popup_delete")
         msg.setWindowTitle("Delete Category")
         msg.setText(f"Are you sure you want to delete '{name}'?")
         msg.setStandardButtons(QMessageBox.Yes | QMessageBox.No)

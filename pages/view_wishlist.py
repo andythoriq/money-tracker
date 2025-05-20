@@ -30,7 +30,7 @@ class WishlistView(QWidget):
 
         # Content container with green background
         content_widget = QWidget()
-        content_widget.setObjectName("Layout")
+        content_widget.setObjectName("QWidgetLayout")
         content_layout = QVBoxLayout(content_widget)
         content_layout.setContentsMargins(30, 30, 30, 30)
         content_layout.setSpacing(20)
@@ -47,7 +47,7 @@ class WishlistView(QWidget):
         form_layout.addWidget(self.name_label)
         
         self.name_input = QLineEdit()
-        self.name_input.setObjectName("wishlist_input")
+        self.name_input.setObjectName("input")
         self.name_input.setPlaceholderText("Nama Target")
         self.name_input.setFixedWidth(400)
         form_layout.addWidget(self.name_input)
@@ -58,7 +58,7 @@ class WishlistView(QWidget):
         form_layout.addWidget(self.price_label)
         
         self.price_input = QSpinBox()
-        self.price_input.setObjectName("wishlist_input")
+        self.price_input.setObjectName("input")
         self.price_input.setRange(0, 100_000_000)
         self.price_input.setSingleStep(50_000)
         self.price_input.setPrefix("Rp ")
@@ -88,7 +88,7 @@ class WishlistView(QWidget):
         self.fulfilled_status = QRadioButton("Sudah Terpenuhi")
 
         for radio in [self.all_status, self.unfulfilled_status, self.fulfilled_status]:
-            radio.setObjectName("wishlist_radio")
+            radio.setObjectName("radio_button")
             status_layout.addWidget(radio)
 
         self.all_status.setChecked(True)
@@ -183,7 +183,7 @@ class WishlistView(QWidget):
 
         self.load_wishlists()  # Muat ulang daftar wishlist
         self.name_input.clear()
-        self.price_input.setValue(1)
+        self.price_input.setValue(0)
 
 
     def show_edit_dialog(self, wishlist_id):
