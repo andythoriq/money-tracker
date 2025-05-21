@@ -152,7 +152,7 @@ class PemulihanScreen(QtWidgets.QWidget):
                 font-weight: bold;
             }
         """)
-        self.recover_button.clicked.connect(lambda: self.stack.setCurrentIndex(self.stack.currentIndex() + 1))
+        self.recover_button.clicked.connect(self.validate_otp)
         button_layout.addWidget(self.recover_button)
         
         main_layout.addLayout(button_layout)
