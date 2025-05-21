@@ -66,6 +66,7 @@ QLineEdit {
     font: 24pt;
     color: #333333;
     padding-left: 10px;
+    font-family: Subway;
 }
 
 #logoApp {
@@ -81,8 +82,8 @@ QLineEdit {
     background-color: #BBDEFB;
     text-align: left;
     padding-left: 20px;
-    font-family: Inter;
-    font: 18pt;
+    font-family: "Progress ORDIN";
+    font: 14pt;
     color: #333333;
     border-radius: 15px;
 }
@@ -123,6 +124,7 @@ QLineEdit {
 #titleLabel {
     background-color: #BBDEFB;
     font: 24pt;
+    font-family: Subway;
     color: #333333;
     padding: 15px;
     border-radius: 10px;

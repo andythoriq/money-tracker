@@ -78,6 +78,7 @@ QLineEdit {
     font: 24pt;
     color: white;
     padding-left: 10px;
+    font-family: Subway;
 }
 
 /* Logo Section */
@@ -91,8 +92,8 @@ QLineEdit {
     background-color: #444444; /* Dark gray */
     text-align: left;
     padding-left: 20px;
-    font-family: Inter;
-    font: 18pt;
+    font-family: "Progress ORDIN";
+    font: 14pt;
     color: white;
     border-radius: 15px;
 }
@@ -179,6 +180,7 @@ QScrollBar {
 #titleLabel {
     background-color: #333333;
     font: 24pt;
+    font-family: Subway;
     color: white;
     padding: 15px;
     border-radius: 10px;

@@ -4,7 +4,7 @@ import sys
 from pages.view_login import LoginScreen
 from pages.view_register import RegisterScreen
 from pages.view_otpbaru import Ui_accotp
-from pages.view_pemulihan import PemulihanScreen
+from pages.view_pemulihan import Ui_pemulihan
 
 
 class OnboardingScreen(QWidget):
@@ -15,7 +15,6 @@ class OnboardingScreen(QWidget):
     def init_ui(self):
         self.setWindowTitle("Money Tracker Onboarding")
         self.setGeometry(100, 100, 360, 640)
-        self.setStyleSheet("background-color: #1c1f26;")
 
         # QStackedWidget
         self.stack = QStackedWidget(self)
@@ -35,12 +34,11 @@ class OnboardingScreen(QWidget):
 
         # Tambahkan halaman ke stack
         self.otp_backend = Ui_accotp(self.stack, key_dict, user_data)
+        self.forget_view = Ui_pemulihan(self.stack)
         self.login_view = LoginScreen(self.stack)
         self.register_view = RegisterScreen(self.stack, user_data)
         self.register_email = self.register_view.register_email_view(user_data)
         self.register_password = self.register_view.register_password_view()
-        self.forgetPass_view = PemulihanScreen(self.stack, key_dict, user_data)
-        self.forgetPass_password_view = self.forgetPass_view.new_password_UI()
 
         self.stack.addWidget(self.main_menu_widget)
         self.stack.addWidget(self.login_view)
@@ -48,8 +46,7 @@ class OnboardingScreen(QWidget):
         self.stack.addWidget(self.register_email)
         self.stack.addWidget(self.register_password)
         self.stack.addWidget(self.otp_backend)
-        self.stack.addWidget(self.forgetPass_view)
-        self.stack.addWidget(self.forgetPass_password_view)
+        self.stack.addWidget(self.forget_view)
 
         # Layout utama window
         main_layout = QtWidgets.QVBoxLayout(self)

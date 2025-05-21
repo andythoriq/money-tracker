@@ -104,18 +104,36 @@ class CategoryView(QWidget):
     def add_category(self):
         """Menambahkan kategori baru"""
         name = self.input_name.text().strip()
-        category_type = self.input_type.currentText()
+        category_type = self.input_type.currentIndex()
 
-        result = self.category_controller.add_category(name, category_type)
+        if not name:
+            msg = QMessageBox()
+            msg.setStyleSheet("""
+                QMessageBox {
+                    background-color: #98C379;
+                }
+                QLabel {
+                    color: white;
+                }
+                QPushButton {
+                    background-color: #4CAF50;
+                    color: white;
+                    border-radius: 5px;
+                    padding: 5px;
+                    min-width: 70px;
+                }
+                QPushButton:hover {
+                    background-color: #45a049;
+                }
+            """)
+            msg.setWindowTitle("Warning")
+            msg.setText("Category name cannot be empty!")
+            msg.exec_()
+            return
 
-        if result.get("valid"):
-            self.input_name.clear()
-            self.load_categories()
-            PopupSuccess("Success", "Category berhasil disimpan!")
-        else:
-            errors = result.get("errors")
-            error_message = "\n".join([f"{key}: {value}" for key, value in errors.items()])
-            PopupWarning("Warning", f"Gagal menyimpan wallet!\n{error_message}")
+        self.category_controller.add_category(name, category_type)
+        self.input_name.clear()
+        self.load_categories()
 
     def load_categories(self):
         """Memuat ulang data kategori ke tabel"""

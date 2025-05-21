@@ -268,7 +268,7 @@ QLineEdit {
 }
 
 #wishlist_label {
-    color: white;
+    color: black;
     font-size: 14px;
 }
 
