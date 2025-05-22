@@ -102,6 +102,12 @@
       "col4": "Status",
       "col5": "Editar",
       "col6": "Excluir"
+    },
+    "comparator" : {
+      "type1": "Receita",
+      "type2": "Despesa",
+      "status0": "Não Realizado",
+      "status1": "ZrealiRealizadozowane"
     }
   }
   

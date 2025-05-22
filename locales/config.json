@@ -1,4 +1,5 @@
 {
-    "language": "id",
-    "theme_color": "dark"
+    "remote_language": "japanese",
+    "local_language": "en",
+    "theme_color": "mono"
 }

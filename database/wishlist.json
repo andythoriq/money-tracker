@@ -4,11 +4,5 @@
         "label": "asa",
         "price": 2000000,
         "status": true
-    },
-    {
-        "ID": 3,
-        "label": "asas",
-        "price": 100000,
-        "status": false
     }
 ]

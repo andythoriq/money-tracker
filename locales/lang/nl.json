@@ -102,6 +102,12 @@
       "col4": "Status",
       "col5": "Bewerken",
       "col6": "Verwijderen"
+    },
+    "comparator" : {
+      "type1": "Inkomsten",
+      "type2": "Uitgaven",
+      "status0": "Niet Voltooid",
+      "status1": "Voltooid"
     }
   }
   

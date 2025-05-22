@@ -102,5 +102,11 @@
         "col4": "Status",
         "col5": "Edit",
         "col6": "Hapus"
+    },
+    "comparator" : {
+      "type1": "Income",
+      "type2": "Outcome",
+      "status0": "Belum Terpenuhi",
+      "status1": "Sudah Terpenuhi"
     }
 }

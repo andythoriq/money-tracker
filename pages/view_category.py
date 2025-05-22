@@ -126,7 +126,7 @@ class CategoryView(QWidget):
 
     def confirm_delete(self, name, category_type):
         """Popup konfirmasi sebelum menghapus kategori"""
-        msg = QMessageBox()
+        msg = QMessageBox(self)
         msg.setObjectName("popup_delete")
         msg.setWindowTitle("Delete Category")
         msg.setText(f"Are you sure you want to delete '{name}'?")

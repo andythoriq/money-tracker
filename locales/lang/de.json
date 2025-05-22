@@ -102,6 +102,12 @@
       "col4": "Status",
       "col5": "Bearbeiten",
       "col6": "Löschen"
+    },
+    "comparator" : {
+      "type1": "Einnahmen",
+      "type2": "Ausgaben",
+      "status0": "Nicht erfüllt",
+      "status1": "Erfüllt"
     }
   }
   

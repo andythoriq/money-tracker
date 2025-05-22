@@ -24,6 +24,11 @@ class Dashboard(QWidget):
         """Inisialisasi tampilan UI utama"""
         self.setWindowTitle("Money Tracker")
 
+        self.theme_handler = Setting()
+        self.config = Setting.load_config()
+        self.setStyleSheet(self.theme_handler.load_theme(Setting.load_config()["theme_color"]))        
+        self.language_data = Setting.load_language_file(self.config.get("local_language"))
+
         self.slider_controller = SlidingWalletWidget(self)
 
         # Stack untuk menyimpan berbagai halaman
@@ -34,14 +39,6 @@ class Dashboard(QWidget):
         self.container.setObjectName("container")
         self.container.setSizePolicy(QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Expanding)
         self.container.setMinimumSize(0, 0)
-
-        self.config = Setting.load_config()
-        self.language_data = Setting.load_language_file(self.config.get("language"))
-        theme_handler = Setting(self)
-        theme_handler.load_theme(self.config["theme_color"])
-
-        theme_handler = Setting(self)
-        theme_handler.load_theme(self.config["theme_color"])
 
         # Sidebar kiri (HomeSection)
         self.HomeSection = QGroupBox()
@@ -179,7 +176,7 @@ class Dashboard(QWidget):
         self.language.setObjectName("cb_lang")
         languages = Setting.get_available_languages()
         self.language.addItems(languages)
-        self.language.setCurrentIndex(self.language.findText(self.config.get("language")))
+        self.language.setCurrentIndex(self.language.findText(self.config.get("local_language")))
         self.language.currentIndexChanged.connect(self.change_language)
 
         self.btn_theme = QPushButton(self.HomeSection)
@@ -193,7 +190,6 @@ class Dashboard(QWidget):
         self.label.setObjectName("label")
 
         self.retranslateView()
-        self.retranslateUi()
 
         # Atur ulang posisi dan ukuran tombol saat pertama kali dijalankan
         self.update_button_geometry()
@@ -232,69 +228,7 @@ class Dashboard(QWidget):
         # Sembunyikan header vertikal
         self.history_table.verticalHeader().setVisible(False)
 
-        # Muat data transaksi dari HistoryView
-        transactions = []
-        
-        # mengambil data dari income dan outcome controller dan menggunakannya dalam satu list
-        for income in self.history_view.income_controller.load_incomes():
-            transactions.append({
-                "date": income.get('date'),
-                "type": "income",
-                "amount": income.get('amount'),
-                "category": income.get('category'),
-                "wallet": income.get('wallet')
-            })
-
-        for outcome in self.history_view.outcome_controller.load_outcomes():
-            transactions.append({
-                "date": outcome.get('date'),
-                "type": "outcome",
-                "amount": outcome.get('amount'),
-                "category": outcome.get('category'),
-                "wallet": outcome.get('wallet')
-            })
-
-        # menyortir transaksi berdasarkan tanggal
-        from datetime import datetime
-        transactions.sort(key=lambda x: datetime.strptime(x["date"], "%d/%m/%Y"), reverse=True)
-        
-        # filter transaksi yang terjadi dalam seminggu terakhir
-        from datetime import datetime, timedelta
-        today = datetime.now()
-        one_week_ago = today - timedelta(days=7)
-        
-        this_week_transactions = []
-        for t in transactions:
-            try:
-                transaction_date = datetime.strptime(t["date"], "%d/%m/%Y")
-                if transaction_date >= one_week_ago:
-                    this_week_transactions.append(t)
-            except ValueError:
-                # Skip transaksi ketika tidak sesuai format
-                print(f"Invalid date format: {t['date']}")
-                continue
-        
-        # Hanya ambil 10 transaksi terbaru
-        recent_transactions = this_week_transactions[:10]
-        
-        # Update table
-        self.history_table.setRowCount(len(recent_transactions))
-        
-        for row, transaction in enumerate(recent_transactions):
-            self.history_table.setItem(row, 0, QTableWidgetItem(transaction["date"]))  # Tanggal
-            self.history_table.setItem(row, 1, QTableWidgetItem(transaction["type"]))  # Jenis
-            self.history_table.setItem(row, 2, QTableWidgetItem(f"Rp {str(transaction['amount'])}"))  # Jumlah
-            self.history_table.setItem(row, 3, QTableWidgetItem(transaction["category"]))  # Kategori
-            self.history_table.setItem(row, 4, QTableWidgetItem(transaction["wallet"]))  # Dompet
-
-        # Menambahkan tombol "View All" di bawah tabel
-        self.view_all_btn = QPushButton("View All")
-        self.view_all_btn.setObjectName("btn_slidenext")
-        self.view_all_btn.clicked.connect(lambda: (
-            self.history_view.load_data("all"),
-            self.history_view.radio_all.setChecked(True),
-            self.stack.setCurrentWidget(self.history_view)
-        ))
+        self.load_history_table(self.language_data["comparator"])
 
         layout.addWidget(self.history_table)
         layout.addWidget(self.view_all_btn, alignment=QtCore.Qt.AlignRight)
@@ -335,25 +269,8 @@ class Dashboard(QWidget):
         # Sembunyikan header vertikal
         self.wishlist_table.verticalHeader().setVisible(False)
         
-        # Muat data wishlist
-        wishlists = self.wishlist_view.wishlist_controller.wishlists
-        
-        # Set jumlah baris maksimal 4
-        self.wishlist_table.setRowCount(min(len(wishlists), 4))
-        
-        # Hanya tampilkan 4 data pertama
-        for row, wishlist in enumerate(wishlists[:4]):
-            if len(wishlist) < 4:  # Periksa apakah data lengkap
-                continue
-                
-            self.wishlist_table.setItem(row, 0, QTableWidgetItem(str(wishlist.get('ID'))))
-            self.wishlist_table.setItem(row, 1, QTableWidgetItem(wishlist.get('label')))
-            self.wishlist_table.setItem(row, 2, QTableWidgetItem(str(wishlist.get('price'))))
-            
-            # Konversi status dari boolean ke text
-            status_text = "Sudah Terpenuhi" if wishlist.get('status') else "Belum Terpenuhi"
-            self.wishlist_table.setItem(row, 3, QTableWidgetItem(status_text))
-        
+        self.load_wishlist_table(self.language_data["comparator"])
+
         layout.addWidget(self.wishlist_table)
         self.layout_4.setLayout(layout)
 
@@ -577,15 +494,101 @@ class Dashboard(QWidget):
 
     def change_language(self):
         """Mengubah bahasa UI berdasarkan bahasa yang dipilih"""
-        self.config["language"] = self.language.currentText()
+        self.config["local_language"] = self.language.currentText()
         Setting.save_config(self.config)
         self.language_data = Setting.load_language_file(self.language.currentText())
         self.retranslateView()
-        self.retranslateUi()
+
+    def load_history_table(self, type = ""):
+        # Muat data transaksi dari HistoryView
+        transactions = []
+        
+        # mengambil data dari income dan outcome controller dan menggunakannya dalam satu list
+        for income in self.history_view.income_controller.load_incomes():
+            transactions.append({
+                "date": income.get('date'),
+                "type": "income",
+                "amount": income.get('amount'),
+                "category": income.get('category'),
+                "wallet": income.get('wallet')
+            })
+
+        for outcome in self.history_view.outcome_controller.load_outcomes():
+            transactions.append({
+                "date": outcome.get('date'),
+                "type": "outcome",
+                "amount": outcome.get('amount'),
+                "category": outcome.get('category'),
+                "wallet": outcome.get('wallet')
+            })
+
+        # menyortir transaksi berdasarkan tanggal
+        from datetime import datetime
+        transactions.sort(key=lambda x: datetime.strptime(x["date"], "%d/%m/%Y"), reverse=True)
+        
+        # filter transaksi yang terjadi dalam seminggu terakhir
+        from datetime import datetime, timedelta
+        today = datetime.now()
+        one_week_ago = today - timedelta(days=7)
+        
+        this_week_transactions = []
+        for t in transactions:
+            try:
+                transaction_date = datetime.strptime(t["date"], "%d/%m/%Y")
+                if transaction_date >= one_week_ago:
+                    this_week_transactions.append(t)
+            except ValueError:
+                # Skip transaksi ketika tidak sesuai format
+                print(f"Invalid date format: {t['date']}")
+                continue
+        
+        # Hanya ambil 10 transaksi terbaru
+        recent_transactions = this_week_transactions[:10]
+        
+        # Update table
+        self.history_table.setRowCount(len(recent_transactions))
+        
+        for row, transaction in enumerate(recent_transactions):
+            transaction["type"] = type["type1"] if transaction["type"] == "income" else type["type2"]
+            self.history_table.setItem(row, 0, QTableWidgetItem(transaction["date"]))  # Tanggal
+            self.history_table.setItem(row, 1, QTableWidgetItem(transaction["type"]))  # Jenis
+            self.history_table.setItem(row, 2, QTableWidgetItem(f"Rp {str(transaction['amount'])}"))  # Jumlah
+            self.history_table.setItem(row, 3, QTableWidgetItem(transaction["category"]))  # Kategori
+            self.history_table.setItem(row, 4, QTableWidgetItem(transaction["wallet"]))  # Dompet
+
+        # Menambahkan tombol "View All" di bawah tabel
+        self.view_all_btn = QPushButton("View All")
+        self.view_all_btn.setObjectName("btn_slidenext")
+        self.view_all_btn.clicked.connect(lambda: (
+            self.history_view.load_data("all"),
+            self.history_view.radio_all.setChecked(True),
+            self.stack.setCurrentWidget(self.history_view)
+        ))
+        
+    def load_wishlist_table(self, status = ""):
+        # Muat data wishlist
+        wishlists = self.wishlist_view.wishlist_controller.wishlists
+        
+        # Set jumlah baris maksimal 4
+        self.wishlist_table.setRowCount(min(len(wishlists), 4))
+        
+        # Hanya tampilkan 4 data pertama
+        for row, wishlist in enumerate(wishlists[:4]):
+            if len(wishlist) < 4:  # Periksa apakah data lengkap
+                continue
+                
+            self.wishlist_table.setItem(row, 0, QTableWidgetItem(str(wishlist.get('ID'))))
+            self.wishlist_table.setItem(row, 1, QTableWidgetItem(wishlist.get('label')))
+            self.wishlist_table.setItem(row, 2, QTableWidgetItem(str(wishlist.get('price'))))
+            
+            # Konversi status dari boolean ke text
+            status_text = status["status1"] if wishlist.get('status') else status["status0"]
+            self.wishlist_table.setItem(row, 3, QTableWidgetItem(status_text))
 
     def retranslateView(self):
         index_aktif = self.stack.currentIndex()
         if index_aktif >= 0:
+            self.retranslateUi()
             self.income_view.retranslateUi(self.language_data)
             self.outcome_view.retranslateUi(self.language_data)
             self.wallet_view.retranslateUi(self.language_data)
@@ -614,7 +617,7 @@ class Dashboard(QWidget):
                 self.language_data.get("dashboard", {}).get("l2col5", "Dompet")
                 ]
                 )
-            self.view_all_btn.setText(_translate("Form", self.language_data.get("dashboard", {}).get("l2btn", "")))
+            self.view_all_btn.setText(_translate("Form", self.language_data.get("dashboard", {}).get("l2btn", "View All")))
             self.statistic_label.setText(_translate("Form", self.language_data.get("dashboard", {}).get("layout3", "Informasi keuanganmu untuk minggu ini")))
             self.title.setText(_translate("Form", self.language_data.get("dashboard", {}).get("layout4", "Wishlist")))
             self.wishlist_table.setHorizontalHeaderLabels(
@@ -626,6 +629,8 @@ class Dashboard(QWidget):
                 ]
                 )
             self.label.setText(_translate("Form", "v1.2"))
+            self.load_wishlist_table(self.language_data["comparator"])
+            self.load_history_table(self.language_data["comparator"])
         else:
             self.setWindowTitle(_translate("Form", "Money Tracker"))
             self.btn_income.setText(_translate("Form", " Edit Income"))
@@ -638,5 +643,7 @@ class Dashboard(QWidget):
             self.label.setText(_translate("Form", "v1.2"))
 
     def open_settings(self):
-        self.settings_window = SettingsWindow(self)
-        self.settings_window.exec_()  # Gunakan show() kalau ingin non-modal
+        settings_window = SettingsWindow(self)
+        if settings_window.exec_():
+            self.retranslateUi()
+            self.setStyleSheet(self.theme_handler.load_theme(Setting.load_config()["theme_color"]))

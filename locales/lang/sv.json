@@ -102,6 +102,12 @@
       "col4": "Status",
       "col5": "Redigera",
       "col6": "Ta bort"
+    },
+    "comparator" : {
+      "type1": "Inkomst",
+      "type2": "Utgift",
+      "status0": "Inte uppfyllt",
+      "status1": "Uppfyllt"
     }
   }
   

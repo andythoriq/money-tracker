@@ -263,7 +263,6 @@ class HistoryView(QWidget):
 
         # Tombol Simpan
         self.btn_save = QPushButton("Simpan")
-        self.btn_save.setObjectName("Edit")
         self.btn_save.clicked.connect(lambda: self.save_edit(transaction, amount_input, category_input, wallet_input, desc_input, date_input, dialog))
         layout.addRow(self.btn_save)
 
@@ -291,7 +290,7 @@ class HistoryView(QWidget):
 
     def confirm_delete(self, transaction):
         """Konfirmasi Delete"""
-        msg = QMessageBox()
+        msg = QMessageBox(self)
         msg.setObjectName("confirm_delete")
         msg.setWindowTitle("Konfirmasi Hapus")
         msg.setText(f"Apakah Anda yakin ingin menghapus transaksi {transaction['type']} dengan jumlah Rp {transaction['amount']}?")

@@ -11,6 +11,13 @@ import json, os, sys, requests
 from googletrans import Translator, LANGUAGES
 from PyQt5.QtGui import QColor, QIcon
 
+# Get the path to the 'config.json' file located in the 'locales' folder
+CONFIG_FILE = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "locales", "config.json"))
+LOCALE_DIR = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "locales", "lang"))
+THEME_DIR = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "locales", "theme"))
+SRC_FILE = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "locales", "lang", "en.json"))
+
+
 # ====== API Translation Function ======
 def translate_text(text, target_lang):
     source_lang = "en"
@@ -25,7 +32,7 @@ def translate_text(text, target_lang):
         return f"[Translation Error: {e}]"
 
 # ====== Language Selection Dialog ======
-class LanguageDialog(QDialog):
+class RemoteLanguageDialog(QDialog):
     def __init__(self, parent=None):
         super().__init__(parent)
         self.setWindowTitle("Pilih Bahasa")
@@ -75,14 +82,9 @@ class InternetChecker(QObject):
             self.internetStatusChanged.emit(True)
         reply.deleteLater()
 
-# Get the path to the 'config.json' file located in the 'locales' folder
-CONFIG_FILE = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "locales", "config.json"))
-LOCALE_DIR = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "locales", "lang"))
-THEME_DIR = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "locales", "theme"))
-
 class Setting:
-    def __init__(self, view=None):
-        self.view = view
+    def __init__(self):
+        pass
 
     def load_config():
         try:
@@ -90,7 +92,7 @@ class Setting:
                 return json.load(f)
         except FileNotFoundError:
             # Default config values when the file doesn't exist
-            return {"language": "en", "theme_color": "light"}
+            return {"local_language": "default", "theme_color": "light"}
 
     def save_config(config):
         # Ensure the directory exists before writing to the file
@@ -129,7 +131,19 @@ class Setting:
         if os.path.exists(path):
             with open(path, "r") as file:
                 qss = file.read()
-                self.view.setStyleSheet(qss)
+                if theme == "customize":
+                    # Load warna yang tersimpan untuk tombol ini
+                    self.settings = QSettings("Kelompok1A", "MoneyTracker")
+                    saved_color = self.settings.value("global_color", '')
+                    base_color = QColor(saved_color)
+
+                    # Gantikan placeholder dengan nilai warna aktual
+                    qss = qss.replace("$saved_color", saved_color)
+                    qss = qss.replace("$base_color_darker130", base_color.darker(130).name())
+                    qss = qss.replace("$base_color_darker140", base_color.darker(140).name())
+                    qss = qss.replace("$base_color_darker150", base_color.darker(150).name())
+                    qss = qss.replace("$base_color_lighter150", base_color.lighter(150).name())
+                return qss
         else:
             print(f"Warning: Stylesheet {path} not found!")
 
@@ -137,12 +151,12 @@ class Setting:
 class SettingsWindow(QDialog):
     def __init__(self, parent=None):
         super().__init__(parent)
-        self.parent_window = parent # simpan referensi pemanggil
         self.setWindowTitle("Settings")
 
         # Buat settings
         self.settings = QSettings("Kelompok1A", "MoneyTracker")
-        self.logic = Setting(self.parent_window)
+        self.logic = Setting()
+        self.config = Setting.load_config()
 
         # UI
         layout = QVBoxLayout()
@@ -186,9 +200,9 @@ class SettingsWindow(QDialog):
         self.dark_button = QPushButton(QIcon("img/icon/dark.svg"), "Dark")
         self.light_button = QPushButton(QIcon("img/icon/light.svg"), "Light")
         self.mono_button = QPushButton(QIcon("img/icon/mono.svg"), "Mono")
-        self.dark_button.clicked.connect(lambda : self.logic.load_theme("dark"))
-        self.light_button.clicked.connect(lambda : self.logic.load_theme("light"))
-        self.mono_button.clicked.connect(lambda : self.logic.load_theme("mono"))
+        self.dark_button.clicked.connect(lambda : self.set_dark_theme())
+        self.light_button.clicked.connect(lambda : self.set_light_theme())
+        self.mono_button.clicked.connect(lambda : self.set_mono_theme())
 
         layout_theme.addWidget(self.dark_button)
         layout_theme.addWidget(self.light_button)
@@ -214,18 +228,21 @@ class SettingsWindow(QDialog):
         layout.addWidget(self.buttonBox)
         self.setLayout(layout)
 
-    def load_and_apply_qss(self, window, base_color: QColor, saved_color: str, path="locales/theme/customize.qss"):
-        with open(path, "r") as file:
-            qss = file.read()
+    def set_dark_theme(self):
+        self.config["theme_color"] = "dark"
+        Setting.save_config(self.config)
 
-        # Gantikan placeholder dengan nilai warna aktual
-        qss = qss.replace("$saved_color", saved_color)
-        qss = qss.replace("$base_color_darker130", base_color.darker(130).name())
-        qss = qss.replace("$base_color_darker140", base_color.darker(140).name())
-        qss = qss.replace("$base_color_darker150", base_color.darker(150).name())
-        qss = qss.replace("$base_color_lighter150", base_color.lighter(150).name())
+    def set_light_theme(self):
+        self.config["theme_color"] = "light"
+        Setting.save_config(self.config)
 
-        window.setStyleSheet(qss)
+    def set_mono_theme(self):
+        self.config["theme_color"] = "mono"
+        Setting.save_config(self.config)
+
+    def set_custom_theme(self):
+        self.config["theme_color"] = "customize"
+        Setting.save_config(self.config)
 
     def check_internet(self):
         self.label.setText("Status koneksi: Memeriksa...")
@@ -240,7 +257,7 @@ class SettingsWindow(QDialog):
             self.lang_btn.setEnabled(False)
 
     def open_language_settings(self):
-        dialog = LanguageDialog(self)
+        dialog = RemoteLanguageDialog(self)
         if dialog.exec_():
             lang_code = dialog.selected_language_code()
             self.settings.setValue("language", lang_code)
@@ -259,12 +276,7 @@ class SettingsWindow(QDialog):
         dialog.colorSelected.connect(lambda color: self.save_color(color))
         dialog.open()
         if dialog.exec_():
-            # Load warna yang tersimpan untuk tombol ini
-            color_key = "global_color"
-            saved_color = self.settings.value(color_key, '')
-            base_color = QColor(saved_color)
-            self.load_and_apply_qss(self.parent_window, base_color, saved_color)
-
+            self.set_custom_theme()
 
     def preview_color(self, color):
         self.btn.setStyleSheet(f"background-color: {color.name()};")
@@ -274,82 +286,48 @@ class SettingsWindow(QDialog):
         self.settings.setValue("global_color", color_name)
 
 class Translation:
-    FILE_PATH = "locales/lang/en.json"
+    FILE_PATH = ".../locales/lang/en.json"
 
     def __init__(self):
         super().__init__()
         self.translator = Translator()
         self.load_json_texts()
-        self.init_ui()
+        self.refresh_language()
 
     def load_json_texts(self):
         try:
-            base_dir = os.path.dirname(os.path.abspath(__file__))
-            json_path = os.path.join(base_dir, self.FILE_PATH)
-
-            with open(json_path, "r", encoding="utf-8") as f:
+            with open(SRC_FILE, "r", encoding="utf-8") as f:
                 self.json_texts = json.load(f)
 
         except Exception as e:
             print(f"Error loading JSON: {e}")
 
     def init_ui(self):
-        layout = QVBoxLayout()
+        pass
+        # layout = QVBoxLayout()
 
-        # Tampilkan 3 label contoh dari JSON
-        self.label1 = QLabel(self.json_texts.get("label1", ""))
-        self.label2 = QLabel(self.json_texts.get("label2", ""))
-        self.label3 = QLabel(self.json_texts.get("label3", ""))
+        # lang_names = list(LANGUAGES.values())
 
-        layout.addWidget(self.label1)
-        layout.addWidget(self.label2)
-        layout.addWidget(self.label3)
+        # # Language selection
+        # lang_layout = QHBoxLayout()
+        # self.target_lang = QComboBox()
+        # self.target_lang.addItems(lang_names)
+        # self.target_lang.setCurrentText("english")
+        # self.target_lang.currentIndexChanged.connect(self.save_remote)
+        # lang_layout.addWidget(self.target_lang)
+        # layout.addLayout(lang_layout)
 
-        # Input text
-        self.input_text = QTextEdit()
-        self.input_text.setPlaceholderText("Enter text here...")
-        layout.addWidget(QLabel("Original Text:"))
-        layout.addWidget(self.input_text)
+        # # Translate button
+        # self.translate_btn = QPushButton("Translate All JSON Values")
+        # self.translate_btn.clicked.connect(self.translate_all_json_texts)
+        # layout.addWidget(self.translate_btn)
 
-        # Language selection
-        lang_layout = QHBoxLayout()
-        self.source_lang = QComboBox()
-        self.target_lang = QComboBox()
-
-        lang_names = list(LANGUAGES.values())
-        self.source_lang.addItems(["auto"] + lang_names)
-        self.target_lang.addItems(lang_names)
-
-        self.source_lang.setCurrentText("auto")
-        self.target_lang.setCurrentText("english")
-
-        lang_layout.addWidget(QLabel("From:"))
-        lang_layout.addWidget(self.source_lang)
-        lang_layout.addWidget(QLabel("To:"))
-        lang_layout.addWidget(self.target_lang)
-        layout.addLayout(lang_layout)
-
-        # Translate button
-        self.translate_btn = QPushButton("Translate All JSON Values")
-        self.translate_btn.clicked.connect(self.translate_all_json_texts)
-        layout.addWidget(self.translate_btn)
-
-        # Output text
-        self.output_text = QTextEdit()
-        self.output_text.setReadOnly(True)
-        layout.addWidget(QLabel("Translated JSON Values:"))
-        layout.addWidget(self.output_text)
-
-        self.setLayout(layout)
+        # self.setLayout(layout)
 
     def translate_all_json_texts(self):
-        src = self.get_lang_code(self.source_lang.currentText())
-        dest = self.get_lang_code(self.target_lang.currentText())
-
+        self.refresh_language(self)
         try:
-            translated_json = self.recursive_translate(self.json_texts, src, dest)
-            formatted = json.dumps(translated_json, indent=2, ensure_ascii=False)
-            self.output_text.setText(formatted)
+            translated_json = self.recursive_translate(self.json_texts)
 
             # OPTIONAL: Simpan hasil ke file
             save_path = f"locales/lang/online.json"
@@ -357,25 +335,36 @@ class Translation:
                 json.dump(translated_json, f, ensure_ascii=False, indent=2)
             print(f"Translated JSON saved to: {save_path}")
         except Exception as e:
-            self.output_text.setText(f"Error: {e}")
+            print(f"Error: {e}")
 
-    def recursive_translate(self, data, src, dest):
+    def recursive_translate(self, data):
+        src = self.src
+        dest = self.dest
         if isinstance(data, dict):
-            return {k: self.recursive_translate(v, src, dest) for k, v in data.items()}
+            return {k: self.recursive_translate(v) for k, v in data.items()}
         elif isinstance(data, list):
-            return [self.recursive_translate(item, src, dest) for item in data]
+            return [self.recursive_translate(item) for item in data]
         elif isinstance(data, str):
             try:
                 return self.translator.translate(data, src=src, dest=dest).text
             except Exception as e:
-                return f"[Error: {e}]"
+                return data
         else:
             return data  # return unchanged for non-str types
 
     def get_lang_code(self, name):
-        if name == "auto":
-            return "auto"
         for code, lang in LANGUAGES.items():
             if lang.lower() == name.lower():
                 return code
         return "en"
+    
+    def save_remote(self):
+        language = Setting.load_config()
+        language["remote_language"] = self.target_lang.currentText()
+        Setting.save_config(language)
+
+    def refresh_language(self):
+        self.src = "auto"
+        self.target = Setting.load_config()
+        self.target = self.target["remote_language"]
+        self.dest = self.get_lang_code(self.target)
