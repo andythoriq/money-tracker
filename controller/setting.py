@@ -2,10 +2,10 @@
 # from config.translation import load_translation, get_available_languages
 from PyQt5 import QtGui
 from PyQt5.QtWidgets import (
-    QLabel, QPushButton, QColorDialog, QVBoxLayout, QTextEdit,
-    QHBoxLayout, QDialog, QComboBox, QDialogButtonBox, QWidget
+    QLabel, QPushButton, QColorDialog, QVBoxLayout, QTextEdit, QStackedWidget,
+    QHBoxLayout, QDialog, QComboBox, QDialogButtonBox, QWidget, QGroupBox
 )
-from PyQt5.QtCore import QSettings, QObject, QUrl, pyqtSignal, QTimer
+from PyQt5.QtCore import QSettings, QObject, QUrl, pyqtSignal, QTimer, QSize
 from PyQt5.QtNetwork import QNetworkAccessManager, QNetworkRequest
 import json, os, sys, requests
 from googletrans import Translator, LANGUAGES
@@ -130,8 +130,8 @@ class Setting:
         
         if os.path.exists(path):
             with open(path, "r") as file:
-                qss = file.read()
                 if theme == "customize":
+                    qss = file.read()
                     # Load warna yang tersimpan untuk tombol ini
                     self.settings = QSettings("Kelompok1A", "MoneyTracker")
                     saved_color = self.settings.value("global_color", '')
@@ -143,6 +143,29 @@ class Setting:
                     qss = qss.replace("$base_color_darker140", base_color.darker(140).name())
                     qss = qss.replace("$base_color_darker150", base_color.darker(150).name())
                     qss = qss.replace("$base_color_lighter150", base_color.lighter(150).name())
+                else:
+                    qss = file.read()
+                return qss
+        else:
+            print(f"Warning: Stylesheet {path} not found!")
+
+    def load_color(self, color, directory="locales/theme"):
+        path = os.path.join(directory, "customize.qss")
+        if os.path.exists(path):
+            with open(path, "r") as file:
+                qss = file.read()
+                base_color = QColor(color)
+                print(color)
+                print(type(color))
+                print(base_color)
+                print(type(base_color))
+
+                # Gantikan placeholder dengan nilai warna aktual
+                qss = qss.replace("$saved_color", color)
+                qss = qss.replace("$base_color_darker130", base_color.darker(130).name())
+                qss = qss.replace("$base_color_darker140", base_color.darker(140).name())
+                qss = qss.replace("$base_color_darker150", base_color.darker(150).name())
+                qss = qss.replace("$base_color_lighter150", base_color.lighter(150).name())
                 return qss
         else:
             print(f"Warning: Stylesheet {path} not found!")
@@ -159,7 +182,8 @@ class SettingsWindow(QDialog):
         self.config = Setting.load_config()
 
         # UI
-        layout = QVBoxLayout()
+        Setting_widget = QWidget()
+        layout = QVBoxLayout(Setting_widget)
 
         self.label_desc1 = QLabel("Language")
         self.label_desc1.setStyleSheet("font-size: 10px;")
@@ -226,7 +250,13 @@ class SettingsWindow(QDialog):
         layout.addWidget(theme_widget)
         layout.addWidget(self.btn)
         layout.addWidget(self.buttonBox)
-        self.setLayout(layout)
+
+        # Layout utama
+        main_layout = QHBoxLayout()
+        main_layout.addWidget(Setting_widget)
+        self.mini_window = MiniMainWindow()
+        main_layout.addWidget(self.mini_window)
+        self.setLayout(main_layout)
 
     def set_dark_theme(self):
         self.config["theme_color"] = "dark"
@@ -274,12 +304,14 @@ class SettingsWindow(QDialog):
         dialog = QColorDialog(self)
         dialog.currentColorChanged.connect(lambda color: self.preview_color(color))
         dialog.colorSelected.connect(lambda color: self.save_color(color))
+        dialog.move(0, 0)
         dialog.open()
         if dialog.exec_():
             self.set_custom_theme()
 
     def preview_color(self, color):
         self.btn.setStyleSheet(f"background-color: {color.name()};")
+        self.mini_window.setStyleSheet(self.logic.load_color(color.name()))
 
     def save_color(self, color):
         color_name = color.name()
@@ -368,3 +400,68 @@ class Translation:
         self.target = Setting.load_config()
         self.target = self.target["remote_language"]
         self.dest = self.get_lang_code(self.target)
+
+class MiniMainWindow(QWidget):
+    def __init__(self):
+        super().__init__()
+        self.init_ui()
+
+    def init_ui(self):
+        self.setWindowTitle("Mini Money Tracker")
+        self.setMinimumSize(400, 200)  # Ukuran sangat kecil
+
+        self.stack = QStackedWidget()
+        self.container = QGroupBox()
+
+        # Sidebar kiri (mini)
+        self.HomeSection = QGroupBox()
+        self.HomeSection.setMinimumWidth(80)
+
+        # Tampilan halaman kosong di stack
+        self.dummy_view = QLabel("Konten")
+        self.stack.addWidget(self.container)
+        self.stack.addWidget(self.dummy_view)
+
+        # Layout utama
+        main_layout = QHBoxLayout()
+        main_layout.setContentsMargins(2, 2, 2, 2)
+        main_layout.setSpacing(4)
+        main_layout.addWidget(self.HomeSection, 1)
+        main_layout.addWidget(self.stack, 3)
+        self.setLayout(main_layout)
+
+        self.init_main_menu()
+
+    def init_main_menu(self):
+        layout = QVBoxLayout()
+
+        # Tombol kecil dengan ikon kecil
+        buttons = [
+            ("../money-tracker/img/icon/logo-app-new.png", self.container),
+            ("../money-tracker/img/icon/add-income.png", self.dummy_view),
+            ("../money-tracker/img/icon/add-outcome.png", self.dummy_view),
+            ("../money-tracker/img/icon/wallet.png", self.dummy_view),
+            ("../money-tracker/img/icon/history.png", self.dummy_view),
+            ("../money-tracker/img/icon/statistic.png", self.dummy_view),
+            ("../money-tracker/img/icon/category.png", self.dummy_view),
+            ("../money-tracker/img/icon/wishlist.png", self.dummy_view),
+            ("../money-tracker/img/icon/aboutUs.png", self.dummy_view),
+        ]
+
+        for icon_path, target_widget in buttons:
+            btn = QPushButton()
+            btn.setIcon(QIcon(icon_path))
+            btn.setIconSize(QSize(24, 24))  # Ukuran ikon kecil
+            btn.setFixedSize(60, 24)        # Ukuran tombol kecil
+            btn.clicked.connect(lambda _, w=target_widget: self.stack.setCurrentWidget(w))
+            layout.addWidget(btn)
+
+        # Tombol Tema
+        self.btn_theme = QPushButton()
+        self.btn_theme.setIcon(QIcon("../money-tracker/img/icon/Setting.svg"))
+        self.btn_theme.setIconSize(QSize(20, 20))
+        self.btn_theme.setFixedSize(30, 30)
+        layout.addWidget(self.btn_theme)
+
+        layout.addStretch()
+        self.HomeSection.setLayout(layout)
