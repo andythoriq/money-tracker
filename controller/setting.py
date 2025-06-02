@@ -2,8 +2,8 @@
 # from config.translation import load_translation, get_available_languages
 from PyQt5 import QtGui
 from PyQt5.QtWidgets import (
-    QLabel, QPushButton, QColorDialog, QVBoxLayout, QTextEdit, QStackedWidget,
-    QHBoxLayout, QDialog, QComboBox, QDialogButtonBox, QWidget, QGroupBox
+    QLabel, QPushButton, QColorDialog, QVBoxLayout, QRadioButton, QStackedWidget,
+    QHBoxLayout, QDialog, QComboBox, QDialogButtonBox, QWidget, QGroupBox, QButtonGroup
 )
 from PyQt5.QtCore import QSettings, QObject, QUrl, pyqtSignal, QTimer, QSize
 from PyQt5.QtNetwork import QNetworkAccessManager, QNetworkRequest
@@ -155,10 +155,6 @@ class Setting:
             with open(path, "r") as file:
                 qss = file.read()
                 base_color = QColor(color)
-                print(color)
-                print(type(color))
-                print(base_color)
-                print(type(base_color))
 
                 # Gantikan placeholder dengan nilai warna aktual
                 qss = qss.replace("$saved_color", color)
@@ -193,6 +189,45 @@ class SettingsWindow(QDialog):
 
         self.lang_btn = QPushButton("Pengaturan Bahasa")
         self.lang_btn.clicked.connect(self.open_language_settings)
+
+
+        self.radioGlobal = QRadioButton("Global")
+        self.radioLocal = QRadioButton("Local")
+        self.comboBoxGlobal = QComboBox()
+        self.comboBoxLocal = QComboBox()
+        self.languageGroup = QButtonGroup()
+        self.languageGroup.addButton(self.radioGlobal)
+        self.languageGroup.addButton(self.radioLocal)
+
+        self.comboBoxGlobal.addItems(["EN", "FR", "ES"])
+        languages = Setting.get_available_languages()
+        self.comboBoxLocal.addItems(languages)
+        self.comboBoxLocal.setCurrentIndex(self.comboBoxLocal.findText(self.config.get("local_language")))
+        self.comboBoxLocal.currentIndexChanged.connect(self.change_language)
+
+        # Connect logic
+        self.radioGlobal.toggled.connect(self.toggleCombos)
+        self.radioLocal.toggled.connect(self.toggleCombos)
+
+        self.toggleCombos()
+
+        # Global section
+        global_widget = QWidget()
+        global_layout = QVBoxLayout(global_widget)
+        global_layout.addWidget(self.radioGlobal)
+        global_layout.addWidget(self.comboBoxGlobal)
+
+        # Local section
+        local_widget = QWidget()
+        local_layout = QVBoxLayout(local_widget)
+        local_layout.addWidget(self.radioLocal)
+        local_layout.addWidget(self.comboBoxLocal)
+
+        # Container
+        language_widget = QWidget()
+        language_layout = QHBoxLayout(language_widget)
+        language_layout.addWidget(global_widget)
+        language_layout.addWidget(local_widget)
 
         # Cek preferensi bahasa sebelumnya
         saved_lang = self.settings.value("language", "en")
@@ -245,6 +280,7 @@ class SettingsWindow(QDialog):
         layout.addWidget(self.label_desc1)
         layout.addWidget(self.label_language)
         layout.addWidget(self.lang_btn)
+        layout.addWidget(language_widget)
         layout.addWidget(self.label)
         layout.addWidget(self.check_btn)
         layout.addWidget(theme_widget)
@@ -281,10 +317,11 @@ class SettingsWindow(QDialog):
     def update_status(self, is_connected):
         if is_connected:
             self.label.setText("Status koneksi: Terhubung ✅")
-            self.lang_btn.setEnabled(True)
+            self.radioGlobal.setEnabled(True)
         else:
             self.label.setText("Status koneksi: Tidak Terhubung ❌")
-            self.lang_btn.setEnabled(False)
+            self.radioGlobal.setEnabled(False)
+            self.comboBoxGlobal.setEnabled(False)
 
     def open_language_settings(self):
         dialog = RemoteLanguageDialog(self)
@@ -299,6 +336,20 @@ class SettingsWindow(QDialog):
         else:
             translated = translate_text("Hello, welcome to our app!", lang_code)
             self.label_language.setText(translated)
+
+    def change_language(self):
+        """Mengubah bahasa UI berdasarkan bahasa yang dipilih"""
+        self.config["local_language"] = self.comboBoxLocal.currentText()
+        Setting.save_config(self.config)
+        self.language_data = Setting.load_language_file(self.comboBoxLocal.currentText())
+    
+    def toggleCombos(self):
+        if self.radioGlobal.isChecked():
+            self.comboBoxGlobal.setEnabled(True)
+            self.comboBoxLocal.setEnabled(False)
+        else:
+            self.comboBoxGlobal.setEnabled(False)
+            self.comboBoxLocal.setEnabled(True)
 
     def choose_color(self):
         dialog = QColorDialog(self)

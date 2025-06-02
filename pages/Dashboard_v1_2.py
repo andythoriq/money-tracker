@@ -172,13 +172,6 @@ class Dashboard(QWidget):
         self.aboutUs.setObjectName("btn_dash")
         self.aboutUs.clicked.connect(lambda: PopupAboutUs(self.aboutUs))
 
-        self.language = QComboBox(self.HomeSection)
-        self.language.setObjectName("cb_lang")
-        languages = Setting.get_available_languages()
-        self.language.addItems(languages)
-        self.language.setCurrentIndex(self.language.findText(self.config.get("local_language")))
-        self.language.currentIndexChanged.connect(self.change_language)
-
         self.btn_theme = QPushButton(self.HomeSection)
         self.btn_theme.setCheckable(True)
         self.btn_theme.setIcon(QtGui.QIcon("../money-tracker/img/icon/Setting.svg"))
@@ -444,13 +437,6 @@ class Dashboard(QWidget):
             48
         )
 
-        self.language.setGeometry(
-            int(aboutus_x_position * 9),
-            y_position,
-            100,
-            20
-        )
-
         self.label.setGeometry(
             int(aboutus_x_position * 11), # Agar berada di bagian kanan
             y_position,
@@ -491,13 +477,6 @@ class Dashboard(QWidget):
             button_layout4_width,
             button_layout4_height
         )
-
-    def change_language(self):
-        """Mengubah bahasa UI berdasarkan bahasa yang dipilih"""
-        self.config["local_language"] = self.language.currentText()
-        Setting.save_config(self.config)
-        self.language_data = Setting.load_language_file(self.language.currentText())
-        self.retranslateView()
 
     def load_history_table(self, type = ""):
         # Muat data transaksi dari HistoryView
@@ -587,6 +566,9 @@ class Dashboard(QWidget):
 
     def retranslateView(self):
         index_aktif = self.stack.currentIndex()
+        self.config = Setting.load_config()
+        self.language_data = Setting.load_language_file(self.config.get("local_language"))
+        print(self.language_data)
         if index_aktif >= 0:
             self.retranslateUi()
             self.income_view.retranslateUi(self.language_data)
@@ -645,5 +627,5 @@ class Dashboard(QWidget):
     def open_settings(self):
         settings_window = SettingsWindow(self)
         if settings_window.exec_():
-            self.retranslateUi()
+            self.retranslateView()
             self.setStyleSheet(self.theme_handler.load_theme(Setting.load_config()["theme_color"]))
