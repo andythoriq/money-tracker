@@ -425,35 +425,50 @@ class Statistic:
         plot_widget.addLegend()
 
     def generate_pie(self, fig):
-        # Data untuk pie chart
-        fig.clf()
-        labels = ['income', 'outcome']
-        sizes = self.cur_data[4]
-        if max(sizes) == 0:
-            fig.canvas.draw()
-            return
-        colors = ['green', 'red']
-        #colors = plt.cm.Paired(range(len(sizes)))  
-
-        # Plot pie chart langsung
-        ax = fig.add_subplot(111)
-        ax.pie(
-            sizes, 
-            colors=colors, 
-            autopct='%1.1f%%', 
-            shadow=True, 
-            wedgeprops={'edgecolor': 'black'}, 
-            startangle=90
-        )
+        try:
+            # Clear the figure
+            fig.clf()
+            
+            # Data for pie chart
+            labels = ['income', 'outcome']
+            sizes = self.cur_data[4]
+            
+            # Check if we have valid data
+            if not sizes or max(sizes) == 0:
+                if hasattr(fig, 'canvas') and fig.canvas is not None:
+                    fig.canvas.draw()
+                return
+            
+            colors = ['green', 'red']
         
-        ax.legend(
-            labels,  # The labels for the legend
-            loc='lower center',
-            fontsize=10,
-            title="Categories",  # Optional: Add a title to the legend
-            bbox_to_anchor=(0.5, -0.2),  # Optional: Place the legend outside the pie chart
-            ncol = 2
-        )
-        ax.axis('equal')  # Pastikan bentuk bulat
-        ax.set_title('Pie Chart')
-        fig.canvas.draw()
+            ax = fig.add_subplot(111)
+            wedges, texts, autotexts = ax.pie(
+                sizes, 
+                colors=colors, 
+                autopct='%1.1f%%', 
+                shadow=True, 
+                wedgeprops={'edgecolor': 'black'}, 
+                startangle=90
+            )
+            
+            # Add legend
+            ax.legend(
+                wedges,
+                labels,
+                loc='lower center',
+                fontsize=10,
+                title="Categories",
+                bbox_to_anchor=(0.5, -0.2),
+                ncol=2
+            )
+            
+            ax.axis('equal')
+            ax.set_title('Pie Chart')
+            
+            # Only draw if canvas exists
+            if hasattr(fig, 'canvas') and fig.canvas is not None:
+                fig.tight_layout()
+                fig.canvas.draw()
+                
+        except Exception as e:
+            print(f"Error generating pie chart: {e}")

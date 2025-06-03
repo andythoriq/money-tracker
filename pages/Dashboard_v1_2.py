@@ -79,19 +79,19 @@ class Dashboard(QWidget):
         self.HomeSection.setMinimumSize(296, 768)
 
         self.layout_1 = QGroupBox(self.container)
-        self.layout_1.setObjectName("Layout")
+        self.layout_1.setObjectName("Layoutblue")
         self.layout_1_ui()
 
         self.layout_2 = QGroupBox(self.container)
-        self.layout_2.setObjectName("Layout")
+        self.layout_2.setObjectName("Layoutgreen")
         self.layout_2_ui()
 
         self.layout_3 = QGroupBox(self.container)
-        self.layout_3.setObjectName("Layout")
+        self.layout_3.setObjectName("Layoutgreen")
         self.layout_3_ui()
 
         self.layout_4 = QGroupBox(self.container)
-        self.layout_4.setObjectName("Layout")
+        self.layout_4.setObjectName("Layoutblue")
         self.layout_4_ui()
 
         # Tombol-tombol Sidebar (HomeSection)
@@ -187,27 +187,40 @@ class Dashboard(QWidget):
         # Atur ulang posisi dan ukuran tombol saat pertama kali dijalankan
         self.update_button_geometry()
 
+## BAGIAN INI YANG QUICKVIEW TEA LAYOUT_1_UI BUAT WALLET
+## LAYOUT_2_UI BUAT HISTORY
+## LAYOUT_3_UI BUAT GRAPH
+## LAYOUT_4_UI BUAT WISLIS
+
     def layout_1_ui(self):
 
         # Create the sliding wallet widget
         self.sliding_wallet_widget = SlidingWalletWidget(self.container)
 
         # Create a layout for the widget
-        layout = QVBoxLayout()
-        layout.addWidget(self.sliding_wallet_widget)
+        layoutblue = QVBoxLayout()
+        layoutblue.addWidget(self.sliding_wallet_widget)
         
         # Set the layout for layout_1
-        self.layout_1.setLayout(layout)
+        self.layout_1.setLayout(layoutblue)
 
     def layout_2_ui(self):
-        layout = QVBoxLayout()
+        layoutgreen = QVBoxLayout()
         self.history_label = QLabel()
         self.history_label.setObjectName("Label_1")
-        layout.addWidget(self.history_label)
+        layoutgreen.addWidget(self.history_label)
 
         self.history_table = QTableWidget()
         self.history_table.setObjectName("table")
         self.history_table.setColumnCount(5)
+        self.history_label = QLabel("Riwayat Transaksi Minggu Ini")
+        self.history_label.setObjectName("Label_1")
+
+        # layout = QVBoxLayout()
+        # history_table = QTableWidget()
+        # history_table.setObjectName("history_table")
+        # history_table.setColumnCount(5)
+        # history_table.setHorizontalHeaderLabels(["Tanggal", "Jenis", "Jumlah", "Kategori", "Dompet"])
 
 
         self.history_table.setColumnWidth(0, 100)  # Tanggal
@@ -230,7 +243,7 @@ class Dashboard(QWidget):
         self.layout_2.setSizePolicy(QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Expanding)
 
     def layout_3_ui(self):
-        layout = QVBoxLayout()
+        layoutgreen = QVBoxLayout()
         self.statistic_label = QLabel()
         self.statistic_label.setObjectName("Label_1")
 
@@ -240,15 +253,15 @@ class Dashboard(QWidget):
         self.statistic_view.statistic_controller.cur_data = self.statistic_view.statistic_controller.generate_data()
         self.statistic_view.statistic_controller.generate_statistics(self.graph_widget)
 
-        layout.addWidget(self.statistic_label)
-        layout.addWidget(self.graph_widget)
-        self.layout_3.setLayout(layout)
+        layoutgreen.addWidget(self.statistic_label)
+        layoutgreen.addWidget(self.graph_widget)
+        self.layout_3.setLayout(layoutgreen)
     
     def layout_4_ui(self):
-        layout = QVBoxLayout()
+        layoutblue = QVBoxLayout()
         self.title = QLabel()
         self.title.setObjectName("Label_1")
-        layout.addWidget(self.title)
+        layoutblue.addWidget(self.title)
         
         self.wishlist_table = QTableWidget()
         self.wishlist_table.setObjectName("table")
@@ -600,6 +613,7 @@ class Dashboard(QWidget):
                 )
             self.view_all_btn.setText(_translate("Form", self.language_data.get("dashboard", {}).get("l2btn", "View All")))
             self.statistic_label.setText(_translate("Form", self.language_data.get("dashboard", {}).get("layout3", "Informasi keuanganmu untuk minggu ini")))
+            self.statistic_label.setText(_translate("Form", self.language_data.get("dashboard", {}).get("layout3", "Keuangan Mingguan")))
             self.title.setText(_translate("Form", self.language_data.get("dashboard", {}).get("layout4", "Wishlist")))
             self.wishlist_table.setHorizontalHeaderLabels(
                 [

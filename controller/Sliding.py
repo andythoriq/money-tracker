@@ -3,6 +3,7 @@ import sys
 from PyQt5.QtWidgets import QWidget, QVBoxLayout, QLabel, QStackedWidget, QSizePolicy, QPushButton
 from PyQt5.QtCore import QTimer, Qt, QPropertyAnimation, QEasingCurve, QRect
 from PyQt5 import QtCore, QtGui
+from utils.number_formatter import NumberFormat
 from controller.wallet import Wallet
 
 class SlidingWalletWidget(QWidget):
@@ -89,7 +90,7 @@ class SlidingWalletWidget(QWidget):
                 wallet_label = QLabel(f"{name}")
                 wallet_label.setObjectName("Label_1")
                 
-                balance_label = QLabel(f"Rp {balance:}")
+                balance_label = QLabel(f"Rp {NumberFormat.getFormattedMoney(balance):}")
                 balance_label.setObjectName("Label_1")
                 
                 page_layout.addWidget(wallet_label)

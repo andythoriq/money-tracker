@@ -146,7 +146,8 @@ class Ui_pemulihan(QtWidgets.QWidget):
                 font-weight: bold;
             }
         """)
-        self.recover_button.clicked.connect(self.recover_password)
+        
+        self.recover_button.clicked.connect(self.validate_otp)
         button_layout.addWidget(self.recover_button)
         
         main_layout.addLayout(button_layout)

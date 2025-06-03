@@ -39,8 +39,8 @@ class CategoryView(QWidget):
         self.name_label.setObjectName("form_label")
 
         self.input_name = QLineEdit()
-        self.input_name.setObjectName("input")
-        self.input_name.setPlaceholderText("Category Name")
+        self.input_name.setObjectName("wishlist_input")
+        self.input_name.setPlaceholderText("Nama kategori")
         self.input_name.setFixedWidth(400)
 
         self.type_label = QLabel("Tipe:")
@@ -48,7 +48,15 @@ class CategoryView(QWidget):
 
         self.input_type = QComboBox()
         self.input_type.addItems(["income", "outcome"])
-        self.input_type.setObjectName("catInput")
+        self.input_type.setStyleSheet("""
+            QComboBox::drop-down {
+                border: none;
+            }
+            QComboBox::down-arrow {
+                image: none;
+                border-width: 0px;
+            }
+        """)
 
         self.btn_add = QPushButton("Add Category")
         self.btn_add.setObjectName("add_button")
@@ -127,6 +135,8 @@ class CategoryView(QWidget):
             self.btn_delete.setObjectName("Delete")  
             self.btn_delete.clicked.connect(lambda _, n=name, t=category_type: self.confirm_delete(n,t))
             self.table.setCellWidget(row_idx, 2, self.btn_delete)
+            # btn_delete.clicked.connect(lambda _, n=name, t=category_type: self.confirm_delete(n, t))
+            # self.table.setCellWidget(row_idx, 2, btn_delete)
 
     def confirm_delete(self, name, category_type):
         """Popup konfirmasi sebelum menghapus kategori"""

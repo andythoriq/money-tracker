@@ -47,8 +47,8 @@ class WishlistView(QWidget):
         form_layout.addWidget(self.name_label)
         
         self.name_input = QLineEdit()
-        self.name_input.setObjectName("input")
-        self.name_input.setPlaceholderText("Nama Target")
+        self.name_input.setObjectName("wishlist_input")
+        self.name_input.setPlaceholderText("Nama wishlist")
         self.name_input.setFixedWidth(400)
         form_layout.addWidget(self.name_input)
 
@@ -62,11 +62,13 @@ class WishlistView(QWidget):
         self.price_input.setRange(0, 100_000_000)
         self.price_input.setSingleStep(50_000)
         self.price_input.setPrefix("Rp ")
+        self.price_input.setFixedWidth(200)
         form_layout.addWidget(self.price_input)
 
         # Add button
         self.add_button = QPushButton("Tambah Wishlist")
         self.add_button.setObjectName("add_button")
+        self.add_button.setFixedWidth(175)
         self.add_button.clicked.connect(self.add_wishlist)
         form_layout.addWidget(self.add_button)
 
@@ -78,7 +80,7 @@ class WishlistView(QWidget):
         status_layout = QHBoxLayout(status_widget)
         status_layout.setSpacing(15)
         
-        self.filter_label = QLabel("Filter Status:")
+        self.filter_label = QLabel("Filter by Status:")
         self.filter_label.setObjectName("form_label")
         status_layout.addWidget(self.filter_label)
 
@@ -92,6 +94,18 @@ class WishlistView(QWidget):
             status_layout.addWidget(radio)
 
         self.all_status.setChecked(True)
+
+        # Wallet filter 
+        self.wallet_filter_label = QLabel("Filter by Wallet:")
+        self.wallet_filter_label.setObjectName("form_label")
+        status_layout.addWidget(self.wallet_filter_label)
+        self.wallet_filter_combo = QComboBox()
+        self.wallet_filter_combo.setObjectName("wallet_filter_combo")
+        self.wallet_filter_combo.addItem("Semua Wallet")
+        for name in self.wallet_controller.get_wallet_name():
+            self.wallet_filter_combo.addItem(name)
+        self.wallet_filter_combo.currentIndexChanged.connect(self.load_wishlists)
+        status_layout.addWidget(self.wallet_filter_combo)
 
         status_layout.addStretch()
 
@@ -135,20 +149,24 @@ class WishlistView(QWidget):
 
     def load_wishlists(self, lang = {}):
         """Memuat data wishlist ke tabel berdasarkan filter"""
-        wishlists = self.wishlist_controller.wishlists  
+        # Filter by wallet
+        selected_wallet = self.wallet_filter_combo.currentText() if hasattr(self, 'wallet_filter_combo') else None
+        if selected_wallet and selected_wallet != "Semua Wallet":
+            wishlists = self.wishlist_controller.filter_by_wallet(selected_wallet)
+        else:
+            wishlists = self.wishlist_controller.wishlists
 
         # Filter status
         if self.unfulfilled_status.isChecked():
-            wishlists = self.wishlist_controller.filter_wishlists(False)
+            wishlists = [w for w in wishlists if not w.get("status")]
         elif self.fulfilled_status.isChecked():
-            wishlists = self.wishlist_controller.filter_wishlists(True)
+            wishlists = [w for w in wishlists if w.get("status")]
 
         # Muat data ke tabel
         self.wishlist_table.setRowCount(len(wishlists))
         for row, wishlist in enumerate(wishlists):
             if len(wishlist) < 4:
                 continue
-
             self.wishlist_table.setItem(row, 0, QTableWidgetItem(str(wishlist.get("ID"))))    # ID
             self.wishlist_table.setItem(row, 1, QTableWidgetItem(wishlist.get("label")))  # Nama
             self.wishlist_table.setItem(row, 2, QTableWidgetItem(str(wishlist.get("price")))) # Harga
@@ -156,8 +174,6 @@ class WishlistView(QWidget):
             # Konversi status dari boolean ke text
             status_text = f"{lang.get("comparator", {}).get("status1", "Sudah Terpenuhi")}" if wishlist.get("status") else f"{lang.get("comparator", {}).get("status0", "Belum Terpenuhi")}"
             self.wishlist_table.setItem(row, 3, QTableWidgetItem(status_text))  # Status
-
-            # Tombol Edit dan Hapus
             edit_button = QPushButton(f"{lang.get("wishlist", {}).get("col5", "Edit")}")
             edit_button.setObjectName("Edit")
             edit_button.clicked.connect(lambda _, id=wishlist.get("ID"): self.show_edit_dialog(id))
@@ -167,7 +183,6 @@ class WishlistView(QWidget):
             delete_button.setObjectName("Delete")
             delete_button.clicked.connect(lambda _, id=wishlist.get("ID"), name=wishlist.get("label"), price=wishlist.get("price"): self.delete_wishlist(id, name, price))
             self.wishlist_table.setCellWidget(row, 5, delete_button)
-
 
     def add_wishlist(self):
         """Menambahkan wishlist baru"""
@@ -184,7 +199,6 @@ class WishlistView(QWidget):
         self.load_wishlists()  # Muat ulang daftar wishlist
         self.name_input.clear()
         self.price_input.setValue(0)
-
 
     def show_edit_dialog(self, wishlist_id):
         """Menampilkan popup edit wishlist"""
@@ -245,7 +259,6 @@ class WishlistView(QWidget):
         else:
             QMessageBox.warning(self, "Error", "Gagal mengupdate wishlist!")
 
-
     def delete_wishlist(self, wishlist_id, label, price):
         """Konfirmasi dan hapus wishlist"""
         confirm = QMessageBox.question(self, "Hapus Wishlist", f"Apakah Anda ingin menghapus {label} yang bernilai {price}?", 
@@ -273,6 +286,11 @@ class WishlistView(QWidget):
             self.all_status.setText(_translate("Form", lang.get("wishlist", {}).get("radbtn1", "")))
             self.fulfilled_status.setText(_translate("Form", lang.get("wishlist", {}).get("radbtn2", "")))
             self.unfulfilled_status.setText(_translate("Form", lang.get("wishlist", {}).get("radbtn3", "")))
+            self.wallet_filter_label.setText(_translate("Form", lang.get("wishlist", {}).get("wallet_filter", "")))
+            self.wallet_filter_combo.clear()
+            self.wallet_filter_combo.addItem("Semua Wallet")
+            for name in self.wallet_controller.get_wallet_name():
+                self.wallet_filter_combo.addItem(name)
             self.wishlist_table.setHorizontalHeaderLabels(               
                 [
                     lang.get("wishlist", {}).get("col1", ""), 

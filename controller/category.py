@@ -21,8 +21,15 @@ class Category:
         if result.get("valid") is False:
             return result
 
+
+        #validasi
+        result = self.validate_category_data({'name': name, 'type': category_type})
+        if result.get("valid") is False:
+            return result
+
         categories.append({"name": name, "type": category_type})
         self.save_categories(categories)
+        return result
         return result
 
     def delete_category(self, name, category_type):

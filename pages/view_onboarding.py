@@ -15,15 +15,14 @@ class OnboardingScreen(QWidget):
     def init_ui(self):
         self.setWindowTitle("Money Tracker Onboarding")
         self.setGeometry(100, 100, 360, 640)
-        self.setStyleSheet("background-color: #1c1f26;")
 
         # QStackedWidget
         self.stack = QStackedWidget(self)
         self.main_menu_widget = QtWidgets.QWidget()  # widget container untuk main menu
         self.init_main_menu()
 
-        # Inisialisasi satu dictionary untuk semua data pengeluaran
-        key_dict = {"key": ""}
+        # Inisialisasi satu dictionary untuk semua data akun
+        key_dict = {"key": ""} # Untuk OTP
         user_data = {
             "email": "",
             "username": "",

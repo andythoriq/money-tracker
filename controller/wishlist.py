@@ -64,6 +64,14 @@ class Wishlist:
                 if not result.get("valid"):
                     return result # Stop execution if validation fails
 
+                result = self.validate_wishlist({
+                    "label": label,
+                    "price": price,
+                    "status": status
+                })
+                if not result.get("valid"):
+                    return result # Stop execution if validation fails
+
                 wishlist["label"] = label
                 wishlist["price"] = price
                 wishlist["status"] = status

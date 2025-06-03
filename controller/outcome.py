@@ -87,7 +87,7 @@ class Outcome:
         outcomes = [outcome for outcome in outcomes if outcome["ID"] != int(id)]
         self.save_outcomes(outcomes)
         return True
-
+    
     def validate_outcome_data(self, outcome_data, is_edit):
         """
         Validate outcome data to ensure it meets the required criteria.
