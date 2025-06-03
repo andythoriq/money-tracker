@@ -48,7 +48,7 @@ class StatisticView(QWidget):
         
         # Income frame
         self.Income = QFrame()
-        self.Income.setObjectName("QFrameLayout")
+        self.Income.setObjectName("Layout")
         self.Income.setFrameShape(QtWidgets.QFrame.StyledPanel)
         self.Income.setFrameShadow(QtWidgets.QFrame.Raised)
         self.incomeLayout = QVBoxLayout(self.Income)
@@ -67,7 +67,7 @@ class StatisticView(QWidget):
         
         # Outcome frame
         self.Outcome = QFrame()
-        self.Outcome.setObjectName("QFrameLayout")
+        self.Outcome.setObjectName("Layout")
         self.Outcome.setFrameShape(QtWidgets.QFrame.StyledPanel)
         self.Outcome.setFrameShadow(QtWidgets.QFrame.Raised)
         self.outcomeLayout = QVBoxLayout(self.Outcome)
@@ -92,7 +92,7 @@ class StatisticView(QWidget):
         
         # Statistics frame
         self.Statistic = QFrame()
-        self.Statistic.setObjectName("QFrameLayout")
+        self.Statistic.setObjectName("Layout")
         self.statisticLayout = QVBoxLayout(self.Statistic)
         
         # Statistic header layout
@@ -154,7 +154,7 @@ class StatisticView(QWidget):
         
         # Pie chart frame
         self.pieChart = QFrame()
-        self.pieChart.setObjectName("QFrameLayout")
+        self.pieChart.setObjectName("Layout")
         self.pieChartLayout = QVBoxLayout(self.pieChart)
         
         # Pie chart header layout
@@ -187,7 +187,7 @@ class StatisticView(QWidget):
         
         # Summary frame
         self.Summary = QFrame()
-        self.Summary.setObjectName("QFrameLayout")
+        self.Summary.setObjectName("Layout")
         self.Summary.setFrameShape(QtWidgets.QFrame.StyledPanel)
         self.Summary.setFrameShadow(QtWidgets.QFrame.Raised)
         self.summaryLayout = QVBoxLayout(self.Summary)
