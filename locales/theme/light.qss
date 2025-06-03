@@ -269,24 +269,10 @@ QScrollBar::add-line, QScrollBar::sub-line {
     }
 }
 
-#deleteWallet {
     QMessageBox {
         background-color: #98C379;
     }
-    QLabel {
-        color: white;
-    }
-    QPushButton {
-        background-color: #4CAF50;
-        color: white;
-        border-radius: 5px;
-        padding: 5px;
-        min-width: 70px;
-    }
-    QPushButton:hover {
-        background-color: #45a049;
-    }
-}
+
 
 /* Wishlist View Styles */
 #wishlist_container {
