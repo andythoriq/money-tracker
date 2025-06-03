@@ -102,6 +102,12 @@
       "col4": "Statut",
       "col5": "Modifier",
       "col6": "Supprimer"
+    },
+    "comparator" : {
+      "type1": "Revenu",
+      "type2": "Dépense",
+      "status0": "Non réalisé",
+      "status1": "Réalisé"
     }
   }
   

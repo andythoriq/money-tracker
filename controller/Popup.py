@@ -33,7 +33,8 @@ class PopupAboutUs(QMessageBox):
     def __init__(self, parent=None):
         super().__init__(parent)
         self.setWindowTitle("About Money Tracker")
-        
+        self.setObjectName("PopupAboutUs")
+
         # Set icon aplikasi
         self.setWindowIcon(QIcon("img/icon/aboutUs.png"))
         
@@ -58,26 +59,6 @@ class PopupAboutUs(QMessageBox):
         """
         
         self.setText(about_text)
-        self.setStyleSheet("""
-            QMessageBox {
-                background-color: #252931;
-            }
-            QLabel {
-                color: white;
-                background-color: #252931;
-            }
-            QPushButton {
-                background-color: #98C379;
-                color: white;
-                border: none;
-                padding: 8px 20px;
-                border-radius: 5px;
-                font-size: 14px;
-            }
-            QPushButton:hover {
-                background-color: #7A9F60;
-            }
-        """)
         
         # Mengatur ukuran popup
         self.setMinimumWidth(450)

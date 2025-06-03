@@ -1,13 +1,5 @@
 [
     {
-        "ID": 1,
-        "amount": 250000,
-        "category": "AUUUU",
-        "wallet": "AMM",
-        "desc": "Auuuuuu",
-        "date": "02/05/2025"
-    },
-    {
         "ID": 2,
         "amount": 250000,
         "category": "AUUUU",
@@ -25,10 +17,18 @@
     },
     {
         "ID": 4,
-        "amount": 250000,
-        "category": "AUUUU",
+        "amount": 600,
+        "category": "AAA",
         "wallet": "AMM",
-        "desc": "Auuuuuu",
-        "date": "02/05/2025"
+        "desc": "pol",
+        "date": "20/05/2025"
+    },
+    {
+        "ID": 4,
+        "amount": 600,
+        "category": "AAA",
+        "wallet": "AMM",
+        "desc": "pol",
+        "date": "20/05/2025"
     }
 ]

@@ -89,8 +89,8 @@
     },
     "wishlist": {
       "Title": "Wishlist",
-      "form1": "Name",
-      "form2": "Price",
+      "form1": "Name:",
+      "form2": "Price:",
       "btn1": "Add to Wishlist",
       "filter": "Filter Status",
       "radbtn1": "All",
@@ -102,5 +102,11 @@
       "col4": "Status",
       "col5": "Edit",
       "col6": "Delete"
+    },
+    "comparator" : {
+      "type1": "income",
+      "type2": "outcome",
+      "status0": "Not Fulfilled",
+      "status1": "Fulfilled"
     }
 }

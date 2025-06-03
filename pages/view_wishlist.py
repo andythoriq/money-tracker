@@ -30,7 +30,7 @@ class WishlistView(QWidget):
 
         # Content container with green background
         content_widget = QWidget()
-        content_widget.setObjectName("Layout")
+        content_widget.setObjectName("QWidgetLayout")
         content_layout = QVBoxLayout(content_widget)
         content_layout.setContentsMargins(30, 30, 30, 30)
         content_layout.setSpacing(20)
@@ -58,7 +58,7 @@ class WishlistView(QWidget):
         form_layout.addWidget(self.price_label)
         
         self.price_input = QSpinBox()
-        self.price_input.setObjectName("wishlist_input")
+        self.price_input.setObjectName("input")
         self.price_input.setRange(0, 100_000_000)
         self.price_input.setSingleStep(50_000)
         self.price_input.setPrefix("Rp ")
@@ -90,7 +90,7 @@ class WishlistView(QWidget):
         self.fulfilled_status = QRadioButton("Sudah Terpenuhi")
 
         for radio in [self.all_status, self.unfulfilled_status, self.fulfilled_status]:
-            radio.setObjectName("wishlist_radio")
+            radio.setObjectName("radio_button")
             status_layout.addWidget(radio)
 
         self.all_status.setChecked(True)
@@ -147,7 +147,7 @@ class WishlistView(QWidget):
         main_layout.addWidget(content_widget)
         self.setLayout(main_layout)
 
-    def load_wishlists(self):
+    def load_wishlists(self, lang = {}):
         """Memuat data wishlist ke tabel berdasarkan filter"""
         # Filter by wallet
         selected_wallet = self.wallet_filter_combo.currentText() if hasattr(self, 'wallet_filter_combo') else None
@@ -169,14 +169,17 @@ class WishlistView(QWidget):
                 continue
             self.wishlist_table.setItem(row, 0, QTableWidgetItem(str(wishlist.get("ID"))))    # ID
             self.wishlist_table.setItem(row, 1, QTableWidgetItem(wishlist.get("label")))  # Nama
-            self.wishlist_table.setItem(row, 2, QTableWidgetItem(f"Rp {wishlist.get('price')}")) # Harga
-            status_text = "Sudah Terpenuhi" if wishlist.get("status") else "Belum Terpenuhi"
+            self.wishlist_table.setItem(row, 2, QTableWidgetItem(str(wishlist.get("price")))) # Harga
+            
+            # Konversi status dari boolean ke text
+            status_text = f"{lang.get("comparator", {}).get("status1", "Sudah Terpenuhi")}" if wishlist.get("status") else f"{lang.get("comparator", {}).get("status0", "Belum Terpenuhi")}"
             self.wishlist_table.setItem(row, 3, QTableWidgetItem(status_text))  # Status
-            edit_button = QPushButton("Edit")
+            edit_button = QPushButton(f"{lang.get("wishlist", {}).get("col5", "Edit")}")
             edit_button.setObjectName("Edit")
             edit_button.clicked.connect(lambda _, id=wishlist.get("ID"): self.show_edit_dialog(id))
             self.wishlist_table.setCellWidget(row, 4, edit_button)
-            delete_button = QPushButton("Hapus")
+
+            delete_button = QPushButton(f"{lang.get("wishlist", {}).get("col6", "Delete")}")
             delete_button.setObjectName("Delete")
             delete_button.clicked.connect(lambda _, id=wishlist.get("ID"), name=wishlist.get("label"), price=wishlist.get("price"): self.delete_wishlist(id, name, price))
             self.wishlist_table.setCellWidget(row, 5, delete_button)
@@ -195,7 +198,7 @@ class WishlistView(QWidget):
 
         self.load_wishlists()  # Muat ulang daftar wishlist
         self.name_input.clear()
-        self.price_input.setValue(1)
+        self.price_input.setValue(0)
 
     def show_edit_dialog(self, wishlist_id):
         """Menampilkan popup edit wishlist"""
@@ -236,7 +239,7 @@ class WishlistView(QWidget):
         # Tombol Simpan
         save_button = QPushButton("Simpan")
         save_button.clicked.connect(lambda: self.save_edit(dialog, wishlist_id, name_input.text(), price_input.value(), 
-                                                         True if status_input.currentText() == "Sudah Terpenuhi" else False))
+                                            True if status_input.currentText() == "Sudah Terpenuhi" else False))
         layout.addWidget(save_button)
 
         dialog.setLayout(layout)
@@ -298,3 +301,4 @@ class WishlistView(QWidget):
                     lang.get("wishlist", {}).get("col6", ""), 
                     ]
                 )
+        self.load_wishlists(lang)

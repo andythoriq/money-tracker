@@ -349,7 +349,7 @@ QScrollBar::add-line, QScrollBar::sub-line {
     spacing: 5px;
 }
 
-#wishlist_radio::indicator {
+#radio_button::indicator {
     width: 15px;
     height: 15px;
 }

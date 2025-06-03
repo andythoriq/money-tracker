@@ -144,6 +144,29 @@ QStackedWidget {
     background-color: #4B97C0;
 }
 
+#btn_dash {
+    background-color: transparent;
+}
+
+QMessageBox#PopupAboutUs {
+    background-color: #252931;
+}
+QLabel#PopupAboutUs {
+    color: white;
+    background-color: #252931;
+}
+QPushButton#PopupAboutUs {
+    background-color: #98C379;
+    color: white;
+    border: none;
+    padding: 8px 20px;
+    border-radius: 5px;
+    font-size: 14px;
+}
+QPushButton#PopupAboutUs:hover {
+    background-color: #7A9F60;
+}
+
 /* Title label pada setiap pages */
 #titleLabel {
     background: #82D1C5;
@@ -162,12 +185,12 @@ QStackedWidget {
     gridline-color: #4B97C0;
 }
 
-#history_table::item {
+#table::item {
     padding: 5px;
     color: #144425;
 }
     
-#history_table::item:selected {
+#table::item:selected {
     background-color: #6A8B52;
     color: white;
 }
@@ -264,6 +287,97 @@ QScrollBar {
         background-color: #98C379;
     }
 
+/* History View Styles */
+QLineEdit#search_bar {
+    background-color: white;
+    border: 1px solid #7A9F60;
+    border-radius: 5px;
+    padding: 5px;
+    color: black;
+}
+QLineEdit#search_bar::focus {
+    border: 2px solid #4CAF50;
+}
+
+
+QMessageBox#confirm_delete {
+    background-color: #98C379;
+}
+QLabel#confirm_delete {
+    color: white;
+}
+QPushButton#confirm_delete {
+    background-color: #4CAF50;
+    color: white;
+    border-radius: 5px;
+    padding: 5px;
+    min-width: 70px;
+}
+QPushButton#confirm_delete:hover {
+    background-color: #45a049;
+}
+
+QDateEdit#date_edit {
+    background-color: white;
+    border: 1px solid #7A9F60;
+    border-radius: 5px;
+    padding: 5px;
+    color: black;
+}
+QDateEdit#date_edit::drop-down {
+    subcontrol-origin: padding;
+    subcontrol-position: top right;
+    width: 20px;
+    border-left-width: 1px;
+    border-left-color: #7A9F60;
+    border-left-style: solid;
+    border-top-right-radius: 5px;
+    border-bottom-right-radius: 5px;
+}
+QDateEdit#date_edit::down-arrow {
+    border: none;
+    width: 16px;
+    height: 16px;
+    image: url(img/down-arrow.png);
+}
+QDateEdit#date_edit::down-arrow:enabled {
+    border: none;
+    width: 16px;
+    height: 16px;
+    image: url(img/icon1.png);
+}
+QCalendarWidget#date_edit {
+    background-color: white;
+    border: 1px solid #7A9F60;
+    border-radius: 5px;
+}
+QCalendarWidget#date_edit QToolButton {
+    background-color: #7A9F60;
+    color: white;
+    border-radius: 5px;
+}
+QCalendarWidget#date_edit QMenu {
+    background-color: white;
+}
+
+#edit_popup {
+    background-color: #98C379;
+}
+QLabel#edit_popup {
+    color: white;
+    font-size: 14px;
+}
+QSpinBox#edit_popup, QComboBox#edit_popup, QLineEdit#edit_popup {
+    background-color: white;
+    border: 1px solid #7A9F60;
+    border-radius: 5px;
+    padding: 5px;
+}
+QCalendarWidget#edit_popup {
+    background-color: white;
+    border-radius: 5px;
+}
+
 /* Wishlist View Styles */
 #wishlist_container {
     background-color: #144425;
@@ -303,7 +417,7 @@ QScrollBar {
     color: #144425;
 }
 
-#wishlist_input {
+#input {
     background-color: white;
     border: 1px solid #82D1C5;
     border-radius: 5px;
@@ -334,7 +448,7 @@ QScrollBar {
     spacing: 5px;
 }
 
-#wishlist_radio::indicator {
+#radio_button::indicator {
     width: 15px;
     height: 15px;
 }
@@ -345,7 +459,7 @@ QScrollBar {
     border-radius: 7px;
 }
 
-#wishlist_radio::indicator:unchecked {
+#radio_button::indicator:unchecked {
     background-color: white;
     border: 2px solid #46953D;
     border-radius: 7px;
@@ -539,44 +653,35 @@ QSpinBox::down-arrow {
     border: none;  /* Remove border */
     text-align: center;  /* Ensure nothing is visible in collapsed state */
 }
-
 #iconDesign::drop-down {
     width: 60px;  /* Size of the dropdown arrow */
 }
-
 #iconDesign::down-arrow {
     image: url(img/icon/database.svg);  /* Ensure this image exists and is correctly loaded */
     width: 60px;  /* Size of the dropdown arrow */
     height: 60px;
 }
-
-/* Hide the text area but don't completely remove it */
 #iconDesign::lineEdit {
     border: none;
     background: transparent;
     padding: 100px;
     color: transparent;  /* Keep the text hidden */
 }
-
-/* Display dropdown list items correctly */
 #iconDesign QAbstractItemView {
     min-width: 150px;  /* Minimum width for dropdown items */
     max-width: 300px;  /* Ensure items have sufficient width to show full text */
     font-size: 14px;
     padding: 100px;
 }
-
 #iconDesign QAbstractItemView::item {
     padding-left: 10px;  /* Indentation for item text */
     padding-right: 10px;
     height: 40px;  /* Height of each item */
 }
-
 #iconDesign::item:selected {
     background-color: lightblue;  /* Background when an item is selected */
     color: black;  /* Text color for selected item */
 }
-
 #iconDesign::editable {
     background: transparent;
     border: none;
@@ -588,15 +693,6 @@ QSpinBox::down-arrow {
     background-color: #D3D3D3;
     padding: 5px;
     border-radius: 5px;"
-}
-
-#textDesignStatistic {
-    font-family: 'Arimo';
-    font-size: 16px;             /* Sets font size */
-    color: #FFFFFF;                 /* Sets text color */
-    font-weight: bold;               /* Makes the font extra bold */
-    text-align: center;
-    border: none;
 }
 
 #changeValue {
