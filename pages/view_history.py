@@ -1,14 +1,12 @@
 from PyQt5.QtWidgets import (
     QWidget, QVBoxLayout, QPushButton, QTableWidget, 
     QTableWidgetItem, QHBoxLayout, QLabel, QRadioButton, 
-    QButtonGroup, QDialog, QFormLayout, 
+    QButtonGroup, QDialog, QFormLayout, QSpinBox, 
     QComboBox, QLineEdit, QCalendarWidget, QMessageBox, 
     QTableView, QVBoxLayout, QDateEdit, QHeaderView
 )
 from PyQt5.QtCore import Qt, QSortFilterProxyModel, QDate, QCoreApplication
 from datetime import datetime
-from components.MoneyLineEdit import MoneyLineEdit
-from utils.number_formatter import NumberFormat
 from controller.income import Income
 from controller.outcome import Outcome
 from controller.wallet import Wallet
@@ -55,15 +53,15 @@ class HistoryView(QWidget):
         self.filter_label = QLabel("Filter Jenis:")
         self.filter_label.setObjectName("form_label")
         self.radio_all = QRadioButton("Semua")
-        self.radio_all.setObjectName("btn_home")
+        self.radio_all.setObjectName("groupBox")
         self.radio_income = QRadioButton("Income")
-        self.radio_income.setObjectName("btn_home")
+        self.radio_income.setObjectName("groupBox")
         self.radio_outcome = QRadioButton("Outcome")
-        self.radio_outcome.setObjectName("btn_home")
+        self.radio_outcome.setObjectName("groupBox")
         
         # Search bar untuk kategori
         self.search_bar = QLineEdit(self)
-        self.search_bar.setPlaceholderText("Cari kategori...")
+        self.search_bar.setPlaceholderText("Cari kategori")
         self.search_bar.setStyleSheet("""
             QLineEdit {
                 background-color: white;
@@ -343,7 +341,7 @@ class HistoryView(QWidget):
 
             self.table.setItem(row, 0, QTableWidgetItem(transaction["date"].strftime("%d/%m/%Y")))
             self.table.setItem(row, 1, QTableWidgetItem(transaction["type"]))
-            
+
             # Konversi dan format jumlah
             selected_currency = self.currency_combo.currentText()
             converted = self.currency_converter.convert(int(transaction["amount"]), selected_currency)
@@ -352,40 +350,19 @@ class HistoryView(QWidget):
                 self.table.setItem(row, 2, QTableWidgetItem(formatted))
             else:
                 self.table.setItem(row, 2, QTableWidgetItem(self.currency_converter.format_amount(int(transaction["amount"]), 'idr')))
-
             self.table.setItem(row, 3, QTableWidgetItem(transaction["category"]))
             self.table.setItem(row, 4, QTableWidgetItem(transaction["wallet"]))
             self.table.setItem(row, 5, QTableWidgetItem(transaction["desc"]))
 
             # Tombol Edit
             btn_edit = QPushButton("Edit")
-            btn_edit.setStyleSheet("""
-                QPushButton {
-                    background-color: #4CAF50;
-                    color: white;
-                    border-radius: 5px;
-                    padding: 5px;
-                }
-                QPushButton:hover {
-                    background-color: #45a049;
-                }
-            """)
+            btn_edit.setObjectName("Edit")
             btn_edit.clicked.connect(lambda _, t=transaction: self.open_edit_popup(t))
             self.table.setCellWidget(row, 6, btn_edit)
 
             # Tombol Delete
-            btn_delete = QPushButton("Delete")
-            btn_delete.setStyleSheet("""
-                QPushButton {
-                    background-color: #f44336;
-                    color: white;
-                    border-radius: 5px;
-                    padding: 5px;
-                }
-                QPushButton:hover {
-                    background-color: #da190b;
-                }
-            """)
+            btn_delete = QPushButton("Hapus")
+            btn_delete.setObjectName("Delete")
             btn_delete.clicked.connect(lambda _, t=transaction: self.confirm_delete(t))
             self.table.setCellWidget(row, 7, btn_delete)
 
@@ -426,9 +403,9 @@ class HistoryView(QWidget):
         layout.setContentsMargins(20, 20, 20, 20)
 
         # Widget Form
-        amount_input = MoneyLineEdit(locale_str='id_ID')
-        # amount_input.setMaximum(100000000)
-        amount_input.set_value(int(transaction["amount"]))
+        amount_input = QSpinBox()
+        amount_input.setMaximum(100000000)
+        amount_input.setValue(int(transaction["amount"]))
 
         category_input = QComboBox()
         category_input.addItems(self.category_controller.load_category_names(transaction["type"]))
@@ -473,7 +450,7 @@ class HistoryView(QWidget):
         """Simpan perubahan edit transaksi"""
         new_data = {
             "ID": transaction["id"],
-            "amount": amount.get_value(),
+            "amount": amount.value(),
             "category": category.currentText(),
             "wallet": wallet.currentText(),
             "desc": desc.text(),
@@ -481,19 +458,12 @@ class HistoryView(QWidget):
         }
 
         if transaction["type"] == "income":
-            result = self.income_controller.update_income(new_data)
+            self.income_controller.update_income(new_data)
         else:
-            result = self.outcome_controller.update_outcome(new_data)
+            self.outcome_controller.update_outcome(new_data)
 
-        if result.get("valid"):
-            self.load_data(transaction["type"])
-            PopupSuccess("Success", "berhasil disimpan!")
-            dialog.accept()
-        else:
-            errors = result.get("errors")
-            error_message = "\n".join([f"{key}: {value}" for key, value in errors.items()])
-            PopupWarning("Warning", f"Gagal menyimpan!\n{error_message}")
-        
+        dialog.accept()
+        self.load_data(transaction["type"])
 
     def confirm_delete(self, transaction):
         """Konfirmasi Delete"""

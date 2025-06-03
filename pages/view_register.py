@@ -1,13 +1,18 @@
 import hashlib, re
-from PyQt5 import QtWidgets, QtCore
+from typing import TypeVarTuple
+from PyQt5 import QtWidgets, QtGui, QtCore
 from PyQt5.QtWidgets import (
+    QApplication,
+    QWidget,
     QLabel,
     QPushButton,
+    QVBoxLayout,
     QLineEdit,
     QCheckBox,
     QHBoxLayout,
+    QMessageBox,
 )
-from PyQt5.QtGui import QFont, QRegExpValidator
+from PyQt5.QtGui import QFont, QColor, QPalette, QRegExpValidator
 from PyQt5.QtCore import Qt, QRegExp
 from controller.account import Account
 
@@ -414,12 +419,17 @@ class RegisterScreen(QtWidgets.QWidget):
         password_confirm = self.password_confirm_input.text().strip()
         is_password_valid = (
             bool(re.search(r"[A-Z]", password))
+            and bool(re.search(r"[A-Z]", password_confirm))
             and bool(re.search(r"[0-9]", password))
+            and bool(re.search(r"[0-9]", password_confirm))
+            and password == password_confirm
         )
 
         if not len(password) >= 8:
             self.password_warning.setText("Password minimal 8 karakter")
             self.password_warning.show()
+            self.password_confirm_warning.setText("Password minimal 8 karakter")
+            self.password_confirm_warning.show()
             self.continue_button_password.setEnabled(False)
             self.continue_button_password.setStyleSheet("""
                 background-color: #2c2f36;
@@ -434,6 +444,10 @@ class RegisterScreen(QtWidgets.QWidget):
                 "Password harus terdiri dari huruf kapital dan angka"
             )
             self.password_warning.show()
+            self.password_confirm_warning.setText(
+                "Password harus terdiri dari huruf kapital dan angka"
+            )
+            self.password_confirm_warning.show()
             self.continue_button_password.setEnabled(False)
             self.continue_button_password.setStyleSheet("""
                 background-color: #2c2f36;
@@ -443,7 +457,9 @@ class RegisterScreen(QtWidgets.QWidget):
                 font-weight: bold;
             """)
 
-        if password and password_confirm and password != password_confirm:
+        if password != password_confirm:
+            self.password_warning.setText("Password dan konfirmasi password harus sama")
+            self.password_warning.show()
             self.password_confirm_warning.setText(
                 "Password dan konfirmasi password harus sama"
             )
@@ -456,9 +472,6 @@ class RegisterScreen(QtWidgets.QWidget):
                 border-radius: 20px;
                 font-weight: bold;
             """)
-        
-        if len(password) >= 8 and is_password_valid:
-            self.password_warning.hide()
 
         if len(password) >= 8 and is_password_valid and password == password_confirm:
             self.password_warning.hide()
