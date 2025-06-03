@@ -343,7 +343,7 @@ class Dashboard(QWidget):
         layoutblue.addWidget(self.title)
         
         self.wishlist_table = QTableWidget()
-        self.wishlist_table.setObjectName("wishlist_table")
+        self.wishlist_table.setObjectName("wishlist_widget")
         self.wishlist_table.setColumnCount(4)
         
         self.wishlist_table.setColumnWidth(0, 50)   # No.
@@ -649,7 +649,7 @@ class Dashboard(QWidget):
                 self.language_data.get("dashboard", {}).get("l2col5", "Dompet")
                 ]
                 )
-            self.statistic_label.setText(_translate("Form", self.language_data.get("dashboard", {}).get("layout3", "Informasi keuanganmu untuk minggu ini")))
+            self.statistic_label.setText(_translate("Form", self.language_data.get("dashboard", {}).get("layout3", "Keuangan Mingguan")))
             self.title.setText(_translate("Form", self.language_data.get("dashboard", {}).get("layout4", "Wishlist")))
             self.wishlist_table.setHorizontalHeaderLabels(
                 [

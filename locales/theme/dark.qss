@@ -3,7 +3,7 @@ QMainWindow {
 }
 
 QPushButton {
-    background-color: #B5D984; /* Tombol utama */
+    background-color: #6A8B52; /* Tombol utama */
     color: white;
     border-radius: 5px;
     padding: 5px;
@@ -47,10 +47,20 @@ QLineEdit {
     border-radius: 15px;
 }
 
-#groupBox {
+#walletBox {
     background-color: #82D1C5; /* Card Saldo & Wishlist: Pearl Aqua */
     border-radius: 25%;
-    color: #4B97C0;
+    color: #46953D;
+    font-family: Inter;
+    font-size: 14px;
+    font-weight: bold;
+    margin-bottom: 5px;
+}
+
+#groupBox{
+    background-color: #B5D984; /* Card Saldo & Wishlist: Pearl Aqua */
+    border-radius: 25%;
+    color: #46953D;
     font-family: Inter;
     font-size: 14px;
     font-weight: bold;
@@ -67,11 +77,15 @@ QLineEdit {
     background-color: #B5D984;
 }
 
+QStackedWidget {
+    background-color: #144425;
+}
+
 #Label_1 {
-    font: 24pt;
+    font: 22pt;
     color: #4B97C0;
     padding-left: 10px;
-    font-family: Subway;
+    font-family: "Willump";
 }
 
 #logoApp {
@@ -103,9 +117,9 @@ QLineEdit {
 }
 
 #label {
-    font-family: Inter;
-    font: 24pt;
-    color: white;
+    font-family: "Willump";
+    font: 16pt;
+    color: #4B97C0;
     text-align: right;
     padding-right: 20px;
 }
@@ -130,7 +144,7 @@ QLineEdit {
 #titleLabel {
     background: #82D1C5;
     font: 24pt;
-    font-family: Subway;
+    font-family: "Willump";
     color: #4B97C0;
     padding: 15px;
     border-radius: 10px;
@@ -138,15 +152,15 @@ QLineEdit {
 
 /* tabel */
 #table {
-    background-color: #7A9F60;
+    background-color: #FFFFFF;
     border-radius: 10px;
-    color: white;
-    gridline-color: #98C379;
+    color: #144425;
+    gridline-color: #4B97C0;
 }
 
 #history_table::item {
     padding: 5px;
-    color: white;
+    color: #144425;
 }
     
 #history_table::item:selected {
@@ -155,7 +169,7 @@ QLineEdit {
 }
 
 #history_table::section {
-    background-color: #82D1C5;
+    background-color: #B5D984;
     color: #4B97C0;
     padding: 5px;
     border: none;
@@ -163,7 +177,8 @@ QLineEdit {
 
 QHeaderView::section {
     background-color: #7A9F60;
-    color: #4B97C0;
+    color: #ffffff;
+    font-weight: bold;
     padding: 5px;
     border: none;
 }
@@ -173,7 +188,7 @@ QScrollBar {
 }
 
 #Edit {
-    background-color: #4CAF50;
+    background-color: #46953D;
     color: white;
     border-radius: 5px;
     padding: 5px;
@@ -186,7 +201,7 @@ QScrollBar {
 }
 
 #Delete {
-    background-color: #f44336;
+    background-color: #FA8989;
     color: white;
     border-radius: 5px;
     padding: 5px;
@@ -195,7 +210,7 @@ QScrollBar {
 }
 
 #Delete:hover {
-    background-color: #da190b;
+    background-color: #d97171;
 }
 
 /* tombol slide yang ada pada layout 1 di home */
@@ -267,7 +282,7 @@ QScrollBar {
 }
 
 #wishlist_content {
-    background-color: #98C379;
+    background-color: #B5D984;
     border-radius: 15px;
     padding: 20px;
     margin: 20px;
@@ -276,8 +291,15 @@ QScrollBar {
 #wishlist_table {
     background-color: transparent;
     border: none;
-    gridline-color: #7A9F60;
-    color: white;
+    gridline-color: #FFFFFF;
+    color: #144425;
+}
+
+#wishlist_widget {
+    background-color: transparent;
+    border: none;
+    gridline-color: #FFFFFF;
+    color: #144425;
 }
 
 #wishlist_table QHeaderView::section {
@@ -289,12 +311,12 @@ QScrollBar {
 
 #wishlist_table::item {
     padding: 5px;
-    color: white;
+    color: #144425;
 }
 
 #wishlist_input {
     background-color: white;
-    border: 1px solid #ccc;
+    border: 1px solid #82D1C5;
     border-radius: 5px;
     padding: 5px;
     font-size: 14px;
@@ -311,20 +333,14 @@ QScrollBar {
 
 #add_button:hover {
     background-color: #45a049;
-    border-radius: 5px;
-    padding: 5px;
-    font-size: 14px;
 }
 
 #add_button:pressed {
     background-color: #45a049;
-    border-radius: 5px;
-    padding: 5px;
-    font-size: 14px;
 }
 
 #wishlist_radio {
-    color: white;
+    color: #46953D;
     font-size: 14px;
     spacing: 5px;
 }
@@ -335,20 +351,21 @@ QScrollBar {
 }
 
 #wishlist_radio::indicator:checked {
-    background-color: #7A9F60;
+    background-color: #46953D;
     border: 2px solid white;
     border-radius: 7px;
 }
 
 #wishlist_radio::indicator:unchecked {
     background-color: white;
-    border: 2px solid #7A9F60;
+    border: 2px solid #46953D;
     border-radius: 7px;
 }
 
 #wishlist_label {
-    color: white;
+    color: #46953D;
     font-size: 14px;
+    font-weight: bold;
 }
 
 
@@ -390,7 +407,7 @@ QScrollBar {
     background-color: white;
     border: 1px solid #82D1C5;
     padding: 5px;
-    color: #46953D;
+    color: #144425;
     selection-background-color: #B5D984;
     min-width: 300px;
     max-width: 1000px;
@@ -398,34 +415,34 @@ QScrollBar {
 
 #calendar QToolButton {
     color: #FFFFFF;
-    background-color: #46953D;
+    background-color: #45A049;
     border-radius: 5px;
     padding: 5px;
     margin: 2px;
 }
 
 #calendar QToolButton:hover {
-    background-color: #79a9be;
+    background-color: #2C8730;
 }
 
 #calendar QToolButton:pressed {
-    background-color: #4B97C0;
+    background-color: #136E17;
 }
 
 #calendar QMenu {
     background-color: white;
-    color: #46953D;
+    color: #144425;
     border: 1px solid #82D1C5;
 }
 
 #calendar QMenu::item:selected {
-    background-color: #82D1C5;
-    color: #46953D;
+    background-color: #B5D984;
+    color: #144425;
 }
 
 #calendar QSpinBox {
     background-color: white;
-    color: #46953D;
+    color: #144425;
     border: 1px solid #82D1C5;
     border-radius: 3px;
     padding: 2px;
@@ -434,17 +451,17 @@ QScrollBar {
 #calendar QTableView {
     background-color: white;
     alternate-background-color: #f5f5f5;
-    color: #46953D;
+    color: #144425;
     selection-background-color: #B5D984;
-    selection-color: #46953D;
+    selection-color: #144425;
     border: none;
 }
 
 #calendar QAbstractItemView:enabled {
-    color: #46953D;
+    color: #144425;
     background-color: white;
     selection-background-color: #B5D984;
-    selection-color: #46953D;
+    selection-color: #144425;
 }
 
 #calendar QAbstractItemView:disabled {
@@ -457,13 +474,13 @@ QScrollBar {
 
 #calendar QWidget#qt_calendar_navigationbar {
     background-color: white;
-    border-bottom: 1px solid #46953D;
+    border-bottom: 1px solid #82D1C5;
     padding: 5px;
 }
 
 #calendar QWidget#qt_calendar_prevmonth, 
 #calendar QWidget#qt_calendar_nextmonth {
-    background-color: #46953D;
+    background-color: #45A049;
     border-radius: 3px;
     padding: 5px;
     color: #FFFFFF;
@@ -471,12 +488,12 @@ QScrollBar {
 
 #calendar QWidget#qt_calendar_prevmonth:hover, 
 #calendar QWidget#qt_calendar_nextmonth:hover {
-    background-color: #408039;
+    background-color: #2C8730;
 }
 
 #calendar QWidget#qt_calendar_prevmonth:pressed, 
 #calendar QWidget#qt_calendar_nextmonth:pressed {
-    background-color:#31592c;
+    background-color: #136E17;
 }
 
 #btn_save, #btn_back {
@@ -677,7 +694,7 @@ QSpinBox::down-arrow {
     background-color: white;
     border: 1px solid #82D1C5;
     padding: 5px;
-    color: #46953D;
+    color: #144425;
     selection-background-color: #B5D984;
     min-width: 300px;
     max-width: 1000px;
@@ -685,34 +702,34 @@ QSpinBox::down-arrow {
 
 #calendar[class="OutcomeView"] QToolButton {
     color: #FFFFFF;
-    background-color: #46953D;
+    background-color: #45A049;
     border-radius: 5px;
     padding: 5px;
     margin: 2px;
 }
 
 #calendar[class="OutcomeView"] QToolButton:hover {
-    background-color: #79a9be;
+    background-color: #45A049;
 }
 
 #calendar[class="OutcomeView"] QToolButton:pressed {
-    background-color: #4B97C0;
+    background-color: #45A049;
 }
 
 #calendar[class="OutcomeView"] QMenu {
     background-color: white;
-    color: #46953D;
+    color: #144425;
     border: 1px solid #82D1C5;
 }
 
 #calendar[class="OutcomeView"] QMenu::item:selected {
-    background-color: #82D1C5;
-    color: #46953D;
+    background-color: #B5D984;
+    color: #144425;
 }
 
 #calendar[class="OutcomeView"] QSpinBox {
     background-color: white;
-    color: #46953D;
+    color: #144425;
     border: 1px solid #82D1C5;
     border-radius: 3px;
     padding: 2px;
@@ -721,17 +738,17 @@ QSpinBox::down-arrow {
 #calendar[class="OutcomeView"] QTableView {
     background-color: white;
     alternate-background-color: #f5f5f5;
-    color: #46953D;
+    color: #144425;
     selection-background-color: #B5D984;
-    selection-color: #46953D;
+    selection-color: #144425;
     border: none;
 }
 
 #calendar[class="OutcomeView"] QAbstractItemView:enabled {
-    color: #46953D;
+    color: #144425;
     background-color: white;
     selection-background-color: #B5D984;
-    selection-color: #46953D;
+    selection-color: #144425;
 }
 
 #calendar[class="OutcomeView"] QAbstractItemView:disabled {
@@ -750,7 +767,7 @@ QSpinBox::down-arrow {
 
 #calendar[class="OutcomeView"] QWidget#qt_calendar_prevmonth, 
 #calendar[class="OutcomeView"] QWidget#qt_calendar_nextmonth {
-    background-color: #46953D;
+    background-color: #7096D1;
     border-radius: 3px;
     padding: 5px;
     color: #FFFFFF;
@@ -758,12 +775,12 @@ QSpinBox::down-arrow {
 
 #calendar[class="OutcomeView"] QWidget#qt_calendar_prevmonth:hover, 
 #calendar[class="OutcomeView"] QWidget#qt_calendar_nextmonth:hover {
-    background-color: #79a9be;
+    background-color: #45A049;
 }
 
 #calendar[class="OutcomeView"] QWidget#qt_calendar_prevmonth:pressed, 
 #calendar[class="OutcomeView"] QWidget#qt_calendar_nextmonth:pressed {
-    background-color: #4B97C0;
+    background-color: #3c9b41;
 }
 
 #btn_save[class="OutcomeView"], 
@@ -788,3 +805,5 @@ QSpinBox::down-arrow {
 #btn_back[class="OutcomeView"]:pressed {
     background-color: #5c9b90;
 }
+
+

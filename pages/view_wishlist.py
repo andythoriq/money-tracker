@@ -48,7 +48,7 @@ class WishlistView(QWidget):
         
         self.name_input = QLineEdit()
         self.name_input.setObjectName("wishlist_input")
-        self.name_input.setPlaceholderText("Nama Target")
+        self.name_input.setPlaceholderText("Nama wishlist")
         self.name_input.setFixedWidth(400)
         form_layout.addWidget(self.name_input)
 

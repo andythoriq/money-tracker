@@ -49,15 +49,28 @@ QLineEdit {
 }
 
 /* Layout Section */
+#Layoutblue {
+    background: #555555; /* Quickview History: Yellow Green */
+    border: none;
+    border-radius: 15px;
+}
+
 #Layout {
-    background-color: #333333; /* Dark gray layout */
+    background-color: #444444;
+    border: none;
+    border-radius: 15px;
+    padding: 15px;
+}
+
+#Layoutgreen {
+    background: #555555; /* Quickview History: Yellow Green */
     border: none;
     border-radius: 15px;
 }
 
 /* Group Box */
 #groupBox {
-    background-color: #333333;
+    background-color: #444444;
     border-radius: 25%;
     color: white;
     font-family: Inter;
@@ -75,10 +88,10 @@ QLineEdit {
 
 /* Label */
 #Label_1 {
-    font: 24pt;
+    font: 22pt;
     color: white;
     padding-left: 10px;
-    font-family: Subway;
+    font-family: "Willump";
 }
 
 /* Logo Section */
@@ -106,25 +119,44 @@ QLineEdit {
     background-color: #666666;
 }
 
+#label {
+    font-family: "Willump";
+    font: 16pt;
+    color: white;
+    text-align: right;
+    padding-right: 20px;
+}
+
+
 /* tabel */
 #table {
-    background-color: #444444;
+    background-color: #2C2C2C;
     border-radius: 10px;
-    color: white;
-    gridline-color:rgb(43, 43, 43);
+    color: #FFFFFF;
+    gridline-color: #444444;
 }
 
 #history_table::item {
     padding: 5px;
+    color: #FFFFFF;
 }
     
 #history_table::item:selected {
     background-color: #555555;
+    color: #FFFFFF;
+}
+
+#history_table::section {
+    background-color: #444444;
+    color: #FFFFFF;
+    padding: 5px;
+    border: none;
 }
 
 QHeaderView::section {
-    background-color: #444444;
-    color: white;
+    background-color: #333333;
+    color: #FFFFFF;
+    font-weight: bold;
     padding: 5px;
     border: none;
 }
@@ -133,8 +165,21 @@ QScrollBar {
     background-color: #444444;
 }
 
+QScrollBar::handle {
+    background-color: #333333;
+    border-radius: 5px;
+}
+
+QScrollBar::handle:hover {
+    background-color: #666666;
+}
+
+QScrollBar::add-line, QScrollBar::sub-line {
+    background-color: #444444;
+}
+
 #Edit {
-    background-color: #757575;
+    background-color: #555555;
     color: white;
     border-radius: 5px;
     padding: 5px;
@@ -143,7 +188,7 @@ QScrollBar {
 }
 
 #Edit:hover {
-    background-color: #45a049;
+    background-color: #666666;
 }
 
 #Delete {
@@ -180,7 +225,7 @@ QScrollBar {
 #titleLabel {
     background-color: #333333;
     font: 24pt;
-    font-family: Subway;
+    font-family: "Willump";
     color: white;
     padding: 15px;
     border-radius: 10px;
@@ -196,7 +241,7 @@ QScrollBar {
         font-size: 14px;
     }
     QLineEdit {
-        background-color: #333333;
+        background-color:#ffffff;
         border: 1px solid #555555;
         border-radius: 5px;
         padding: 5px;
@@ -249,13 +294,23 @@ QScrollBar {
 #wishlist_table {
     background-color: transparent;
     border: none;
-    gridline-color: #555555;
-    color: white;
+    gridline-color: #444444;
+    color: #FFFFFF;
+}
+
+#wishlist_table::item {
+    padding: 5px;
+    color: #FFFFFF;
+}
+
+#wishlist_table::item:selected {
+    background-color: #555555;
+    color: #FFFFFF;
 }
 
 #wishlist_table QHeaderView::section {
     background-color: #444444;
-    color: white;
+    color: #FFFFFF;
     padding: 5px;
     border: none;
 }
@@ -266,11 +321,13 @@ QScrollBar {
     border-radius: 5px;
     padding: 5px;
     font-size: 14px;
+    color: white;
 }
 
 #add_button {
-    background-color: #444444;
+    background-color: #333333;
     color: white;
+    font-weight: bold;
     border-radius: 5px;
     padding: 5px;
     font-size: 14px;
@@ -322,6 +379,7 @@ QScrollBar {
 
 #form_input {
     background-color: #333333;
+    color: #ffffff;
     border: 1px solid #444444;
     border-radius: 5px;
     padding: 8px;
@@ -331,7 +389,7 @@ QScrollBar {
 
 /* Outcome Styles */
 #titleLabel[class="OutcomeView"] {
-    background-color: #444444;
+    background-color: #333333;
     font: 24pt;
     color: white;
     padding: 15px;
@@ -339,7 +397,7 @@ QScrollBar {
 }
 
 #Layout[class="OutcomeView"] {
-    background-color: #444444;
+    background-color: #333333;
     border: none;
     border-radius: 15px;
     padding: 15px;
@@ -448,11 +506,11 @@ QScrollBar {
 }
 
 #btn_save:hover, #btn_back:hover {
-    background-color: #555555;
+    background-color: #333333;
 }
 
 #btn_save:pressed, #btn_back:pressed {
-    background-color: #666666;
+    background-color: #222222;
 }
 
 QSpinBox::up-button, QSpinBox::down-button {
@@ -467,66 +525,63 @@ QSpinBox::up-button:hover, QSpinBox::down-button:hover {
 }
 
 QStackedWidget {
-    background-color: #252931;
+    background-color: #555555;
 }
 
 /* Statistic View Styles */
-#iconDesignStatistic {
-    QComboBox {
-        background-color: #383C42;  /* Warna latar belakang combobox */
-        width: 60px;  /* Only the width for the dropdown arrow */
-        height: 22px;
-        padding: 0px;
-        border: none;  /* Remove border */
-        text-align: center;  /* Ensure nothing is visible in collapsed state */
-    }
-
-    QComboBox::drop-down {
-        width: 60px;  /* Size of the dropdown arrow */
-    }
-
-    QComboBox::down-arrow {
-        image: url(img/icon/database.svg);  /* Ensure this image exists and is correctly loaded */
-        width: 60px;  /* Size of the dropdown arrow */
-        height: 60px;
-    }
-
-    /* Hide the text area but don't completely remove it */
-    QComboBox::lineEdit {
-        border: none;
-        background: transparent;
-        padding: 100px;
-        color: transparent;  /* Keep the text hidden */
-    }
-
-    /* Display dropdown list items correctly */
-    QComboBox QAbstractItemView {
-        min-width: 150px;  /* Minimum width for dropdown items */
-        max-width: 300px;  /* Ensure items have sufficient width to show full text */
-        font-size: 14px;
-        padding: 100px;
-        background-color: #2C3039;  /* Background dropdown items */
-    }
-
-    QComboBox QAbstractItemView::item {
-        padding-left: 10px;  /* Indentation for item text */
-        padding-right: 10px;
-        height: 40px;  /* Height of each item */
-        color: #ffffff;  /* White text */
-    }
-
-    QComboBox::item:selected {
-        background-color: #4C566A;  /* Darker selected item */
-        color: white;  /* Text color for selected item */
-    }
-
-    QComboBox::editable {
-        background: transparent;
-        border: none;
-        padding: 0px;
-        color: transparent;  /* Hide the text but still keep the arrow visible */
-    }
+#iconDesign {
+    background-color: transparent;
+    width: 60px;  /* Only the width for the dropdown arrow */
+    height: 22px;
+    padding: 0px;
+    border: none;  /* Remove border */
+    text-align: center;  /* Ensure nothing is visible in collapsed state */
 }
+
+#iconDesign::drop-down {
+    width: 60px;  /* Size of the dropdown arrow */
+}
+
+#iconDesign::down-arrow {
+    image: url(img/icon/database_mono.svg);  /* Ensure this image exists and is correctly loaded */
+    width: 60px;  /* Size of the dropdown arrow */
+    height: 60px;
+}
+
+/* Hide the text area but don't completely remove it */
+#iconDesign::lineEdit {
+    border: none;
+    background: transparent;
+    padding: 100px;
+    color: transparent;  /* Keep the text hidden */
+}
+
+/* Display dropdown list items correctly */
+#iconDesign QAbstractItemView {
+    min-width: 150px;  /* Minimum width for dropdown items */
+    max-width: 300px;  /* Ensure items have sufficient width to show full text */
+    font-size: 14px;
+    padding: 100px;
+}
+
+#iconDesign QAbstractItemView::item {
+    padding-left: 10px;  /* Indentation for item text */
+    padding-right: 10px;
+    height: 40px;  /* Height of each item */
+}
+
+#iconDesign::item:selected {
+    background-color: lightblue;  /* Background when an item is selected */
+    color: black;  /* Text color for selected item */
+}
+
+#iconDesign::editable {
+    background: transparent;
+    border: none;
+    padding: 0px;
+    color: transparent;  /* Hide the text but still keep the arrow visible */
+}
+
 
 #textDesignStatistic {
     QLabel {
@@ -577,3 +632,62 @@ QStackedWidget {
         background-color: #3E4B53;  /* Darker on hover */
     }
 }
+
+/* Quickview History Table */
+#quickview_table {
+    background-color: #2C2C2C;
+    border-radius: 10px;
+    color: #FFFFFF;
+    gridline-color: #444444;
+}
+
+#quickview_table::item {
+    padding: 5px;
+    color: #FFFFFF;
+}
+
+#quickview_table::item:selected {
+    background-color: #555555;
+    color: #FFFFFF;
+}
+
+#quickview_table::section {
+    background-color: #444444;
+    color: #FFFFFF;
+    padding: 5px;
+    border: none;
+}
+
+/* Wishlist Table */
+#wishlist_widget {
+    background-color: transparent;
+    border: none;
+    gridline-color: #444444;
+    color: #FFFFFF;
+}
+
+/* Statistic Table */
+#statistic_table {
+    background-color: #2C2C2C;
+    border-radius: 10px;
+    color: #FFFFFF;
+    gridline-color: #444444;
+}
+
+#statistic_table::item {
+    padding: 5px;
+    color: #FFFFFF;
+}
+
+#statistic_table::item:selected {
+    background-color: #555555;
+    color: #FFFFFF;
+}
+
+#statistic_table::section {
+    background-color: #444444;
+    color: #FFFFFF;
+    padding: 5px;
+    border: none;
+}
+

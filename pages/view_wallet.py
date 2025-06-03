@@ -32,13 +32,10 @@ class WalletView(QWidget):
         content_layout.setSpacing(15)
 
         # === BOX TAMBAH WALLET ===
-        self.group_add_wallet = QGroupBox("Tambah Wallet")
-        self.group_add_wallet.setObjectName("groupBox")
+        self.group_add_wallet = QGroupBox("")
+        self.group_add_wallet.setObjectName("walletcontent")
         self.group_add_wallet.setStyleSheet("""
             QGroupBox {
-                color: white;
-                font-size: 14px;
-                padding: 15px;
                 border: none;
             }
         """)
@@ -221,7 +218,6 @@ class WalletView(QWidget):
             self.saldo_label.setText(_translate("Form", lang.get("wallet", {}).get("form2", "") + ":"))
             self.btn_add.setText(_translate("Form", lang.get("wallet", {}).get("btn", "")))
             self.input_name.setPlaceholderText(_translate("Form", lang.get("wallet", {}).get("desc1", "")))
-            self.group_add_wallet.setTitle(_translate("Form", lang.get("wallet", {}).get("entry", "")))
             self.table_wallet.setHorizontalHeaderLabels(
                 [
                     lang.get("wallet", {}).get("col1", ""), 

@@ -40,7 +40,7 @@ class CategoryView(QWidget):
 
         self.input_name = QLineEdit()
         self.input_name.setObjectName("wishlist_input")
-        self.input_name.setPlaceholderText("Category Name")
+        self.input_name.setPlaceholderText("Nama kategori")
         self.input_name.setFixedWidth(400)
 
         self.type_label = QLabel("Tipe:")
@@ -49,13 +49,6 @@ class CategoryView(QWidget):
         self.input_type = QComboBox()
         self.input_type.addItems(["income", "outcome"])
         self.input_type.setStyleSheet("""
-            QComboBox {
-                background-color: white;
-                border: 1px solid #7A9F60;
-                border-radius: 5px;
-                padding: 5px;
-                font-size: 14px;
-            }
             QComboBox::drop-down {
                 border: none;
             }

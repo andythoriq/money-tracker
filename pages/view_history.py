@@ -51,15 +51,15 @@ class HistoryView(QWidget):
         self.filter_label = QLabel("Filter Jenis:")
         self.filter_label.setObjectName("form_label")
         self.radio_all = QRadioButton("Semua")
-        self.radio_all.setObjectName("btn_home")
+        self.radio_all.setObjectName("groupBox")
         self.radio_income = QRadioButton("Income")
-        self.radio_income.setObjectName("btn_home")
+        self.radio_income.setObjectName("groupBox")
         self.radio_outcome = QRadioButton("Outcome")
-        self.radio_outcome.setObjectName("btn_home")
+        self.radio_outcome.setObjectName("groupBox")
         
         # Search bar untuk kategori
         self.search_bar = QLineEdit(self)
-        self.search_bar.setPlaceholderText("Cari kategori...")
+        self.search_bar.setPlaceholderText("Cari kategori")
         self.search_bar.setStyleSheet("""
             QLineEdit {
                 background-color: white;
@@ -158,18 +158,6 @@ class HistoryView(QWidget):
 
         # Tombol Hapus Filter
         self.clear_filter_btn = QPushButton("Hapus Filter")
-        self.clear_filter_btn.setStyleSheet("""
-            QPushButton {
-                background-color: #f44336;
-                color: white;
-                border-radius: 5px;
-                padding: 5px 10px;
-                font-size: 12px;
-            }
-            QPushButton:hover {
-                background-color: #da190b;
-            }
-        """)
         self.clear_filter_btn.clicked.connect(self.clear_filters)
         btn_layout.addWidget(self.clear_filter_btn)
 
@@ -292,33 +280,13 @@ class HistoryView(QWidget):
 
             # Tombol Edit
             btn_edit = QPushButton("Edit")
-            btn_edit.setStyleSheet("""
-                QPushButton {
-                    background-color: #4CAF50;
-                    color: white;
-                    border-radius: 5px;
-                    padding: 5px;
-                }
-                QPushButton:hover {
-                    background-color: #45a049;
-                }
-            """)
+            btn_edit.setObjectName("Edit")
             btn_edit.clicked.connect(lambda _, t=transaction: self.open_edit_popup(t))
             self.table.setCellWidget(row, 6, btn_edit)
 
             # Tombol Delete
-            btn_delete = QPushButton("Delete")
-            btn_delete.setStyleSheet("""
-                QPushButton {
-                    background-color: #f44336;
-                    color: white;
-                    border-radius: 5px;
-                    padding: 5px;
-                }
-                QPushButton:hover {
-                    background-color: #da190b;
-                }
-            """)
+            btn_delete = QPushButton("Hapus")
+            btn_delete.setObjectName("Delete")
             btn_delete.clicked.connect(lambda _, t=transaction: self.confirm_delete(t))
             self.table.setCellWidget(row, 7, btn_delete)
 
