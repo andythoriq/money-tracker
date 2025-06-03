@@ -184,7 +184,9 @@ class HistoryView(QWidget):
             }
         """)
         self.currency_combo.currentTextChanged.connect(self.update_currency_display)
-        btn_layout.addWidget(QLabel("Mata Uang:"))
+        labelkurs = QLabel("Mata Uang:")
+        labelkurs.setObjectName("labelkurs")
+        btn_layout.addWidget(labelkurs)
         btn_layout.addWidget(self.currency_combo)
 
         # Tombol Hapus Filter
