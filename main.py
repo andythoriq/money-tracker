@@ -6,6 +6,7 @@ from pages.Dashboard_v1_2 import Dashboard
 from PyQt5.QtCore import QTimer
 from pages.view_onboarding import OnboardingScreen
 
+
 def load_stylesheet(app, filename="styles/style.qss"):
     if os.path.exists(filename):
         with open(filename, "r") as file:
@@ -15,7 +16,7 @@ def load_stylesheet(app, filename="styles/style.qss"):
         print(f"Warning: Stylesheet {filename} not found!")
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     app = QApplication(sys.argv)
 
     app.setOrganizationName("Kelompok1A")
@@ -28,7 +29,7 @@ if __name__ == '__main__':
     splash.show()
 
     def start_main_window():
-        splash.close()  
+        splash.close()
         load_stylesheet(app)
         account_screen = Dashboard()
         account_screen.show()

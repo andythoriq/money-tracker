@@ -1,4 +1,4 @@
-#QWidgetLayout, #Layout, #QFrameLayout, QScrollBar, #form_label, #groupBox {
+#QWidgetLayout, #Layout, #QFrameLayout, QScrollBar, #form_label, #groupBox, #Layoutgreen, #Layoutblue, #walletBox, #callendar {
     background-color: $saved_color;
     border-radius: 10px;
 }
@@ -31,4 +31,499 @@ QPushButton:hover, #table::section {
 
 QPushButton:focus, #table::item:selected, QHeaderView::section {
     background-color: $base_color_darker150;
+}
+
+/* Tambahan dari style.qss */
+QMainWindow {
+    background-color: $base_color_lighter150;
+}
+
+QComboBox {
+    background-color: white;
+    border: 1px solid $saved_color;
+    padding: 3px;
+    border-radius: 4px;
+}
+
+QLineEdit {
+    background-color: white;
+    border: 1px solid $saved_color;
+    padding: 3px;
+    border-radius: 4px;
+}
+
+#Layout {
+    background: $saved_color;
+    border: none;
+    border-radius: 15px;
+}
+
+#groupBox {
+    position: absolute;
+    background-color: $saved_color;
+    border-radius: 25%;
+}
+
+#HomeSection {
+    background: $base_color_lighter150;
+    border: none;
+    padding: 5px;
+}
+
+#stackedWidget {
+    background-color: $saved_color;
+}
+
+#Label_1 {
+    font: 24pt;
+    color: white;
+    padding-left: 10px;
+}
+
+#logoApp {
+    background: $saved_color;
+    border-radius: 15px;
+}
+
+#btn_aboutUs {
+    text-align: left;
+}
+
+#btn_homeSection {
+    background-color: $saved_color;
+    text-align: left;
+    padding-left: 20px;
+    font-family: Inter;
+    font: 18pt;
+    color: white;
+    border-radius: 15px;
+}
+
+#btn_homeSection:hover {
+    background-color: $base_color_darker130;
+}
+
+#btn_homeSection:focus {
+    background-color: $base_color_darker140;
+}
+
+#label {
+    font-family: Inter;
+    font: 24pt;
+    color: white;
+    text-align: right;
+    padding-right: 20px;
+}
+
+#btn_home {
+    background-color: $saved_color;
+    border-radius: 15px;
+    font-family: Inter;
+    font: 24pt;
+    color: white;
+}
+
+#btn_home:hover {
+    background-color: $base_color_darker130;
+}
+
+#btn_home:focus {
+    background-color: $base_color_darker140;
+}
+
+#tittleLabel {
+    background-color: $saved_color;
+    font: 24pt;
+    color: white;
+    padding: 15px;
+    border-radius: 10px;
+}
+
+#btn_nextslide {
+    background-color: $saved_color;
+    padding: 5px;
+    color: white;
+    border-radius: 15px;
+}
+
+#btn_nextslide:hover {
+    background-color: $base_color_darker130;
+}
+
+#btn_nextslide:pressed {
+    background-color: $base_color_darker140;
+}
+
+/* Wallet View Styles */
+#editWallet {
+    QInputDialog {
+        background-color: $saved_color;
+    }
+    QLabel {
+        color: white;
+        font-size: 14px;
+    }
+    QLineEdit {
+        background-color: white;
+        border: 1px solid $saved_color;
+        border-radius: 5px;
+        padding: 5px;
+    }
+    QPushButton {
+        background-color: $base_color_darker130;
+        color: white;
+        border-radius: 5px;
+        padding: 5px;
+        min-width: 70px;
+    }
+    QPushButton:hover {
+        background-color: $base_color_darker140;
+    }
+}
+
+#deleteWallet {
+    QMessageBox {
+        background-color: $saved_color;
+    }
+    QLabel {
+        color: white;
+    }
+    QPushButton {
+        background-color: $base_color_darker130;
+        color: white;
+        border-radius: 5px;
+        padding: 5px;
+        min-width: 70px;
+    }
+    QPushButton:hover {
+        background-color: $base_color_darker140;
+    }
+}
+
+/* Wishlist View Styles */
+#wishlist_container {
+    background-color: $base_color_lighter150;
+    border: none;
+}
+
+#wishlist_content {
+    background-color: $saved_color;
+    border-radius: 15px;
+    padding: 20px;
+    margin: 20px;
+}
+
+#wishlist_table {
+    background-color: transparent;
+    border: none;
+    gridline-color: $saved_color;
+    color: white;
+}
+
+#wishlist_table QHeaderView::section {
+    background-color: $saved_color;
+    color: white;
+    padding: 5px;
+    border: none;
+}
+
+#wishlist_table::item {
+    padding: 5px;
+}
+
+#wishlist_input {
+    background-color: white;
+    border: 1px solid $saved_color;
+    border-radius: 5px;
+    padding: 5px;
+    font-size: 14px;
+}
+
+#wishlist_button {
+    background-color: $saved_color;
+    color: white;
+    border-radius: 5px;
+    padding: 5px;
+    font-size: 14px;
+}
+
+#wishlist_button:hover {
+    background-color: $base_color_darker130;
+}
+
+#wishlist_button:pressed {
+    background-color: $base_color_darker140;
+}
+
+#wishlist_radio {
+    color: white;
+    font-size: 14px;
+    spacing: 5px;
+}
+
+#wishlist_radio::indicator {
+    width: 15px;
+    height: 15px;
+}
+
+#wishlist_radio::indicator:checked {
+    background-color: $saved_color;
+    border: 2px solid white;
+    border-radius: 7px;
+}
+
+#wishlist_radio::indicator:unchecked {
+    background-color: white;
+    border: 2px solid $saved_color;
+    border-radius: 7px;
+}
+
+#wishlist_label {
+    color: black;
+    font-size: 14px;
+}
+
+/* Form Styles */
+#form_label {
+    color: white;
+    font-family: Inter;
+    font-size: 14px;
+    font-weight: bold;
+    margin-bottom: 5px;
+}
+
+#form_input {
+    background-color: white;
+    border: 1px solid $saved_color;
+    border-radius: 5px;
+    padding: 8px;
+    font-size: 14px;
+    min-width: 300px;
+}
+
+#input_desc {
+    background-color: white;
+    border: 1px solid $saved_color;
+    border-radius: 5px;
+    padding: 8px;
+    font-size: 14px;
+    max-width: 1000px;
+}
+
+/* Calendar Styles */
+#calendar {
+    background-color: $base_color_lighter150;
+    border: 1px solid $saved_color;
+    padding: 5px;
+    color: white;
+    selection-background-color: $saved_color;
+    min-width: 300px;
+    max-width: 1000px;
+}
+
+#calendar QToolButton {
+    color: white;
+    background-color: $saved_color;
+    border-radius: 5px;
+    padding: 5px;
+    margin: 2px;
+}
+
+#calendar QToolButton:hover {
+    background-color: $base_color_darker130;
+}
+
+#calendar QToolButton:pressed {
+    background-color: $base_color_darker140;
+}
+
+#calendar QMenu {
+    background-color: $base_color_lighter150;
+    color: white;
+    border: 1px solid $saved_color;
+}
+
+#calendar QMenu::item:selected {
+    background-color: $saved_color;
+}
+
+#calendar QSpinBox {
+    background-color: $base_color_lighter150;
+    color: white;
+    border: 1px solid $saved_color;
+    border-radius: 3px;
+    padding: 2px;
+}
+
+#calendar QTableView {
+    background-color: $base_color_lighter150;
+    alternate-background-color: $base_color_darker130;
+    color: white;
+    selection-background-color: $saved_color;
+    selection-color: white;
+    border: none;
+}
+
+/* Button Styles */
+#btn_save, #btn_back {
+    background-color: $saved_color;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    padding: 10px 20px;
+    font-size: 14px;
+    min-width: 100px;
+    margin: 10px;
+}
+
+#btn_save:hover, #btn_back:hover {
+    background-color: $base_color_darker130;
+}
+
+#btn_save:pressed, #btn_back:pressed {
+    background-color: $base_color_darker140;
+}
+
+/* SpinBox Styles */
+QSpinBox::up-button, QSpinBox::down-button {
+    background-color: $saved_color;
+    border: none;
+    border-radius: 3px;
+    width: 20px;
+}
+
+QSpinBox::up-button:hover, QSpinBox::down-button:hover {
+    background-color: $base_color_darker130;
+}
+
+/* Statistic View Styles */
+#iconDesignStatistic {
+    QComboBox {
+        background-color: transparent;
+        width: 60px;
+        height: 22px;
+        padding: 0px;
+        border: none;
+        text-align: center;
+    }
+
+    QComboBox::drop-down {
+        width: 60px;
+    }
+
+    QComboBox::down-arrow {
+        image: url(img/icon/database.svg);
+        width: 60px;
+        height: 60px;
+    }
+
+    QComboBox::lineEdit {
+        border: none;
+        background: transparent;
+        padding: 100px;
+        color: transparent;
+    }
+
+    QComboBox QAbstractItemView {
+        min-width: 150px;
+        max-width: 300px;
+        font-size: 14px;
+        padding: 100px;
+    }
+
+    QComboBox QAbstractItemView::item {
+        padding-left: 10px;
+        padding-right: 10px;
+        height: 40px;
+    }
+
+    QComboBox::item:selected {
+        background-color: $saved_color;
+        color: white;
+    }
+
+    QComboBox::editable {
+        background: transparent;
+        border: none;
+        padding: 0px;
+        color: transparent;
+    }
+}
+
+#textDesignStatistic {
+    QLabel {
+        font-family: 'Arimo';
+        font-size: 16px;
+        color: #FFFFFF;
+        font-weight: bold;
+        text-align: center;
+        border: none;
+    }
+
+    #changeValue {
+        font-family: 'Arimo';
+        font-size: 10px;
+        color: #FFFFFF;
+        font-weight: bold;
+    }
+}
+
+#chartDesignStatistic {
+    QFrame {
+        border: 10px solid $base_color_darker150;
+        padding: 20px;
+        background-color: #FFFFFF;
+        border-radius: 15px;
+    }
+}
+
+#DesignStatistic {
+    QFrame {
+        border: 10px solid $base_color_darker150;
+        padding: 20px;
+        background-color: #FFFFFF;
+        border-radius: 15px;
+    }
+}
+
+#buttonDesignStatistic {
+    QPushButton {
+        background-color: $base_color_darker130;
+        border-radius: 10px;
+        padding: 5px;
+        font-weight: bold;
+    }
+    QPushButton:hover {
+        background-color: $base_color_darker140;
+    }
+}
+
+/* Label Kurs */
+#labelkurs {
+    color: white;
+    font-size: 14px;
+    font-weight: bold;
+}
+
+/* Edit dan Delete Button */
+#Edit {
+    background-color: $base_color_darker130;
+    color: white;
+    border-radius: 5px;
+    padding: 5px;
+}
+
+#Edit:hover {
+    background-color: $base_color_darker140;
+}
+
+#Delete {
+    background-color: #f44336;
+    color: white;
+    border-radius: 5px;
+    padding: 5px;
+}
+
+#Delete:hover {
+    background-color: #da190b;
 }
