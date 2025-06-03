@@ -12,6 +12,7 @@ from controller.outcome import Outcome
 from controller.wallet import Wallet
 from controller.category import Category
 from controller.Popup import PopupWarning, PopupSuccess
+from utils.converter import CurrencyConverter
 
 class HistoryView(QWidget):
     def __init__(self, parent=None):
@@ -20,6 +21,7 @@ class HistoryView(QWidget):
         self.category_controller = Category()
         self.income_controller = Income(self.wallet_controller)
         self.outcome_controller = Outcome(self.wallet_controller)
+        self.currency_converter = CurrencyConverter()
         self.init_ui()
         self.setObjectName("HomeSection")
 
@@ -156,8 +158,49 @@ class HistoryView(QWidget):
         btn_layout.addWidget(self.search_bar)
         btn_layout.addWidget(self.date_edit)
 
+        # Tambahkan ComboBox untuk pemilihan mata uang
+        self.currency_combo = QComboBox()
+        self.currency_combo.addItems(self.currency_converter.get_available_currencies())
+        self.currency_combo.setCurrentText("idr")  # Default ke IDR
+        self.currency_combo.setStyleSheet("""
+            QComboBox {
+                background-color: white;
+                border: 1px solid #7A9F60;
+                border-radius: 5px;
+                padding: 5px;
+                color: black;
+            }
+            QComboBox::drop-down {
+                subcontrol-origin: padding;
+                subcontrol-position: top right;
+                width: 20px;
+                border-left-width: 1px;
+                border-left-color: #7A9F60;
+                border-left-style: solid;
+                border-top-right-radius: 5px;
+                border-bottom-right-radius: 5px;
+            }
+        """)
+        self.currency_combo.currentTextChanged.connect(self.update_currency_display)
+        labelkurs = QLabel("Mata Uang:")
+        labelkurs.setObjectName("labelkurs")
+        btn_layout.addWidget(labelkurs)
+        btn_layout.addWidget(self.currency_combo)
+
         # Tombol Hapus Filter
-        self.clear_filter_btn = QPushButton("Hapus Filter")
+        self.clear_filter_btn = QPushButton("Refresh Filter")
+        self.clear_filter_btn.setStyleSheet("""
+            QPushButton {
+                background-color: #f44336;
+                color: white;
+                border-radius: 5px;
+                padding: 5px 10px;
+                font-size: 12px;
+            }
+            QPushButton:hover {
+                background-color: #da190b;
+            }
+        """)
         self.clear_filter_btn.clicked.connect(self.clear_filters)
         btn_layout.addWidget(self.clear_filter_btn)
 
@@ -223,6 +266,31 @@ class HistoryView(QWidget):
             
             self.table.setRowHidden(row, not show_row)
 
+    def update_currency_display(self):
+        """Memperbarui tampilan jumlah dengan mata uang yang dipilih"""
+        selected_currency = self.currency_combo.currentText()
+        
+        for row in range(self.table.rowCount()):
+            amount_item = self.table.item(row, 2)
+            if amount_item:
+                # Ekstrak nilai numerik dari string
+                amount_str = amount_item.text().replace("Rp ", "").replace(".", "")
+                try:
+                    amount = float(amount_str)
+                    converted = self.currency_converter.convert(amount, selected_currency)
+                    if converted is not None:
+                        formatted = self.currency_converter.format_amount(converted, selected_currency)
+                        amount_item.setText(formatted)
+                except ValueError:
+                    continue
+
+        # Update total
+        if hasattr(self, 'total'):
+            converted_total = self.currency_converter.convert(self.total, selected_currency)
+            if converted_total is not None:
+                formatted_total = self.currency_converter.format_amount(converted_total, selected_currency)
+                self.label.setText(f"Total : {formatted_total}")
+
     def load_data(self, filter_type):
         """Memuat data ke tabel berdasarkan filter"""
         self.table.setRowCount(0)
@@ -273,7 +341,15 @@ class HistoryView(QWidget):
 
             self.table.setItem(row, 0, QTableWidgetItem(transaction["date"].strftime("%d/%m/%Y")))
             self.table.setItem(row, 1, QTableWidgetItem(transaction["type"]))
-            self.table.setItem(row, 2, QTableWidgetItem(f"Rp {transaction['amount']}"))
+
+            # Konversi dan format jumlah
+            selected_currency = self.currency_combo.currentText()
+            converted = self.currency_converter.convert(int(transaction["amount"]), selected_currency)
+            if converted is not None:
+                formatted = self.currency_converter.format_amount(converted, selected_currency)
+                self.table.setItem(row, 2, QTableWidgetItem(formatted))
+            else:
+                self.table.setItem(row, 2, QTableWidgetItem(self.currency_converter.format_amount(int(transaction["amount"]), 'idr')))
             self.table.setItem(row, 3, QTableWidgetItem(transaction["category"]))
             self.table.setItem(row, 4, QTableWidgetItem(transaction["wallet"]))
             self.table.setItem(row, 5, QTableWidgetItem(transaction["desc"]))
@@ -290,8 +366,14 @@ class HistoryView(QWidget):
             btn_delete.clicked.connect(lambda _, t=transaction: self.confirm_delete(t))
             self.table.setCellWidget(row, 7, btn_delete)
 
-        self.label.setText(f"Total : Rp {self.total}")
-
+        # Update total dengan mata uang yang dipilih
+        selected_currency = self.currency_combo.currentText()
+        converted_total = self.currency_converter.convert(self.total, selected_currency)
+        if converted_total is not None:
+            formatted_total = self.currency_converter.format_amount(converted_total, selected_currency)
+            self.label.setText(f"Total : {formatted_total}")
+        else:
+            self.label.setText(f"Total : {self.currency_converter.format_amount(self.total, 'idr')}")
 
     def open_edit_popup(self, transaction):
         """Popup Edit Data"""
