@@ -1,5 +1,4 @@
 import json
-# from controller.setting import Translation
 
 class Outcome:
     FILE_PATH = "database/outcome.json"

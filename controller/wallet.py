@@ -1,5 +1,4 @@
 import json
-from controller.setting import Translation
 
 class Wallet:
     FILE_PATH = "database/wallet.json"
@@ -17,8 +16,7 @@ class Wallet:
         """Memuat data wallet dari file."""
         try:
             with open(self.FILE_PATH, "r") as file:
-                translator = Translation()
-                return translator.recursive_translate(json.load(file))
+                return json.load(file)
         except FileNotFoundError:
             return []
 

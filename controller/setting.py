@@ -1,5 +1,3 @@
-# from config.config_handler import load_config, save_config
-# from config.translation import load_translation, get_available_languages
 from PyQt5 import QtGui
 from PyQt5.QtWidgets import (
     QLabel, QPushButton, QColorDialog, QVBoxLayout, QRadioButton, QStackedWidget,
@@ -10,58 +8,17 @@ from PyQt5.QtNetwork import QNetworkAccessManager, QNetworkRequest
 import json, os, sys, requests
 from googletrans import Translator, LANGUAGES
 from PyQt5.QtGui import QColor, QIcon
+from controller.wallet import Wallet
+from controller.income import Income
+from controller.outcome import Outcome
+from controller.wishlist import Wishlist
+from controller.category import Category
 
 # Get the path to the 'config.json' file located in the 'locales' folder
 CONFIG_FILE = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "locales", "config.json"))
 LOCALE_DIR = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "locales", "lang"))
 THEME_DIR = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "locales", "theme"))
 SRC_FILE = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "locales", "lang", "en.json"))
-
-
-# ====== API Translation Function ======
-def translate_text(text, target_lang):
-    source_lang = "en"
-    url = f"https://api.mymemory.translated.net/get?q={text}&langpair={source_lang}|{target_lang}"
-    try:
-        response = requests.get(url)
-        if response.status_code == 200:
-            return response.json()["responseData"]["translatedText"]
-        else:
-            return f"[Error: {response.status_code}]"
-    except Exception as e:
-        return f"[Translation Error: {e}]"
-
-# ====== Language Selection Dialog ======
-class RemoteLanguageDialog(QDialog):
-    def __init__(self, parent=None):
-        super().__init__(parent)
-        self.setWindowTitle("Pilih Bahasa")
-
-        self.languages = {
-            "English": "en",
-            "Indonesian": "id",
-            "Spanish": "es",
-            "French": "fr",
-            "German": "de",
-            "Japanese": "ja",
-            "Chinese": "zh"
-        }
-
-        self.combo = QComboBox()
-        self.combo.addItems(self.languages.keys())
-
-        buttons = QDialogButtonBox.Ok | QDialogButtonBox.Cancel
-        self.buttonBox = QDialogButtonBox(buttons)
-        self.buttonBox.accepted.connect(self.accept)
-        self.buttonBox.rejected.connect(self.reject)
-
-        layout = QVBoxLayout()
-        layout.addWidget(self.combo)
-        layout.addWidget(self.buttonBox)
-        self.setLayout(layout)
-
-    def selected_language_code(self):
-        return self.languages[self.combo.currentText()]
 
 class InternetChecker(QObject):
     internetStatusChanged = pyqtSignal(bool)
@@ -92,7 +49,7 @@ class Setting:
                 return json.load(f)
         except FileNotFoundError:
             # Default config values when the file doesn't exist
-            return {"local_language": "default", "theme_color": "light"}
+            return {"language": "default", "theme_color": "light"}
 
     def save_config(config):
         # Ensure the directory exists before writing to the file
@@ -176,6 +133,7 @@ class SettingsWindow(QDialog):
         self.settings = QSettings("Kelompok1A", "MoneyTracker")
         self.logic = Setting()
         self.config = Setting.load_config()
+        self.translate = Translation()
 
         # UI
         Setting_widget = QWidget()
@@ -187,26 +145,26 @@ class SettingsWindow(QDialog):
         self.label_language = QLabel("Hello, welcome to our app!")
         self.label_language.setStyleSheet("font-size: 18px;")
 
-        self.lang_btn = QPushButton("Pengaturan Bahasa")
-        self.lang_btn.clicked.connect(self.open_language_settings)
-
-
-        self.radioGlobal = QRadioButton("Global")
+        # self.radioGlobal = QRadioButton("Global")
         self.radioLocal = QRadioButton("Local")
-        self.comboBoxGlobal = QComboBox()
+        # self.comboBoxGlobal = QComboBox()
         self.comboBoxLocal = QComboBox()
         self.languageGroup = QButtonGroup()
-        self.languageGroup.addButton(self.radioGlobal)
+        # self.languageGroup.addButton(self.radioGlobal)
         self.languageGroup.addButton(self.radioLocal)
 
-        self.comboBoxGlobal.addItems(["EN", "FR", "ES"])
+        # lang_names = list(LANGUAGES.values())
+        # self.comboBoxGlobal.addItems(lang_names)
+        # self.comboBoxGlobal.setCurrentIndex(self.comboBoxGlobal.findText(self.config.get("language")))
+        # self.comboBoxGlobal.currentIndexChanged.connect(self.change_language)
+
         languages = Setting.get_available_languages()
         self.comboBoxLocal.addItems(languages)
-        self.comboBoxLocal.setCurrentIndex(self.comboBoxLocal.findText(self.config.get("local_language")))
-        self.comboBoxLocal.currentIndexChanged.connect(self.change_language)
+        self.comboBoxLocal.setCurrentIndex(self.comboBoxLocal.findText(self.config.get("language")))
+        # self.comboBoxLocal.currentIndexChanged.connect(self.change_language)
 
         # Connect logic
-        self.radioGlobal.toggled.connect(self.toggleCombos)
+        # self.radioGlobal.toggled.connect(self.toggleCombos)
         self.radioLocal.toggled.connect(self.toggleCombos)
 
         self.toggleCombos()
@@ -214,8 +172,8 @@ class SettingsWindow(QDialog):
         # Global section
         global_widget = QWidget()
         global_layout = QVBoxLayout(global_widget)
-        global_layout.addWidget(self.radioGlobal)
-        global_layout.addWidget(self.comboBoxGlobal)
+        # global_layout.addWidget(self.radioGlobal)
+        # global_layout.addWidget(self.comboBoxGlobal)
 
         # Local section
         local_widget = QWidget()
@@ -228,11 +186,6 @@ class SettingsWindow(QDialog):
         language_layout = QHBoxLayout(language_widget)
         language_layout.addWidget(global_widget)
         language_layout.addWidget(local_widget)
-
-        # Cek preferensi bahasa sebelumnya
-        saved_lang = self.settings.value("language", "en")
-        if saved_lang != "en":
-            self.update_translation(saved_lang)
 
         self.label = QLabel("Status koneksi: Unknown")
         self.label.setStyleSheet("font-size: 18px;")
@@ -248,8 +201,8 @@ class SettingsWindow(QDialog):
 
         # Auto check setiap 10 detik
         self.timer = QTimer()
-        self.timer.timeout.connect(self.check_internet)
-        self.timer.start(10000)  # 10.000 ms = 10 detik
+        self.timer.timeout.connect(self.checker.check)
+        self.timer.start(2000)  # 2.000 ms = 2 detik
 
         theme_widget = QWidget()
         theme_widget.setObjectName("groupBox")
@@ -279,7 +232,6 @@ class SettingsWindow(QDialog):
 
         layout.addWidget(self.label_desc1)
         layout.addWidget(self.label_language)
-        layout.addWidget(self.lang_btn)
         layout.addWidget(language_widget)
         layout.addWidget(self.label)
         layout.addWidget(self.check_btn)
@@ -317,39 +269,20 @@ class SettingsWindow(QDialog):
     def update_status(self, is_connected):
         if is_connected:
             self.label.setText("Status koneksi: Terhubung ✅")
-            self.radioGlobal.setEnabled(True)
+            # self.radioGlobal.setEnabled(True)
         else:
             self.label.setText("Status koneksi: Tidak Terhubung ❌")
-            self.radioGlobal.setEnabled(False)
-            self.comboBoxGlobal.setEnabled(False)
+            # self.radioGlobal.setEnabled(False)
+            # self.comboBoxGlobal.setEnabled(False)
 
-    def open_language_settings(self):
-        dialog = RemoteLanguageDialog(self)
-        if dialog.exec_():
-            lang_code = dialog.selected_language_code()
-            self.settings.setValue("language", lang_code)
-            self.update_translation(lang_code)
-
-    def update_translation(self, lang_code):
-        if lang_code == "en":
-            self.label_language.setText("Hello, welcome to our app!")
-        else:
-            translated = translate_text("Hello, welcome to our app!", lang_code)
-            self.label_language.setText(translated)
-
-    def change_language(self):
-        """Mengubah bahasa UI berdasarkan bahasa yang dipilih"""
-        self.config["local_language"] = self.comboBoxLocal.currentText()
-        Setting.save_config(self.config)
-        self.language_data = Setting.load_language_file(self.comboBoxLocal.currentText())
-    
     def toggleCombos(self):
-        if self.radioGlobal.isChecked():
-            self.comboBoxGlobal.setEnabled(True)
-            self.comboBoxLocal.setEnabled(False)
-        else:
-            self.comboBoxGlobal.setEnabled(False)
-            self.comboBoxLocal.setEnabled(True)
+        # if self.radioGlobal.isChecked():
+        #     self.comboBoxGlobal.setEnabled(True)
+        #     self.comboBoxLocal.setEnabled(False)
+        # else:
+        #     self.comboBoxGlobal.setEnabled(False)
+        #     self.comboBoxLocal.setEnabled(True)
+        pass
 
     def choose_color(self):
         dialog = QColorDialog(self)
@@ -368,9 +301,56 @@ class SettingsWindow(QDialog):
         color_name = color.name()
         self.settings.setValue("global_color", color_name)
 
-class Translation:
-    FILE_PATH = ".../locales/lang/en.json"
+    def clear_data(self):
+        wallet = Wallet()
+        data = wallet.load_wallets()
+        if any("name_translation" in item for item in data):
+            for item in data:
+                item.pop("name_translation", None)
+        wallet.save_wallets(data)
 
+        wishlist = Wishlist(wallet)
+        data = wishlist.load_wishlists()
+        if any("label_translation" in item for item in data):
+            for item in data:
+                item.pop("label_translation", None)
+        wishlist.save_wishlists(data)
+
+        income = Income(wallet)
+        data = income.load_incomes()
+        if any("desc_translation" in item for item in data):
+            for item in data:
+                item.pop("desc_translation", None)
+        income.save_incomes(data)
+
+        outcome = Outcome(wallet)
+        data = outcome.load_outcomes()
+        if any("desc_translation" in item for item in data):
+            for item in data:
+                item.pop("desc_translation", None)
+        outcome.save_outcomes(data)
+
+        category = Category()
+        data = category.load_categories()
+        if any("label_translation" in item for item in data):
+            for item in data:
+                item.pop("label_translation", None)
+        category.save_categories(data)
+
+    def accept(self):
+        if self.radioLocal.isChecked():
+            self.config["language"] = self.comboBoxLocal.currentText()
+            Setting.save_config(self.config)
+            self.clear_data()
+
+        # elif self.radioGlobal.isChecked():
+        #     self.config["language"] = self.comboBoxGlobal.currentText()
+        #     Setting.save_config(self.config)
+        #     self.translate.translate_all_json_texts(Setting.load_language_file("en"))
+        #     self.translate.translate_content()
+        super().accept()  # Wajib dipanggil agar dialog tetap tertutup
+
+class Translation:
     def __init__(self):
         super().__init__()
         self.translator = Translator()
@@ -385,35 +365,13 @@ class Translation:
         except Exception as e:
             print(f"Error loading JSON: {e}")
 
-    def init_ui(self):
-        pass
-        # layout = QVBoxLayout()
-
-        # lang_names = list(LANGUAGES.values())
-
-        # # Language selection
-        # lang_layout = QHBoxLayout()
-        # self.target_lang = QComboBox()
-        # self.target_lang.addItems(lang_names)
-        # self.target_lang.setCurrentText("english")
-        # self.target_lang.currentIndexChanged.connect(self.save_remote)
-        # lang_layout.addWidget(self.target_lang)
-        # layout.addLayout(lang_layout)
-
-        # # Translate button
-        # self.translate_btn = QPushButton("Translate All JSON Values")
-        # self.translate_btn.clicked.connect(self.translate_all_json_texts)
-        # layout.addWidget(self.translate_btn)
-
-        # self.setLayout(layout)
-
-    def translate_all_json_texts(self):
-        self.refresh_language(self)
+    def translate_all_json_texts(self, json_texts):
+        self.refresh_language()
         try:
-            translated_json = self.recursive_translate(self.json_texts)
+            translated_json = self.recursive_translate(json_texts)
 
             # OPTIONAL: Simpan hasil ke file
-            save_path = f"locales/lang/online.json"
+            save_path = f"locales/lang/{self.target}.json"
             with open(save_path, "w", encoding="utf-8") as f:
                 json.dump(translated_json, f, ensure_ascii=False, indent=2)
             print(f"Translated JSON saved to: {save_path}")
@@ -440,17 +398,51 @@ class Translation:
             if lang.lower() == name.lower():
                 return code
         return "en"
-    
-    def save_remote(self):
-        language = Setting.load_config()
-        language["remote_language"] = self.target_lang.currentText()
-        Setting.save_config(language)
 
     def refresh_language(self):
         self.src = "auto"
         self.target = Setting.load_config()
-        self.target = self.target["remote_language"]
+        self.target = self.target["language"]
         self.dest = self.get_lang_code(self.target)
+
+    def translate_content(self):
+        src = self.src
+        dest = self.dest
+
+        wallet = Wallet()
+        data = wallet.load_wallets()
+        for item in data:
+            translation = self.translator.translate(item["name"], src=src, dest=dest).text
+            item["name_translation"] = translation
+        wallet.save_wallets(data)
+
+        wishlist = Wishlist(wallet)
+        data = wishlist.load_wishlists()
+        for item in data:
+            translation = self.translator.translate(item["label"], src=src, dest=dest).text
+            item["label_translation"] = translation
+        wishlist.save_wishlists(data)
+
+        income = Income(wallet)
+        data = income.load_incomes()
+        for item in data:
+            translation = self.translator.translate(item["desc"], src=src, dest=dest).text
+            item["desc_translation"] = translation
+        income.save_incomes(data)
+
+        outcome = Outcome(wallet)
+        data = outcome.load_outcomes()
+        for item in data:
+            translation = self.translator.translate(item["desc"], src=src, dest=dest).text
+            item["desc_translation"] = translation
+        outcome.save_outcomes(data)
+
+        category = Category()
+        data = category.load_categories()
+        for item in data:
+            translation = self.translator.translate(item["name"], src=src, dest=dest).text
+            item["name_translation"] = translation
+        category.save_categories(data)
 
 class MiniMainWindow(QWidget):
     def __init__(self):

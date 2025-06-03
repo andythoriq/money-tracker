@@ -102,21 +102,24 @@ class WalletView(QWidget):
         self.setLayout(main_layout)
         self.load_wallets()
 
-    def load_wallets(self):
+    def load_wallets(self, lang = {}):
         """Memuat data wallet ke tabel"""
         wallets = self.wallet_controller.load_wallets()
         self.table_wallet.setRowCount(len(wallets))
 
         for row, wallet in enumerate(wallets):
-            name_item = QTableWidgetItem(wallet.get("name"))
+            if "name_translation" in wallet:
+                name_item = QTableWidgetItem(wallet.get("name_translation"))
+            else:
+                name_item = QTableWidgetItem(wallet.get("name"))
             amount_item = QTableWidgetItem(f"Rp {wallet.get('amount')}")
 
-            self.btn_edit = QPushButton("Edit")
+            self.btn_edit = QPushButton(f"{lang.get("wishlist", {}).get("col5", "Edit")}")
             self.btn_edit.setFixedWidth(80)
             self.btn_edit.setObjectName("Edit")
             self.btn_edit.clicked.connect(lambda _, n=wallet.get("name"): self.edit_wallet(n))
 
-            self.btn_delete = QPushButton("Hapus")
+            self.btn_delete = QPushButton(f"{lang.get("wishlist", {}).get("col6", "Delete")}")
             self.btn_delete.setFixedWidth(80)
             self.btn_delete.setObjectName("Delete")
             self.btn_delete.clicked.connect(lambda _, n=wallet.get("name"): self.delete_wallet(n))
@@ -220,5 +223,6 @@ class WalletView(QWidget):
             except AttributeError:
                 # Menangani jika btn_delete tidak ada sama sekali
                 print("btn_delete is missing")
+            self.load_wallets(lang)
 
 

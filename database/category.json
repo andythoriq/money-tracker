@@ -6,5 +6,9 @@
     {
         "name": "III",
         "type": "outcome"
+    },
+    {
+        "name": "Merah",
+        "type": "income"
     }
 ]

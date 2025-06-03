@@ -1,5 +1,4 @@
 import json
-from controller.setting import Translation
 
 class Income:
     FILE_PATH = "database/income.json"

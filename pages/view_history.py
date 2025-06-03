@@ -157,7 +157,7 @@ class HistoryView(QWidget):
             
             self.table.setRowHidden(row, not show_row)
 
-    def load_data(self, filter_type):
+    def load_data(self, filter_type = "all", lang = {}):
         """Memuat data ke tabel berdasarkan filter"""
         self.table.setRowCount(0)
         transactions = []
@@ -168,7 +168,7 @@ class HistoryView(QWidget):
             transactions.append({
                 "id": income.get("ID"),
                 "date": datetime.strptime(income.get("date"), "%d/%m/%Y"),
-                "type": "income",
+                "type": f"{lang.get("category", {}).get("item1", "Income")}",
                 "amount": income.get("amount"),
                 "category": income.get("category"),
                 "wallet": income.get("wallet"),
@@ -180,7 +180,7 @@ class HistoryView(QWidget):
             transactions.append({
                 "id": outcome.get("ID"),
                 "date": datetime.strptime(outcome.get("date"), "%d/%m/%Y"),
-                "type": "outcome",
+                "type": f"{lang.get("category", {}).get("item2", "Outcome")}",
                 "amount": outcome.get("amount"),
                 "category": outcome.get("category"),
                 "wallet": outcome.get("wallet"),
@@ -213,13 +213,13 @@ class HistoryView(QWidget):
             self.table.setItem(row, 5, QTableWidgetItem(transaction["desc"]))
 
             # Tombol Edit
-            self.btn_edit = QPushButton("Edit")
+            self.btn_edit = QPushButton(f"{lang.get("wishlist", {}).get("col5", "Edit")}")
             self.btn_edit.setObjectName("Edit")
             self.btn_edit.clicked.connect(lambda _, t=transaction: self.open_edit_popup(t))
             self.table.setCellWidget(row, 6, self.btn_edit)
 
             # Tombol Delete
-            self.btn_delete = QPushButton("Delete")
+            self.btn_delete = QPushButton(f"{lang.get("wishlist", {}).get("col6", "Delete")}")
             self.btn_delete.setObjectName("Delete")
             self.btn_delete.clicked.connect(lambda _, t=transaction: self.confirm_delete(t))
             self.table.setCellWidget(row, 7, self.btn_delete)
@@ -347,3 +347,4 @@ class HistoryView(QWidget):
                     ]
                 )
             self.label.setText(_translate("Form", lang.get("history", {}).get("foot", "") + f"Rp {self.total}"))
+        self.load_data("all", lang)

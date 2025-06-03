@@ -133,7 +133,7 @@ class WishlistView(QWidget):
         main_layout.addWidget(content_widget)
         self.setLayout(main_layout)
 
-    def load_wishlists(self):
+    def load_wishlists(self, lang = {}):
         """Memuat data wishlist ke tabel berdasarkan filter"""
         wishlists = self.wishlist_controller.wishlists  
 
@@ -154,16 +154,16 @@ class WishlistView(QWidget):
             self.wishlist_table.setItem(row, 2, QTableWidgetItem(str(wishlist.get("price")))) # Harga
             
             # Konversi status dari boolean ke text
-            status_text = "Sudah Terpenuhi" if wishlist.get("status") else "Belum Terpenuhi"
+            status_text = f"{lang.get("comparator", {}).get("status1", "Sudah Terpenuhi")}" if wishlist.get("status") else f"{lang.get("comparator", {}).get("status0", "Belum Terpenuhi")}"
             self.wishlist_table.setItem(row, 3, QTableWidgetItem(status_text))  # Status
 
             # Tombol Edit dan Hapus
-            edit_button = QPushButton("Edit")
+            edit_button = QPushButton(f"{lang.get("wishlist", {}).get("col5", "Edit")}")
             edit_button.setObjectName("Edit")
             edit_button.clicked.connect(lambda _, id=wishlist.get("ID"): self.show_edit_dialog(id))
             self.wishlist_table.setCellWidget(row, 4, edit_button)
 
-            delete_button = QPushButton("Hapus")
+            delete_button = QPushButton(f"{lang.get("wishlist", {}).get("col6", "Delete")}")
             delete_button.setObjectName("Delete")
             delete_button.clicked.connect(lambda _, id=wishlist.get("ID"), name=wishlist.get("label"), price=wishlist.get("price"): self.delete_wishlist(id, name, price))
             self.wishlist_table.setCellWidget(row, 5, delete_button)
@@ -225,7 +225,7 @@ class WishlistView(QWidget):
         # Tombol Simpan
         save_button = QPushButton("Simpan")
         save_button.clicked.connect(lambda: self.save_edit(dialog, wishlist_id, name_input.text(), price_input.value(), 
-                                                         True if status_input.currentText() == "Sudah Terpenuhi" else False))
+                                            True if status_input.currentText() == "Sudah Terpenuhi" else False))
         layout.addWidget(save_button)
 
         dialog.setLayout(layout)
@@ -283,3 +283,4 @@ class WishlistView(QWidget):
                     lang.get("wishlist", {}).get("col6", ""), 
                     ]
                 )
+        self.load_wishlists(lang)

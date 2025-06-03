@@ -104,21 +104,25 @@ class CategoryView(QWidget):
             error_message = "\n".join([f"{key}: {value}" for key, value in errors.items()])
             PopupWarning("Warning", f"Gagal menyimpan wallet!\n{error_message}")
 
-    def load_categories(self):
+    def load_categories(self, lang = {}):
         """Memuat ulang data kategori ke tabel"""
         self.table.setRowCount(0)
         categories = self.category_controller.load_categories()
 
         for row_idx, category in enumerate(categories):
-            name = category["name"]
+            if "name_translation" in category:
+                name = category["name_translation"]
+            else:
+                name = category["name"]
             category_type = category["type"]
+            category_type = f"{lang.get("category", {}).get("item1", "Income")}" if category_type == "income" else f"{lang.get("category", {}).get("item2", "Outcome")}"
 
             self.table.insertRow(row_idx)
             self.table.setItem(row_idx, 0, QTableWidgetItem(name))
             self.table.setItem(row_idx, 1, QTableWidgetItem(category_type))
 
             # Tombol Delete
-            self.btn_delete = QPushButton("Delete")
+            self.btn_delete = QPushButton(f"{lang.get("wishlist", {}).get("col6", "Delete")}")
             self.btn_delete.setFixedWidth(80)
             self.btn_delete.setObjectName("Delete")  
             self.btn_delete.clicked.connect(lambda _, n=name, t=category_type: self.confirm_delete(n,t))
@@ -162,3 +166,4 @@ class CategoryView(QWidget):
             except AttributeError:
                 # Menangani jika btn_delete tidak ada sama sekali
                 print("btn_delete is missing")
+            self.load_categories(lang)

@@ -1,5 +1,4 @@
 import json
-# from controller.setting import Translation
 
 class Wishlist:
     FILE_PATH = "database/wishlist.json"
@@ -23,13 +22,14 @@ class Wishlist:
         except FileNotFoundError:
             return []
 
-    def save_wishlists(self):
+    def save_wishlists(self, wishlists):
         """Menyimpan data wishlist ke file."""
         with open(self.FILE_PATH, "w") as file:
-            json.dump(self.wishlists, file, indent=4)
+            json.dump(wishlists, file, indent=4)
 
     def add_wishlist(self, label, price, status):
         """Menambah wishlist baru dengan ID."""
+        wishlists = self.load_wishlists()
 
         # validasi
         result = self.validate_wishlist({
@@ -47,12 +47,14 @@ class Wishlist:
             "price": price,
             "status": status
         })
-        self.save_wishlists()
+        self.save_wishlists(wishlists)
         return result
 
     def edit_wishlist(self, wishlist_id, label, price, status):
         """Mengedit wishlist berdasarkan ID."""
-        for wishlist in self.wishlists:
+
+        wishlists = self.load_wishlists()
+        for wishlist in wishlists:
             if wishlist["ID"] == wishlist_id:
                 result = self.validate_wishlist({
                     "label": label,
@@ -66,16 +68,18 @@ class Wishlist:
                 wishlist["price"] = price
                 wishlist["status"] = status
 
-                self.save_wishlists()
+                self.save_wishlists(wishlists)
                 return result
         return False
 
     def delete_wishlist(self, wishlist_id):
         """Menghapus wishlist berdasarkan ID."""
-        new_wishlists = [wishlist for wishlist in self.wishlists if wishlist["ID"] != int(wishlist_id)]
-        if len(new_wishlists) != len(self.wishlists):
-            self.wishlists = new_wishlists
-            self.save_wishlists()
+        wishlists = self.load_wishlists()
+
+        new_wishlists = [wishlist for wishlist in wishlists if wishlist["ID"] != int(wishlist_id)]
+        if len(new_wishlists) != len(wishlists):
+            wishlists = new_wishlists
+            self.save_wishlists(wishlists)
             return True
         return False
 

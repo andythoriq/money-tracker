@@ -27,7 +27,7 @@ class Dashboard(QWidget):
         self.theme_handler = Setting()
         self.config = Setting.load_config()
         self.setStyleSheet(self.theme_handler.load_theme(Setting.load_config()["theme_color"]))        
-        self.language_data = Setting.load_language_file(self.config.get("local_language"))
+        self.language_data = Setting.load_language_file(self.config.get("language"))
 
         self.slider_controller = SlidingWalletWidget(self)
 
@@ -567,8 +567,7 @@ class Dashboard(QWidget):
     def retranslateView(self):
         index_aktif = self.stack.currentIndex()
         self.config = Setting.load_config()
-        self.language_data = Setting.load_language_file(self.config.get("local_language"))
-        print(self.language_data)
+        self.language_data = Setting.load_language_file(self.config.get("language"))
         if index_aktif >= 0:
             self.retranslateUi()
             self.income_view.retranslateUi(self.language_data)

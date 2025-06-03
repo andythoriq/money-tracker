@@ -70,5 +70,13 @@
         "wallet": "AMM",
         "desc": "asas",
         "date": "20/05/2025"
+    },
+    {
+        "ID": 10,
+        "amount": 100000,
+        "category": "AAA",
+        "wallet": "Makan",
+        "desc": "Apaa",
+        "date": "03/06/2025"
     }
 ]

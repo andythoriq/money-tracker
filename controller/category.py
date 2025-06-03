@@ -1,5 +1,4 @@
 import json
-# from controller.setting import Translation
 
 class Category:
     FILE_PATH = "database/category.json"
