@@ -49,9 +49,9 @@ class Setting:
 
     def toggle_icon(self, theme):
         if theme.isChecked():
-            theme.setIcon(QtGui.QIcon("../money-tracker/img/icon/sun.svg"))
+            theme.setIcon(QtGui.QIcon("./img/icon/sun.svg"))
         else:
-            theme.setIcon(QtGui.QIcon("../money-tracker/img/icon/moon.svg"))
+            theme.setIcon(QtGui.QIcon("./img/icon/moon.svg"))
 
     def load_theme(self, theme, directory="locales/theme"):
         path = os.path.join(directory, f"{theme}.qss")
