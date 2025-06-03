@@ -316,7 +316,7 @@ class HistoryView(QWidget):
                 formatted_total = self.currency_converter.format_amount(converted_total, selected_currency)
                 self.label.setText(f"Total : {formatted_total}")
 
-    def load_data(self, filter_type):
+    def load_data(self, filter_type = "all", lang = {}):
         """Memuat data ke tabel berdasarkan filter"""
         self.table.setRowCount(0)
         transactions = []

@@ -236,9 +236,9 @@ class Dashboard(QWidget):
 
         self.load_history_table(self.language_data["comparator"])
 
-        layout.addWidget(self.history_table)
-        layout.addWidget(self.view_all_btn, alignment=QtCore.Qt.AlignRight)
-        self.layout_2.setLayout(layout)
+        layoutgreen.addWidget(self.history_table)
+        layoutgreen.addWidget(self.view_all_btn, alignment=QtCore.Qt.AlignRight)
+        self.layout_2.setLayout(layoutgreen)
         self.layout_2.setContentsMargins(0, 0, 0, 0)  # Menghilangkan margin di sekitar layout_2
         self.layout_2.setSizePolicy(QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Expanding)
 
@@ -277,8 +277,8 @@ class Dashboard(QWidget):
         
         self.load_wishlist_table(self.language_data["comparator"])
 
-        layout.addWidget(self.wishlist_table)
-        self.layout_4.setLayout(layout)
+        layoutblue.addWidget(self.wishlist_table)
+        self.layout_4.setLayout(layoutblue)
 
 
     def resizeEvent(self, event):
