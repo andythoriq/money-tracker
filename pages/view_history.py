@@ -379,25 +379,7 @@ class HistoryView(QWidget):
         """Popup Edit Data"""
         dialog = QDialog(self)
         dialog.setWindowTitle("Edit Transaksi")
-        dialog.setStyleSheet("""
-            QDialog {
-                background-color: #98C379;
-            }
-            QLabel {
-                color: white;
-                font-size: 14px;
-            }
-            QSpinBox, QComboBox, QLineEdit {
-                background-color: white;
-                border: 1px solid #7A9F60;
-                border-radius: 5px;
-                padding: 5px;
-            }
-            QCalendarWidget {
-                background-color: white;
-                border-radius: 5px;
-            }
-        """)
+
         layout = QFormLayout(dialog)
         layout.setSpacing(10)
         layout.setContentsMargins(20, 20, 20, 20)
@@ -428,18 +410,7 @@ class HistoryView(QWidget):
 
         # Tombol Simpan
         btn_save = QPushButton("Simpan")
-        btn_save.setStyleSheet("""
-            QPushButton {
-                background-color: #4CAF50;
-                color: white;
-                border-radius: 5px;
-                padding: 8px;
-                font-size: 14px;
-            }
-            QPushButton:hover {
-                background-color: #45a049;
-            }
-        """)
+ 
         btn_save.clicked.connect(lambda: self.save_edit(transaction, amount_input, category_input, wallet_input, desc_input, date_input, dialog))
         layout.addRow(btn_save)
 
@@ -468,24 +439,14 @@ class HistoryView(QWidget):
     def confirm_delete(self, transaction):
         """Konfirmasi Delete"""
         msg = QMessageBox()
-        msg.setStyleSheet("""
-            QMessageBox {
-                background-color: #98C379;
-            }
-            QLabel {
-                color: white;
-            }
-            QPushButton {
-                background-color: #4CAF50;
+        msg.setStyleSheet("""  
+         QPushButton {
+                background-color: #000000;
                 color: white;
                 border-radius: 5px;
                 padding: 5px;
                 min-width: 70px;
-            }
-            QPushButton:hover {
-                background-color: #45a049;
-            }
-        """)
+            }""")
         msg.setWindowTitle("Konfirmasi Hapus")
         msg.setText(f"Apakah Anda yakin ingin menghapus transaksi {transaction['type']} dengan jumlah Rp {transaction['amount']}?")
         msg.setStandardButtons(QMessageBox.Yes | QMessageBox.No)
