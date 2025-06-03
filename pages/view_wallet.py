@@ -138,24 +138,7 @@ class WalletView(QWidget):
             self.input_amount.setValue(0)
         else:
             msg = QMessageBox()
-            msg.setStyleSheet("""
-                QMessageBox {
-                    background-color: #7A9F60;
-                }
-                QLabel {
-                    color: white;
-                }
-                QPushButton {
-                    background-color: #4CAF50;
-                    color: white;
-                    border-radius: 5px;
-                    padding: 5px;
-                    min-width: 70px;
-                }
-                QPushButton:hover {
-                    background-color: #45a049;
-                }
-            """)
+
             msg.setWindowTitle("Error")
             msg.setText("Nama wallet tidak boleh kosong!")
             msg.exec_()
@@ -171,6 +154,7 @@ class WalletView(QWidget):
 
     def delete_wallet(self, name):
         """Menghapus wallet"""
+
         msg = QMessageBox(self)
         msg.setObjectName("deleteWallet")
         msg.setWindowTitle("Konfirmasi")

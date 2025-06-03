@@ -281,25 +281,11 @@ QPushButton#PopupAboutUs:hover {
     }
 }
 
-/* Delete Wallet */
-#deleteWallet {
+
     QMessageBox {
         background-color: #444444;
     }
-    QLabel {
-        color: white;
-    }
-    QPushButton {
-        background-color: #555555;
-        color: white;
-        border-radius: 5px;
-        padding: 5px;
-        min-width: 70px;
-    }
-    QPushButton:hover {
-        background-color: #666666;
-    }
-}
+
 
 /* Wishlist View Styles */
 #wishlist_container {
@@ -786,3 +772,6 @@ QStackedWidget {
     border: none;
 }
 
+#labelkurs {
+  color: white;
+}

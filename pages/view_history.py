@@ -406,6 +406,7 @@ class HistoryView(QWidget):
         dialog.setWindowTitle("Edit Transaksi")
         dialog.setObjectName("edit_popup")
 
+
         layout = QFormLayout(dialog)
         layout.setSpacing(10)
         layout.setContentsMargins(20, 20, 20, 20)
@@ -438,6 +439,7 @@ class HistoryView(QWidget):
         self.btn_save = QPushButton("Simpan")
         self.btn_save.clicked.connect(lambda: self.save_edit(transaction, amount_input, category_input, wallet_input, desc_input, date_input, dialog))
         layout.addRow(self.btn_save)
+
 
         dialog.setLayout(layout)
         dialog.exec_()

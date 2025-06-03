@@ -47,6 +47,10 @@ QLineEdit {
     border-radius: 15px;
 }
 
+#walletwidget{
+  background-color: #82D1C5;
+}
+
 #walletBox {
     background-color: #82D1C5; /* Card Saldo & Wishlist: Pearl Aqua */
     border-radius: 25%;
@@ -279,24 +283,9 @@ QScrollBar {
     }
 }
 
-#deleteWallet {
     QMessageBox {
         background-color: #98C379;
     }
-    QLabel {
-        color: white;
-    }
-    QPushButton {
-        background-color: #4CAF50;
-        color: white;
-        border-radius: 5px;
-        padding: 5px;
-        min-width: 70px;
-    }
-    QPushButton:hover {
-        background-color: #45a049;
-    }
-}
 
 /* History View Styles */
 QLineEdit#search_bar {
@@ -902,4 +891,17 @@ QSpinBox::down-arrow {
     background-color: #5c9b90;
 }
 
+QDialog {
+    background-color: #98C379;
+}
 
+QSpinBox, QComboBox, QLineEdit {
+    background-color: white;
+    border: 1px solid #7A9F60;
+    border-radius: 5px;
+    padding: 5px;
+}
+QCalendarWidget {
+    background-color: white;
+    border-radius: 5px;
+}
