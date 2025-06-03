@@ -102,6 +102,12 @@
       "col4": "Status",
       "col5": "Edytuj",
       "col6": "Usuń"
+    },
+    "comparator" : {
+      "type1": "Dochód",
+      "type2": "Wydatek",
+      "status0": "Nie zrealizowane",
+      "status1": "Zrealizowane"
     }
   }
   

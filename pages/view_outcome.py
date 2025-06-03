@@ -1,11 +1,9 @@
 from PyQt5.QtWidgets import (
     QWidget, QVBoxLayout, QLineEdit, QPushButton, 
-    QComboBox, QFormLayout, QCalendarWidget, QLabel, QHBoxLayout
+    QComboBox, QSpinBox, QFormLayout, QCalendarWidget, QLabel, QHBoxLayout
 )
 from PyQt5.QtGui import QRegExpValidator
 from PyQt5.QtCore import QRegExp, QDate, Qt, QCoreApplication
-from utils.number_formatter import NumberFormat
-from components.MoneyLineEdit import MoneyLineEdit
 from controller.outcome import Outcome
 from controller.category import Category
 from controller.wallet import Wallet
@@ -33,7 +31,6 @@ class OutcomeView(QWidget):
         # Form container
         form_container = QWidget()
         form_container.setObjectName("Layout")
-        form_container.setProperty("class", "OutcomeView")
         form_layout = QFormLayout()
         
         # Input jumlah pengeluaran container
@@ -41,13 +38,13 @@ class OutcomeView(QWidget):
         amount_layout = QHBoxLayout()
         self.amount_label = QLabel("Jumlah Pengeluaran:")
         self.amount_label.setObjectName("form_label")
-        self.input_amount = MoneyLineEdit(locale_str='id_ID')
+        self.input_amount = QSpinBox()
         self.input_amount.setObjectName("form_input")
         self.input_amount.setProperty("class", "OutcomeView")
-        # self.input_amount.setMinimum(0)
-        # self.input_amount.setMaximum(1000000000)
-        # self.input_amount.setPrefix("Rp ")
-        # self.input_amount.setSingleStep(50000)
+        self.input_amount.setMinimum(0)
+        self.input_amount.setMaximum(1000000000)
+        self.input_amount.setPrefix("Rp ")
+        self.input_amount.setSingleStep(50000)
         amount_layout.addWidget(self.amount_label)
         amount_layout.addWidget(self.input_amount)
         amount_container.setLayout(amount_layout)
@@ -145,7 +142,7 @@ class OutcomeView(QWidget):
 
     def refresh_inputs(self):
         """Menghapus input setelah menyimpan"""
-        self.input_amount.set_value(0)
+        self.input_amount.setValue(0)
         self.input_desc.clear()
         self.calendar.setSelectedDate(QDate.currentDate())  # Reset tanggal ke hari ini
 
@@ -159,11 +156,11 @@ class OutcomeView(QWidget):
 
         self.input_category.addItems(category_names)
         for wallet in wallets:
-            self.input_wallet.addItem(f"{wallet.get('name')} - Rp {NumberFormat.getFormattedMoney(wallet.get('amount'))}", wallet.get("name"))
+            self.input_wallet.addItem(f"{wallet.get('name')} - Rp {wallet.get('amount')}", wallet.get("name"))
 
     def add_outcome(self):
         """Menambahkan pengeluaran"""
-        amount = self.input_amount.get_value()
+        amount = self.input_amount.value()
         category = self.input_category.currentText().strip()
         wallet = self.input_wallet.currentData()
         desc = self.input_desc.text().strip()

@@ -48,14 +48,6 @@
         "date": "01/05/2025"
     },
     {
-        "ID": 7,
-        "amount": 200000,
-        "category": "AAA",
-        "wallet": "AMM",
-        "desc": "asa",
-        "date": "02/05/2025"
-    },
-    {
         "ID": 8,
         "amount": 200000,
         "category": "AAA",
@@ -72,19 +64,19 @@
         "date": "02/05/2025"
     },
     {
-        "ID": 10,
-        "amount": 200000,
+        "ID": 9,
+        "amount": 600000,
         "category": "AAA",
         "wallet": "AMM",
-        "desc": "asa",
-        "date": "02/05/2025"
+        "desc": "asas",
+        "date": "20/05/2025"
     },
     {
-        "ID": 11,
-        "amount": 1000000,
+        "ID": 10,
+        "amount": 100000,
         "category": "AAA",
-        "wallet": "AMM",
-        "desc": "MAKANAN",
-        "date": "20/05/2025"
+        "wallet": "Makan",
+        "desc": "Apaa",
+        "date": "03/06/2025"
     }
 ]

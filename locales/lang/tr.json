@@ -102,6 +102,12 @@
       "col4": "Durum",
       "col5": "Düzenle",
       "col6": "Sil"
+    },
+    "comparator" : {
+      "type1": "Gelir",
+      "type2": "Gider",
+      "status0": "Tamamlanmadı",
+      "status1": "Tamamlandı"
     }
   }
   

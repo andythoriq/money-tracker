@@ -83,7 +83,7 @@ class SlidingWalletWidget(QWidget):
                 
                 # Create a page for each wallet
                 page = QWidget()
-                page.setObjectName("groupBox")
+                page.setObjectName("walletBox")
                 page_layout = QVBoxLayout(page)
                 page_layout.setContentsMargins(20, 20, 20, 20)
                 
@@ -99,12 +99,12 @@ class SlidingWalletWidget(QWidget):
                 
                 self.stacked_widget.setSizePolicy(QSizePolicy.Expanding, QSizePolicy.Expanding)
                 self.stacked_widget.setAttribute(Qt.WA_StyledBackground, True)
-                self.stacked_widget.setObjectName("groupBox")
+                self.stacked_widget.setObjectName("walletBox")
                 self.stacked_widget.addWidget(page)
         else:
             # Create a "No Wallet" page
             no_wallet_page = QWidget()
-            no_wallet_page.setObjectName("groupBox")
+            no_wallet_page.setObjectName("walletBox")
             no_wallet_layout = QVBoxLayout(no_wallet_page)
             no_wallet_layout.setContentsMargins(20, 20, 20, 20)
             

@@ -1,6 +1,5 @@
 import json, os
 
-
 class Account:
     FILE_PATH = "database/account.json"
 

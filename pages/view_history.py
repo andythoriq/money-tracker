@@ -1,19 +1,18 @@
 from PyQt5.QtWidgets import (
     QWidget, QVBoxLayout, QPushButton, QTableWidget, 
     QTableWidgetItem, QHBoxLayout, QLabel, QRadioButton, 
-    QButtonGroup, QDialog, QFormLayout, 
+    QButtonGroup, QDialog, QFormLayout, QSpinBox, 
     QComboBox, QLineEdit, QCalendarWidget, QMessageBox, 
     QTableView, QVBoxLayout, QDateEdit, QHeaderView
 )
 from PyQt5.QtCore import Qt, QSortFilterProxyModel, QDate, QCoreApplication
 from datetime import datetime
-from components.MoneyLineEdit import MoneyLineEdit
-from utils.number_formatter import NumberFormat
 from controller.income import Income
 from controller.outcome import Outcome
 from controller.wallet import Wallet
 from controller.category import Category
 from controller.Popup import PopupWarning, PopupSuccess
+from utils.converter import CurrencyConverter
 
 class HistoryView(QWidget):
     def __init__(self, parent=None):
@@ -22,6 +21,7 @@ class HistoryView(QWidget):
         self.category_controller = Category()
         self.income_controller = Income(self.wallet_controller)
         self.outcome_controller = Outcome(self.wallet_controller)
+        self.currency_converter = CurrencyConverter()
         self.init_ui()
         self.setObjectName("HomeSection")
 
@@ -53,15 +53,15 @@ class HistoryView(QWidget):
         self.filter_label = QLabel("Filter Jenis:")
         self.filter_label.setObjectName("form_label")
         self.radio_all = QRadioButton("Semua")
-        self.radio_all.setObjectName("btn_home")
+        self.radio_all.setObjectName("groupBox")
         self.radio_income = QRadioButton("Income")
-        self.radio_income.setObjectName("btn_home")
+        self.radio_income.setObjectName("groupBox")
         self.radio_outcome = QRadioButton("Outcome")
-        self.radio_outcome.setObjectName("btn_home")
+        self.radio_outcome.setObjectName("groupBox")
         
         # Search bar untuk kategori
         self.search_bar = QLineEdit(self)
-        self.search_bar.setPlaceholderText("Cari kategori...")
+        self.search_bar.setPlaceholderText("Cari kategori")
         self.search_bar.setStyleSheet("""
             QLineEdit {
                 background-color: white;
@@ -158,8 +158,37 @@ class HistoryView(QWidget):
         btn_layout.addWidget(self.search_bar)
         btn_layout.addWidget(self.date_edit)
 
+        # Tambahkan ComboBox untuk pemilihan mata uang
+        self.currency_combo = QComboBox()
+        self.currency_combo.addItems(self.currency_converter.get_available_currencies())
+        self.currency_combo.setCurrentText("idr")  # Default ke IDR
+        self.currency_combo.setStyleSheet("""
+            QComboBox {
+                background-color: white;
+                border: 1px solid #7A9F60;
+                border-radius: 5px;
+                padding: 5px;
+                color: black;
+            }
+            QComboBox::drop-down {
+                subcontrol-origin: padding;
+                subcontrol-position: top right;
+                width: 20px;
+                border-left-width: 1px;
+                border-left-color: #7A9F60;
+                border-left-style: solid;
+                border-top-right-radius: 5px;
+                border-bottom-right-radius: 5px;
+            }
+        """)
+        self.currency_combo.currentTextChanged.connect(self.update_currency_display)
+        labelkurs = QLabel("Mata Uang:")
+        labelkurs.setObjectName("labelkurs")
+        btn_layout.addWidget(labelkurs)
+        btn_layout.addWidget(self.currency_combo)
+
         # Tombol Hapus Filter
-        self.clear_filter_btn = QPushButton("Hapus Filter")
+        self.clear_filter_btn = QPushButton("Refresh Filter")
         self.clear_filter_btn.setStyleSheet("""
             QPushButton {
                 background-color: #f44336;
@@ -237,6 +266,31 @@ class HistoryView(QWidget):
             
             self.table.setRowHidden(row, not show_row)
 
+    def update_currency_display(self):
+        """Memperbarui tampilan jumlah dengan mata uang yang dipilih"""
+        selected_currency = self.currency_combo.currentText()
+        
+        for row in range(self.table.rowCount()):
+            amount_item = self.table.item(row, 2)
+            if amount_item:
+                # Ekstrak nilai numerik dari string
+                amount_str = amount_item.text().replace("Rp ", "").replace(".", "")
+                try:
+                    amount = float(amount_str)
+                    converted = self.currency_converter.convert(amount, selected_currency)
+                    if converted is not None:
+                        formatted = self.currency_converter.format_amount(converted, selected_currency)
+                        amount_item.setText(formatted)
+                except ValueError:
+                    continue
+
+        # Update total
+        if hasattr(self, 'total'):
+            converted_total = self.currency_converter.convert(self.total, selected_currency)
+            if converted_total is not None:
+                formatted_total = self.currency_converter.format_amount(converted_total, selected_currency)
+                self.label.setText(f"Total : {formatted_total}")
+
     def load_data(self, filter_type):
         """Memuat data ke tabel berdasarkan filter"""
         self.table.setRowCount(0)
@@ -287,77 +341,53 @@ class HistoryView(QWidget):
 
             self.table.setItem(row, 0, QTableWidgetItem(transaction["date"].strftime("%d/%m/%Y")))
             self.table.setItem(row, 1, QTableWidgetItem(transaction["type"]))
-            self.table.setItem(row, 2, QTableWidgetItem(f"Rp {NumberFormat.getFormattedMoney(transaction['amount'])}"))
+
+            # Konversi dan format jumlah
+            selected_currency = self.currency_combo.currentText()
+            converted = self.currency_converter.convert(int(transaction["amount"]), selected_currency)
+            if converted is not None:
+                formatted = self.currency_converter.format_amount(converted, selected_currency)
+                self.table.setItem(row, 2, QTableWidgetItem(formatted))
+            else:
+                self.table.setItem(row, 2, QTableWidgetItem(self.currency_converter.format_amount(int(transaction["amount"]), 'idr')))
             self.table.setItem(row, 3, QTableWidgetItem(transaction["category"]))
             self.table.setItem(row, 4, QTableWidgetItem(transaction["wallet"]))
             self.table.setItem(row, 5, QTableWidgetItem(transaction["desc"]))
 
             # Tombol Edit
             btn_edit = QPushButton("Edit")
-            btn_edit.setStyleSheet("""
-                QPushButton {
-                    background-color: #4CAF50;
-                    color: white;
-                    border-radius: 5px;
-                    padding: 5px;
-                }
-                QPushButton:hover {
-                    background-color: #45a049;
-                }
-            """)
+            btn_edit.setObjectName("Edit")
             btn_edit.clicked.connect(lambda _, t=transaction: self.open_edit_popup(t))
             self.table.setCellWidget(row, 6, btn_edit)
 
             # Tombol Delete
-            btn_delete = QPushButton("Delete")
-            btn_delete.setStyleSheet("""
-                QPushButton {
-                    background-color: #f44336;
-                    color: white;
-                    border-radius: 5px;
-                    padding: 5px;
-                }
-                QPushButton:hover {
-                    background-color: #da190b;
-                }
-            """)
+            btn_delete = QPushButton("Hapus")
+            btn_delete.setObjectName("Delete")
             btn_delete.clicked.connect(lambda _, t=transaction: self.confirm_delete(t))
             self.table.setCellWidget(row, 7, btn_delete)
 
-        self.label.setText(f"Total : Rp {NumberFormat.getFormattedMoney(self.total)}")
-
+        # Update total dengan mata uang yang dipilih
+        selected_currency = self.currency_combo.currentText()
+        converted_total = self.currency_converter.convert(self.total, selected_currency)
+        if converted_total is not None:
+            formatted_total = self.currency_converter.format_amount(converted_total, selected_currency)
+            self.label.setText(f"Total : {formatted_total}")
+        else:
+            self.label.setText(f"Total : {self.currency_converter.format_amount(self.total, 'idr')}")
 
     def open_edit_popup(self, transaction):
         """Popup Edit Data"""
         dialog = QDialog(self)
         dialog.setWindowTitle("Edit Transaksi")
-        dialog.setStyleSheet("""
-            QDialog {
-                background-color: #98C379;
-            }
-            QLabel {
-                color: white;
-                font-size: 14px;
-            }
-            QSpinBox, QComboBox, QLineEdit {
-                background-color: white;
-                border: 1px solid #7A9F60;
-                border-radius: 5px;
-                padding: 5px;
-            }
-            QCalendarWidget {
-                background-color: white;
-                border-radius: 5px;
-            }
-        """)
+
         layout = QFormLayout(dialog)
         layout.setSpacing(10)
         layout.setContentsMargins(20, 20, 20, 20)
 
         # Widget Form
-        amount_input = MoneyLineEdit(locale_str='id_ID')
-        # amount_input.setMaximum(100000000)
-        amount_input.set_value(int(transaction["amount"]))
+        amount_input = QSpinBox()
+        amount_input.setMaximum(100000000)
+        amount_input.setValue(int(transaction["amount"]))
 
         category_input = QComboBox()
         category_input.addItems(self.category_controller.load_category_names(transaction["type"]))
@@ -380,18 +410,7 @@ class HistoryView(QWidget):
 
         # Tombol Simpan
         btn_save = QPushButton("Simpan")
-        btn_save.setStyleSheet("""
-            QPushButton {
-                background-color: #4CAF50;
-                color: white;
-                border-radius: 5px;
-                padding: 8px;
-                font-size: 14px;
-            }
-            QPushButton:hover {
-                background-color: #45a049;
-            }
-        """)
+ 
         btn_save.clicked.connect(lambda: self.save_edit(transaction, amount_input, category_input, wallet_input, desc_input, date_input, dialog))
         layout.addRow(btn_save)
 
@@ -402,7 +421,7 @@ class HistoryView(QWidget):
         """Simpan perubahan edit transaksi"""
         new_data = {
             "ID": transaction["id"],
-            "amount": amount.get_value(),
+            "amount": amount.value(),
             "category": category.currentText(),
             "wallet": wallet.currentText(),
             "desc": desc.text(),
@@ -410,41 +429,24 @@ class HistoryView(QWidget):
         }
 
         if transaction["type"] == "income":
-            result = self.income_controller.update_income(new_data)
+            self.income_controller.update_income(new_data)
         else:
-            result = self.outcome_controller.update_outcome(new_data)
+            self.outcome_controller.update_outcome(new_data)
 
-        if result.get("valid"):
-            self.load_data(transaction["type"])
-            PopupSuccess("Success", "berhasil disimpan!")
-            dialog.accept()
-        else:
-            errors = result.get("errors")
-            error_message = "\n".join([f"{key}: {value}" for key, value in errors.items()])
-            PopupWarning("Warning", f"Gagal menyimpan!\n{error_message}")
-        
+        dialog.accept()
+        self.load_data(transaction["type"])
 
     def confirm_delete(self, transaction):
         """Konfirmasi Delete"""
         msg = QMessageBox()
-        msg.setStyleSheet("""
-            QMessageBox {
-                background-color: #98C379;
-            }
-            QLabel {
-                color: white;
-            }
-            QPushButton {
-                background-color: #4CAF50;
+        msg.setStyleSheet("""  
+         QPushButton {
+                background-color: #000000;
                 color: white;
                 border-radius: 5px;
                 padding: 5px;
                 min-width: 70px;
-            }
-            QPushButton:hover {
-                background-color: #45a049;
-            }
-        """)
+            }""")
         msg.setWindowTitle("Konfirmasi Hapus")
         msg.setText(f"Apakah Anda yakin ingin menghapus transaksi {transaction['type']} dengan jumlah Rp {transaction['amount']}?")
         msg.setStandardButtons(QMessageBox.Yes | QMessageBox.No)

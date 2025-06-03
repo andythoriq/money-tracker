@@ -13,7 +13,7 @@
         "l2col3" : "Jumlah",
         "l2col4" : "Kategori",
         "l2col5" : "Dompet",
-        "layout3": "Informasi keuanganmu untuk minggu ini",
+        "layout3": "Keuangan Mingguan",
         "layout4": "Wishlist",
         "l4col1" : "No",
         "l4col2" : "Nama",
@@ -102,5 +102,11 @@
         "col4": "Status",
         "col5": "Edit",
         "col6": "Delete"
+    },
+    "comparator" : {
+      "type1": "income",
+      "type2": "outcome",
+      "status0": "Belum Terpenuhi",
+      "status1": "Sudah Terpenuhi"
     }
   }

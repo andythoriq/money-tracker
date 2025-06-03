@@ -102,6 +102,12 @@
       "col4": "Stato",
       "col5": "Modifica",
       "col6": "Elimina"
+    },
+    "comparator" : {
+      "type1": "Entrate",
+      "type2": "Uscite",
+      "status0": "Non soddisfatto",
+      "status1": "Soddisfatto"
     }
   }
   

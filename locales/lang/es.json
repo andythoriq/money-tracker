@@ -102,5 +102,11 @@
       "col4": "Estado",
       "col5": "Editar",
       "col6": "Eliminar"
+    },
+    "comparator" : {
+      "type1": "Ingreso",
+      "type2": "Gasto",
+      "status0": "No cumplido",
+      "status1": "Cumplido"
     }
 }  

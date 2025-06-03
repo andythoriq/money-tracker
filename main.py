@@ -17,17 +17,20 @@ def load_stylesheet(app, filename="styles/style.qss"):
 
 if __name__ == '__main__':
     app = QApplication(sys.argv)
+
+    app.setOrganizationName("Kelompok1A")
+    app.setApplicationName("MoneyTracker")
+
     palette = QPalette()
     palette.setColor(QPalette.Window, QColor("#252931"))
 
     splash = SplashScreen()
     splash.show()
-    
 
     def start_main_window():
         splash.close()  
         load_stylesheet(app)
-        account_screen = OnboardingScreen()
+        account_screen = Dashboard()
         account_screen.show()
 
     QTimer.singleShot(3000, start_main_window)
