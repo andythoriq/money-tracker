@@ -1,34 +1,42 @@
 [
     {
+        "ID": 1,
+        "amount": 200000,
+        "category": "Makanan",
+        "wallet": "BCA",
+        "desc": "Dinner",
+        "date": "01/06/2025"
+    },
+    {
         "ID": 2,
-        "amount": 250000,
-        "category": "AUUUU",
-        "wallet": "AMM",
-        "desc": "Auuuuuu",
-        "date": "02/05/2025"
+        "amount": 7000000,
+        "category": "Peralatan",
+        "wallet": "BankMandiri",
+        "desc": "Rakit PC",
+        "date": "13/06/2025"
     },
     {
         "ID": 3,
-        "amount": 250000,
-        "category": "AUUUU",
-        "wallet": "AMM",
-        "desc": "Auuuuuu",
-        "date": "02/05/2025"
+        "amount": 8000000,
+        "category": "Sewa",
+        "wallet": "Cash",
+        "desc": "Sewa Mobil 1 Hari",
+        "date": "16/06/2025"
     },
     {
         "ID": 4,
-        "amount": 600,
-        "category": "AAA",
-        "wallet": "AMM",
-        "desc": "pol",
-        "date": "20/05/2025"
+        "amount": 100000,
+        "category": "Listrik",
+        "wallet": "BRI",
+        "desc": "Beli Token Listrik 100000",
+        "date": "25/06/2025"
     },
     {
-        "ID": 4,
-        "amount": 600,
-        "category": "AAA",
-        "wallet": "AMM",
-        "desc": "pol",
-        "date": "20/05/2025"
+        "ID": 5,
+        "amount": 2000000,
+        "category": "Utang",
+        "wallet": "BRI",
+        "desc": "Bayar hutang Bank",
+        "date": "15/06/2025"
     }
 ]

@@ -151,7 +151,7 @@ class OutcomeView(QWidget):
         self.input_category.clear()
         self.input_wallet.clear()
     
-        category_names = self.category_controller.load_category_names("outcome")
+        category_names = self.category_controller.load_category_names("Outcome")
         wallets = self.wallet_controller.load_wallets()
 
         self.input_category.addItems(category_names)

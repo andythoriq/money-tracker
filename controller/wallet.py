@@ -66,9 +66,9 @@ class Wallet:
         for wallet in wallets:
             if wallet["name"] == name:
                 current_balance = wallet["amount"]
-                if transaction_type == "income":
+                if transaction_type == "Income":
                     wallet["amount"] = current_balance + amount
-                elif transaction_type == "outcome":
+                elif transaction_type == "Outcome":
                     if current_balance < amount:
                         return False
                     wallet["amount"] = current_balance - amount

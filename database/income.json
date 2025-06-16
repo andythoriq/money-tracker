@@ -1,82 +1,18 @@
 [
     {
         "ID": 1,
-        "amount": 200000,
-        "category": "Auuuu",
-        "wallet": "AMM",
-        "desc": "Auuu",
-        "date": "01/05/2025"
+        "amount": 2000000,
+        "category": "Gaji",
+        "wallet": "Cash",
+        "desc": "Kuli Bangunan",
+        "date": "09/06/2025"
     },
     {
         "ID": 2,
-        "amount": 200000,
-        "category": "Auuuu",
-        "wallet": "AMM",
-        "desc": "Auuu",
-        "date": "01/05/2025"
-    },
-    {
-        "ID": 3,
-        "amount": 200000,
-        "category": "Auuuu",
-        "wallet": "AMM",
-        "desc": "Auuu",
-        "date": "01/05/2025"
-    },
-    {
-        "ID": 4,
-        "amount": 200000,
-        "category": "Auuuu",
-        "wallet": "AMM",
-        "desc": "Auuu",
-        "date": "01/05/2025"
-    },
-    {
-        "ID": 5,
-        "amount": 200000,
-        "category": "Auuuu",
-        "wallet": "AMM",
-        "desc": "Auuu",
-        "date": "01/05/2025"
-    },
-    {
-        "ID": 6,
-        "amount": 200000,
-        "category": "Auuuu",
-        "wallet": "AMM",
-        "desc": "Auuu",
-        "date": "01/05/2025"
-    },
-    {
-        "ID": 8,
-        "amount": 200000,
-        "category": "AAA",
-        "wallet": "AMM",
-        "desc": "asa",
-        "date": "02/05/2025"
-    },
-    {
-        "ID": 9,
-        "amount": 200000,
-        "category": "AAA",
-        "wallet": "AMM",
-        "desc": "asa",
-        "date": "02/05/2025"
-    },
-    {
-        "ID": 9,
-        "amount": 600000,
-        "category": "AAA",
-        "wallet": "AMM",
-        "desc": "asas",
-        "date": "20/05/2025"
-    },
-    {
-        "ID": 10,
-        "amount": 100000,
-        "category": "AAA",
-        "wallet": "Makan",
-        "desc": "Apaa",
-        "date": "03/06/2025"
+        "amount": 9000000,
+        "category": "Gaji",
+        "wallet": "Cash",
+        "desc": "Merancang Software",
+        "date": "16/06/2025"
     }
 ]

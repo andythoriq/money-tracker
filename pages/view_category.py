@@ -47,7 +47,7 @@ class CategoryView(QWidget):
         self.type_label.setObjectName("form_label")
 
         self.input_type = QComboBox()
-        self.input_type.addItems(["income", "outcome"])
+        self.input_type.addItems(["Income", "Outcome"])
         self.input_type.setStyleSheet("""
             QComboBox::drop-down {
                 border: none;
@@ -97,7 +97,7 @@ class CategoryView(QWidget):
     def add_category(self):
         """Menambahkan kategori baru"""
         name = self.input_name.text().strip()
-        category_type = self.input_type.currentIndex()
+        category_type = self.input_type.currentText()
 
         if not name:
             msg = QMessageBox()
@@ -142,12 +142,11 @@ class CategoryView(QWidget):
             self.table.setItem(row_idx, 1, QTableWidgetItem(category_type))
 
             # Tombol Delete
-            self.btn_delete = QPushButton("Delete")
-            self.btn_delete.setFixedWidth(80)
-            self.btn_delete.setObjectName("Delete")            
-            self.table.setCellWidget(row_idx, 2, self.btn_delete)
-            # btn_delete.clicked.connect(lambda _, n=name, t=category_type: self.confirm_delete(n, t))
-            # self.table.setCellWidget(row_idx, 2, btn_delete)
+            btn_delete = QPushButton("Delete")
+            btn_delete.setFixedWidth(80)
+            btn_delete.setObjectName("Delete")            
+            btn_delete.clicked.connect(lambda _, n=name, t=category_type: self.confirm_delete(n, t))
+            self.table.setCellWidget(row_idx, 2, btn_delete)
 
     def confirm_delete(self, name, category_type):
         """Popup konfirmasi sebelum menghapus kategori"""
@@ -195,12 +194,7 @@ class CategoryView(QWidget):
                     lang.get("category", {}).get("col3", "")
                     ]
                 )
-            try:
-                if self.btn_delete:  # Pastikan btn_delete ada
-                    self.btn_delete.setText(_translate("Form", lang.get("category", {}).get("col3", "")))
-                else:
-                    # Jika btn_delete ada tapi None atau tidak valid, bisa diberi penanganan khusus
-                    print("btn_delete is None or invalid")
-            except AttributeError:
-                # Menangani jika btn_delete tidak ada sama sekali
-                print("btn_delete is missing")
+            for row in range(self.table.rowCount()):
+                widget = self.table.cellWidget(row, 2)
+                if isinstance(widget, QPushButton):
+                    widget.setText(_translate("Form", lang.get("category", {}).get("col3", "")))

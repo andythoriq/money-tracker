@@ -146,8 +146,8 @@ class HistoryView(QWidget):
         self.radio_group.addButton(self.radio_outcome)
 
         self.radio_all.setChecked(True)
-        self.radio_income.toggled.connect(lambda: self.load_data("income"))
-        self.radio_outcome.toggled.connect(lambda: self.load_data("outcome"))
+        self.radio_income.toggled.connect(lambda: self.load_data("Income"))
+        self.radio_outcome.toggled.connect(lambda: self.load_data("Outcome"))
         self.radio_all.toggled.connect(lambda: self.load_data("all"))
 
         btn_layout.addWidget(self.radio_all)
@@ -302,7 +302,7 @@ class HistoryView(QWidget):
             transactions.append({
                 "id": income.get("ID"),
                 "date": datetime.strptime(income.get("date"), "%d/%m/%Y"),
-                "type": "income",
+                "type": "Income",
                 "amount": income.get("amount"),
                 "category": income.get("category"),
                 "wallet": income.get("wallet"),
@@ -314,7 +314,7 @@ class HistoryView(QWidget):
             transactions.append({
                 "id": outcome.get("ID"),
                 "date": datetime.strptime(outcome.get("date"), "%d/%m/%Y"),
-                "type": "outcome",
+                "type": "Outcome",
                 "amount": outcome.get("amount"),
                 "category": outcome.get("category"),
                 "wallet": outcome.get("wallet"),
@@ -324,17 +324,17 @@ class HistoryView(QWidget):
         # Filter transaksi
         if self.radio_all.isChecked():
             transactions = [t for t in transactions]
-        elif filter_type == "income":
-            transactions = [t for t in transactions if t["type"] == "income"]
-        elif filter_type == "outcome":
-            transactions = [t for t in transactions if t["type"] == "outcome"]
+        elif filter_type == "Income":
+            transactions = [t for t in transactions if t["type"] == "Income"]
+        elif filter_type == "Outcome":
+            transactions = [t for t in transactions if t["type"] == "Outcome"]
 
         transactions.sort(key=lambda x: x["date"], reverse=True)
 
         # Tampilkan data di tabel
         self.table.setRowCount(len(transactions))
         for row, transaction in enumerate(transactions):
-            if transaction["type"] == "income":
+            if transaction["type"] == "Income":
                 self.total += int(transaction["amount"])
             else:
                 self.total -= int(transaction["amount"])
@@ -428,7 +428,7 @@ class HistoryView(QWidget):
             "date": date.selectedDate().toString("dd/MM/yyyy")
         }
 
-        if transaction["type"] == "income":
+        if transaction["type"] == "Income":
             self.income_controller.update_income(new_data)
         else:
             self.outcome_controller.update_outcome(new_data)
@@ -453,7 +453,7 @@ class HistoryView(QWidget):
         
         result = msg.exec_()
         if result == QMessageBox.Yes:
-            if transaction["type"] == "income":
+            if transaction["type"] == "Income":
                 self.income_controller.delete_income(transaction["id"])
             else:
                 self.outcome_controller.delete_outcome(transaction["id"])

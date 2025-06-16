@@ -29,8 +29,6 @@ class Dashboard(QWidget):
         self.setStyleSheet(self.theme_handler.load_theme(Setting.load_config()["theme_color"]))        
         self.language_data = Setting.load_language_file(self.config.get("language"))
 
-        self.slider_controller = SlidingWalletWidget(self)
-
         # Stack untuk menyimpan berbagai halaman
         self.stack = QStackedWidget()
         self.stack.setObjectName("Tumpukan")
@@ -187,10 +185,11 @@ class Dashboard(QWidget):
         # Atur ulang posisi dan ukuran tombol saat pertama kali dijalankan
         self.update_button_geometry()
 
-## BAGIAN INI YANG QUICKVIEW TEA LAYOUT_1_UI BUAT WALLET
-## LAYOUT_2_UI BUAT HISTORY
-## LAYOUT_3_UI BUAT GRAPH
-## LAYOUT_4_UI BUAT WISLIS
+    ## BAGIAN INI UNTUK MENAMPILKAN QUICKVIEW
+    ## LAYOUT_1_UI BUAT WALLET
+    ## LAYOUT_2_UI BUAT HISTORY
+    ## LAYOUT_3_UI BUAT STATISTIK
+    ## LAYOUT_4_UI BUAT WISHLIST
 
     def layout_1_ui(self):
 
@@ -499,7 +498,7 @@ class Dashboard(QWidget):
         for income in self.history_view.income_controller.load_incomes():
             transactions.append({
                 "date": income.get('date'),
-                "type": "income",
+                "type": "Income",
                 "amount": income.get('amount'),
                 "category": income.get('category'),
                 "wallet": income.get('wallet')
@@ -508,7 +507,7 @@ class Dashboard(QWidget):
         for outcome in self.history_view.outcome_controller.load_outcomes():
             transactions.append({
                 "date": outcome.get('date'),
-                "type": "outcome",
+                "type": "Outcome",
                 "amount": outcome.get('amount'),
                 "category": outcome.get('category'),
                 "wallet": outcome.get('wallet')
@@ -541,7 +540,7 @@ class Dashboard(QWidget):
         self.history_table.setRowCount(len(recent_transactions))
         
         for row, transaction in enumerate(recent_transactions):
-            transaction["type"] = type["type1"] if transaction["type"] == "income" else type["type2"]
+            transaction["type"] = type["type1"] if transaction["type"] == "Income" else type["type2"]
             self.history_table.setItem(row, 0, QTableWidgetItem(transaction["date"]))  # Tanggal
             self.history_table.setItem(row, 1, QTableWidgetItem(transaction["type"]))  # Jenis
             self.history_table.setItem(row, 2, QTableWidgetItem(f"Rp {str(transaction['amount'])}"))  # Jumlah

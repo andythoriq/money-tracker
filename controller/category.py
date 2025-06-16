@@ -21,15 +21,8 @@ class Category:
         if result.get("valid") is False:
             return result
 
-
-        #validasi
-        result = self.validate_category_data({'name': name, 'type': category_type})
-        if result.get("valid") is False:
-            return result
-
         categories.append({"name": name, "type": category_type})
         self.save_categories(categories)
-        return result
         return result
 
     def delete_category(self, name, category_type):
@@ -48,8 +41,7 @@ class Category:
 
     def load_category_names(self, category_type):
         """Memuat hanya nama kategori berdasarkan type."""
-        category_type = "income" if category_type == 0 else "outcome"
-        if category_type not in ["income", "outcome"]:
+        if category_type not in ["Income", "Outcome"]:
             raise ValueError("Jenis kategori harus 'income' atau 'outcome'.")
         return [cat["name"] for cat in self.load_categories() if cat["type"] == category_type]
 
@@ -60,8 +52,7 @@ class Category:
 
     def validate_category_data(self, category):
         errors = {}
-        category["type"] = "income" if category == 0 else "outcome"
-        if category.get('type') not in ["income", "outcome"]:
+        if category.get('type') not in ["Income", "Outcome"]:
             errors["type"] = "Jenis kategori harus 'income' atau 'outcome'."
 
         if not category.get('name'):

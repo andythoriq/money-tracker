@@ -1,0 +1,112 @@
+{
+  "dashboard": {
+    "btn1": "Redigeer inkomste",
+    "btn2": "Wysig die uitkoms",
+    "btn3": "Beursie",
+    "btn4": "Geskiedenis",
+    "btn5": "Statistiek",
+    "btn6": "Kategorie",
+    "btn7": "Wenslys",
+    "layout2": "Hierdie week se transaksiegeskiedenis!",
+    "l2col1": "Datum",
+    "l2col2": "Tipe",
+    "l2col3": "Bedrag",
+    "l2col4": "Kategorie",
+    "l2col5": "Beursie",
+    "layout3": "U finansiële inligting vir hierdie week",
+    "layout4": "Wenslys",
+    "l4col1": "Nee",
+    "l4col2": "Naam",
+    "l4col3": "Prys",
+    "l4col4": "Status"
+  },
+  "income": {
+    "Title": "Nuwe inkomste",
+    "form1": "Inkomstebedrag:",
+    "form2": "Kategorie:",
+    "form3": "Wallet moet gekrediteer word:",
+    "form4": "Beskrywing:",
+    "form5": "Voer datum in:",
+    "btn1": "Red",
+    "btn2": "Agter"
+  },
+  "outcome": {
+    "Title": "Nuwe uitkoms",
+    "form1": "Uitkomsbedrag:",
+    "form2": "Kategorie:",
+    "form3": "Wallet wat gedebiteer moet word:",
+    "form4": "Beskrywing:",
+    "form5": "Voer datum in:",
+    "btn1": "Red",
+    "btn2": "Agter"
+  },
+  "wallet": {
+    "Title": "Beursie",
+    "entry": "Voeg beursie by",
+    "form1": "Naam",
+    "desc1": "Beursie naam",
+    "form2": "Balans",
+    "btn": "Byvoeg",
+    "col1": "Naam",
+    "col2": "Balans",
+    "col3": "Redigeer",
+    "col4": "Verwyder"
+  },
+  "history": {
+    "Title": "Geskiedenis",
+    "radbtn1": "Alle",
+    "radbtn2": "Inkomste",
+    "radbtn3": "Uitslag",
+    "col1": "Datum",
+    "col2": "Tipe",
+    "col3": "Bedrag",
+    "col4": "Kategorie",
+    "col5": "Beursie",
+    "col6": "Beskrywing",
+    "col7": "Redigeer",
+    "col8": "Verwyder",
+    "foot": "Totaal"
+  },
+  "statistic": {
+    "Title": "Statistieke",
+    "head1": "Totale inkomste",
+    "head2": "Totale uitkoms",
+    "head3": "Statistieke",
+    "head4": "Kategorie -grafiek",
+    "head5": "QuickView Samevatting",
+    "desc1": "Nuwe balans",
+    "desc2": "Vorige balans"
+  },
+  "category": {
+    "Title": "Kategorie",
+    "desc": "Kategorie Naam",
+    "item1": "Inkomste",
+    "item2": "Uitslag",
+    "btn": "Voeg kategorie by",
+    "col1": "Naam",
+    "col2": "Tipe",
+    "col3": "Verwyder"
+  },
+  "wishlist": {
+    "Title": "Wenslys",
+    "form1": "Naam:",
+    "form2": "Prys:",
+    "btn1": "Voeg by die wenslys",
+    "filter": "Filterstatus",
+    "radbtn1": "Alle",
+    "radbtn2": "Vervul",
+    "radbtn3": "Nie vervul nie",
+    "col1": "Nee",
+    "col2": "Naam",
+    "col3": "Prys",
+    "col4": "Status",
+    "col5": "Redigeer",
+    "col6": "Verwyder"
+  },
+  "comparator": {
+    "type1": "inkomste",
+    "type2": "uitslag",
+    "status0": "Nie vervul nie",
+    "status1": "Vervul"
+  }
+}

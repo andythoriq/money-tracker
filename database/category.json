@@ -1,14 +1,58 @@
 [
     {
-        "name": "AAA",
-        "type": "outcome"
+        "name": "Makanan",
+        "type": "Outcome"
     },
     {
-        "name": "III",
-        "type": "outcome"
+        "name": "Minuman",
+        "type": "Outcome"
     },
     {
-        "name": "Merah",
-        "type": "income"
+        "name": "Hiburan",
+        "type": "Outcome"
+    },
+    {
+        "name": "Peralatan",
+        "type": "Outcome"
+    },
+    {
+        "name": "Tagihan",
+        "type": "Outcome"
+    },
+    {
+        "name": "Listrik",
+        "type": "Outcome"
+    },
+    {
+        "name": "AirPDAM",
+        "type": "Outcome"
+    },
+    {
+        "name": "Kosan",
+        "type": "Outcome"
+    },
+    {
+        "name": "Sewa",
+        "type": "Outcome"
+    },
+    {
+        "name": "Gaji",
+        "type": "Income"
+    },
+    {
+        "name": "Giveaway",
+        "type": "Income"
+    },
+    {
+        "name": "Piutang",
+        "type": "Income"
+    },
+    {
+        "name": "Utang",
+        "type": "Outcome"
+    },
+    {
+        "name": "Kerja",
+        "type": "Income"
     }
 ]

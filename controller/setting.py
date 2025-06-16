@@ -145,17 +145,17 @@ class SettingsWindow(QDialog):
         self.label_language = QLabel("Hello, welcome to our app!")
         self.label_language.setStyleSheet("font-size: 18px;")
 
-        # self.radioGlobal = QRadioButton("Global")
+        self.radioGlobal = QRadioButton("Global")
         self.radioLocal = QRadioButton("Local")
-        # self.comboBoxGlobal = QComboBox()
+        self.comboBoxGlobal = QComboBox()
         self.comboBoxLocal = QComboBox()
         self.languageGroup = QButtonGroup()
-        # self.languageGroup.addButton(self.radioGlobal)
+        self.languageGroup.addButton(self.radioGlobal)
         self.languageGroup.addButton(self.radioLocal)
 
-        # lang_names = list(LANGUAGES.values())
-        # self.comboBoxGlobal.addItems(lang_names)
-        # self.comboBoxGlobal.setCurrentIndex(self.comboBoxGlobal.findText(self.config.get("language")))
+        lang_names = list(LANGUAGES.values())
+        self.comboBoxGlobal.addItems(lang_names)
+        self.comboBoxGlobal.setCurrentIndex(self.comboBoxGlobal.findText(self.config.get("language")))
         # self.comboBoxGlobal.currentIndexChanged.connect(self.change_language)
 
         languages = Setting.get_available_languages()
@@ -164,7 +164,7 @@ class SettingsWindow(QDialog):
         # self.comboBoxLocal.currentIndexChanged.connect(self.change_language)
 
         # Connect logic
-        # self.radioGlobal.toggled.connect(self.toggleCombos)
+        self.radioGlobal.toggled.connect(self.toggleCombos)
         self.radioLocal.toggled.connect(self.toggleCombos)
 
         self.toggleCombos()
@@ -172,8 +172,8 @@ class SettingsWindow(QDialog):
         # Global section
         global_widget = QWidget()
         global_layout = QVBoxLayout(global_widget)
-        # global_layout.addWidget(self.radioGlobal)
-        # global_layout.addWidget(self.comboBoxGlobal)
+        global_layout.addWidget(self.radioGlobal)
+        global_layout.addWidget(self.comboBoxGlobal)
 
         # Local section
         local_widget = QWidget()
@@ -269,20 +269,19 @@ class SettingsWindow(QDialog):
     def update_status(self, is_connected):
         if is_connected:
             self.label.setText("Status koneksi: Terhubung ✅")
-            # self.radioGlobal.setEnabled(True)
+            self.radioGlobal.setEnabled(True)
         else:
             self.label.setText("Status koneksi: Tidak Terhubung ❌")
-            # self.radioGlobal.setEnabled(False)
-            # self.comboBoxGlobal.setEnabled(False)
+            self.radioGlobal.setEnabled(False)
+            self.comboBoxGlobal.setEnabled(False)
 
     def toggleCombos(self):
-        # if self.radioGlobal.isChecked():
-        #     self.comboBoxGlobal.setEnabled(True)
-        #     self.comboBoxLocal.setEnabled(False)
-        # else:
-        #     self.comboBoxGlobal.setEnabled(False)
-        #     self.comboBoxLocal.setEnabled(True)
-        pass
+        if self.radioGlobal.isChecked():
+            self.comboBoxGlobal.setEnabled(True)
+            self.comboBoxLocal.setEnabled(False)
+        else:
+            self.comboBoxGlobal.setEnabled(False)
+            self.comboBoxLocal.setEnabled(True)
 
     def choose_color(self):
         dialog = QColorDialog(self)
@@ -343,11 +342,11 @@ class SettingsWindow(QDialog):
             Setting.save_config(self.config)
             self.clear_data()
 
-        # elif self.radioGlobal.isChecked():
-        #     self.config["language"] = self.comboBoxGlobal.currentText()
-        #     Setting.save_config(self.config)
-        #     self.translate.translate_all_json_texts(Setting.load_language_file("en"))
-        #     self.translate.translate_content()
+        elif self.radioGlobal.isChecked():
+            self.config["language"] = self.comboBoxGlobal.currentText()
+            Setting.save_config(self.config)
+            self.translate.translate_all_json_texts(Setting.load_language_file("en"))
+            self.translate.translate_content()
         super().accept()  # Wajib dipanggil agar dialog tetap tertutup
 
 class Translation:

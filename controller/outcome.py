@@ -69,8 +69,8 @@ class Outcome:
                 #update balance
                 old_amount = int(outcome["amount"])
                 new_amount = int(updated_outcome["amount"])
-                self.wallet_controller.update_balance(outcome["wallet"], -old_amount, "outcome")
-                self.wallet_controller.update_balance(updated_outcome["wallet"], new_amount, "outcome")
+                self.wallet_controller.update_balance(outcome["wallet"], -old_amount, "Outcome")
+                self.wallet_controller.update_balance(updated_outcome["wallet"], new_amount, "Outcome")
                 
                 outcomes[i] = updated_outcome
                 self.save_outcomes(outcomes)
@@ -83,7 +83,7 @@ class Outcome:
         deleted_outcome = next((outcome for outcome in outcomes if outcome["ID"] == id), None)
         if not deleted_outcome:
             return False
-        self.wallet_controller.update_balance(deleted_outcome["wallet"], -int(deleted_outcome["amount"]), "outcome")
+        self.wallet_controller.update_balance(deleted_outcome["wallet"], -int(deleted_outcome["amount"]), "Outcome")
         outcomes = [outcome for outcome in outcomes if outcome["ID"] != int(id)]
         self.save_outcomes(outcomes)
         return True
@@ -107,7 +107,7 @@ class Outcome:
         if not errors and not is_edit:
             wallet = outcome_data['wallet']
             amount = int(outcome_data['amount'])
-            if not self.wallet_controller.update_balance(wallet, amount, "outcome"):
+            if not self.wallet_controller.update_balance(wallet, amount, "Outcome"):
                 errors['wallet'] = "Gagal memperbarui saldo wallet"
 
         return {"valid": True} if not errors else {"valid": False, "errors": errors}
