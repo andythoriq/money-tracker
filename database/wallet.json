@@ -1,34 +1,47 @@
 [
     {
         "name": "BCA",
-        "amount": 2300000
+        "amount": 2300000,
+        "name_translation": "BCA"
     },
     {
         "name": "Gopay",
-        "amount": 900000
+        "amount": 900000,
+        "name_translation": "Gopay"
     },
     {
         "name": "BankMandiri",
-        "amount": 1000000
+        "amount": 1000000,
+        "name_translation": "\u94f6\u884c"
     },
     {
         "name": "ShopeePay",
-        "amount": 230000
+        "amount": 230000,
+        "name_translation": "Shopeepay"
     },
     {
         "name": "BankCIMBNiaga",
-        "amount": 2000000
+        "amount": 2000000,
+        "name_translation": "\u94f6\u884cCimba Niaga"
     },
     {
         "name": "BRI",
-        "amount": 7900000
+        "amount": 7900000,
+        "name_translation": "\u5e03\u91cc"
     },
     {
         "name": "Dana",
-        "amount": 700000
+        "amount": 700000,
+        "name_translation": "\u8fbe\u5a1c"
     },
     {
         "name": "Cash",
-        "amount": 8000000
+        "amount": 8000000,
+        "name_translation": "\u73b0\u91d1"
+    },
+    {
+        "name": "Pinjol",
+        "amount": 100000000,
+        "name_translation": "\u677e\u5b50"
     }
 ]

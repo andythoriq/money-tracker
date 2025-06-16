@@ -131,14 +131,6 @@ QLineEdit {
     background-color: $base_color_darker140;
 }
 
-#tittleLabel {
-    background-color: $saved_color;
-    font: 24pt;
-    color: white;
-    padding: 15px;
-    border-radius: 10px;
-}
-
 #btn_nextslide {
     background-color: $saved_color;
     padding: 5px;
@@ -155,31 +147,7 @@ QLineEdit {
 }
 
 /* Wallet View Styles */
-#editWallet {
-    QInputDialog {
-        background-color: $saved_color;
-    }
-    QLabel {
-        color: white;
-        font-size: 14px;
-    }
-    QLineEdit {
-        background-color: white;
-        border: 1px solid $saved_color;
-        border-radius: 5px;
-        padding: 5px;
-    }
-    QPushButton {
-        background-color: $base_color_darker130;
-        color: white;
-        border-radius: 5px;
-        padding: 5px;
-        min-width: 70px;
-    }
-    QPushButton:hover {
-        background-color: $base_color_darker140;
-    }
-}
+
 
 #deleteWallet {
     QMessageBox {
@@ -255,32 +223,27 @@ QLineEdit {
     background-color: $base_color_darker140;
 }
 
-#wishlist_radio {
+#radio_button {
     color: white;
     font-size: 14px;
     spacing: 5px;
 }
 
-#wishlist_radio::indicator {
+#radio_button::indicator {
     width: 15px;
     height: 15px;
 }
 
-#wishlist_radio::indicator:checked {
+#radio_button::indicator:checked {
     background-color: $saved_color;
     border: 2px solid white;
     border-radius: 7px;
 }
 
-#wishlist_radio::indicator:unchecked {
+#radio_button::indicator:unchecked {
     background-color: white;
     border: 2px solid $saved_color;
     border-radius: 7px;
-}
-
-#wishlist_label {
-    color: black;
-    font-size: 14px;
 }
 
 /* Form Styles */
@@ -394,108 +357,6 @@ QSpinBox::up-button, QSpinBox::down-button {
 
 QSpinBox::up-button:hover, QSpinBox::down-button:hover {
     background-color: $base_color_darker130;
-}
-
-/* Statistic View Styles */
-#iconDesignStatistic {
-    QComboBox {
-        background-color: transparent;
-        width: 60px;
-        height: 22px;
-        padding: 0px;
-        border: none;
-        text-align: center;
-    }
-
-    QComboBox::drop-down {
-        width: 60px;
-    }
-
-    QComboBox::down-arrow {
-        image: url(img/icon/database.svg);
-        width: 60px;
-        height: 60px;
-    }
-
-    QComboBox::lineEdit {
-        border: none;
-        background: transparent;
-        padding: 100px;
-        color: transparent;
-    }
-
-    QComboBox QAbstractItemView {
-        min-width: 150px;
-        max-width: 300px;
-        font-size: 14px;
-        padding: 100px;
-    }
-
-    QComboBox QAbstractItemView::item {
-        padding-left: 10px;
-        padding-right: 10px;
-        height: 40px;
-    }
-
-    QComboBox::item:selected {
-        background-color: $saved_color;
-        color: white;
-    }
-
-    QComboBox::editable {
-        background: transparent;
-        border: none;
-        padding: 0px;
-        color: transparent;
-    }
-}
-
-#textDesignStatistic {
-    QLabel {
-        font-family: 'Arimo';
-        font-size: 16px;
-        color: #FFFFFF;
-        font-weight: bold;
-        text-align: center;
-        border: none;
-    }
-
-    #changeValue {
-        font-family: 'Arimo';
-        font-size: 10px;
-        color: #FFFFFF;
-        font-weight: bold;
-    }
-}
-
-#chartDesignStatistic {
-    QFrame {
-        border: 10px solid $base_color_darker150;
-        padding: 20px;
-        background-color: #FFFFFF;
-        border-radius: 15px;
-    }
-}
-
-#DesignStatistic {
-    QFrame {
-        border: 10px solid $base_color_darker150;
-        padding: 20px;
-        background-color: #FFFFFF;
-        border-radius: 15px;
-    }
-}
-
-#buttonDesignStatistic {
-    QPushButton {
-        background-color: $base_color_darker130;
-        border-radius: 10px;
-        padding: 5px;
-        font-weight: bold;
-    }
-    QPushButton:hover {
-        background-color: $base_color_darker140;
-    }
 }
 
 /* Label Kurs */

@@ -183,6 +183,8 @@ class CategoryView(QWidget):
         _translate = QCoreApplication.translate
         if lang:
             self.title_label.setText(_translate("Form", lang.get("category", {}).get("Title", "")))
+            self.name_label.setText(_translate("Form", lang.get("category", {}).get("col1", "") + ":"))
+            self.type_label.setText(_translate("Form", lang.get("category", {}).get("col3", "") + ":"))
             self.input_name.setPlaceholderText(_translate("Form", lang.get("category", {}).get("desc", "")))
             self.input_type.setItemText(0, lang.get("category", {}).get("item1", ""))
             self.input_type.setItemText(1, lang.get("category", {}).get("item2", ""))

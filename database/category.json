@@ -1,58 +1,72 @@
 [
     {
         "name": "Makanan",
-        "type": "Outcome"
+        "type": "Outcome",
+        "name_translation": "\u5582\u517b"
     },
     {
         "name": "Minuman",
-        "type": "Outcome"
+        "type": "Outcome",
+        "name_translation": "\u559d"
     },
     {
         "name": "Hiburan",
-        "type": "Outcome"
+        "type": "Outcome",
+        "name_translation": "\u5a31\u4e50"
     },
     {
         "name": "Peralatan",
-        "type": "Outcome"
+        "type": "Outcome",
+        "name_translation": "\u4e50\u5668"
     },
     {
         "name": "Tagihan",
-        "type": "Outcome"
+        "type": "Outcome",
+        "name_translation": "\u8d26\u5355"
     },
     {
         "name": "Listrik",
-        "type": "Outcome"
+        "type": "Outcome",
+        "name_translation": "\u7535"
     },
     {
         "name": "AirPDAM",
-        "type": "Outcome"
+        "type": "Outcome",
+        "name_translation": "Airpdam"
     },
     {
         "name": "Kosan",
-        "type": "Outcome"
+        "type": "Outcome",
+        "name_translation": "\u5bc4\u5bbf\u623f"
     },
     {
         "name": "Sewa",
-        "type": "Outcome"
+        "type": "Outcome",
+        "name_translation": "\u585e\u74e6"
     },
     {
         "name": "Gaji",
-        "type": "Income"
+        "type": "Income",
+        "name_translation": "\u85aa\u6c34"
     },
     {
         "name": "Giveaway",
-        "type": "Income"
+        "type": "Income",
+        "name_translation": "\u9001"
     },
     {
         "name": "Piutang",
-        "type": "Income"
+        "type": "Income",
+        "name_translation": "\u5e94\u6536\u8d26\u6b3e"
     },
     {
         "name": "Utang",
-        "type": "Outcome"
+        "type": "Outcome",
+        "name_translation": "\u503a\u52a1"
     },
     {
         "name": "Kerja",
-        "type": "Income"
+        "type": "Income",
+        "name_translation": "\u52b3\u52a8"
     }
 ]

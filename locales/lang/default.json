@@ -13,6 +13,7 @@
         "l2col3" : "Jumlah",
         "l2col4" : "Kategori",
         "l2col5" : "Dompet",
+        "l2btn": "View All",
         "layout3": "Keuangan Mingguan",
         "layout4": "Wishlist",
         "l4col1" : "No",
@@ -54,6 +55,9 @@
     },
     "history": {
         "Title": "History",
+        "label": "Filter tipe",
+        "label2": "Mata uang",
+        "btn1": "Refresh Filter",
         "radbtn1": "Semua",
         "radbtn2": "Income",
         "radbtn3": "Outcome",
@@ -108,5 +112,18 @@
       "type2": "outcome",
       "status0": "Belum Terpenuhi",
       "status1": "Sudah Terpenuhi"
+    },
+    "Settings" : {
+      "label": "Hello, welcome to our app!",
+      "radbtn1": "Global",
+      "radbtn2": "Local",
+      "label2": "Connection Status:",
+      "status2": "Checking...",
+      "status1": "Connected ✅",
+      "status0": "Not Connected ❌",
+      "btn11": "Dark",
+      "btn12": "Light",
+      "btn13": "mono",
+      "btn14": "Customize Color"
     }
   }

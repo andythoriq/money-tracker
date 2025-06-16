@@ -149,11 +149,12 @@ class HistoryView(QWidget):
         self.radio_income.toggled.connect(lambda: self.load_data("Income"))
         self.radio_outcome.toggled.connect(lambda: self.load_data("Outcome"))
         self.radio_all.toggled.connect(lambda: self.load_data("all"))
-
+        
+        btn_layout.addWidget(self.filter_label)
         btn_layout.addWidget(self.radio_all)
         btn_layout.addWidget(self.radio_income)
         btn_layout.addWidget(self.radio_outcome)
-        btn_layout.addWidget(self.filter_label)
+        
         btn_layout.addStretch()
         btn_layout.addWidget(self.search_bar)
         btn_layout.addWidget(self.date_edit)
@@ -182,9 +183,9 @@ class HistoryView(QWidget):
             }
         """)
         self.currency_combo.currentTextChanged.connect(self.update_currency_display)
-        labelkurs = QLabel("Mata Uang:")
-        labelkurs.setObjectName("labelkurs")
-        btn_layout.addWidget(labelkurs)
+        self.labelkurs = QLabel("Mata Uang:")
+        self.labelkurs.setObjectName("labelkurs")
+        btn_layout.addWidget(self.labelkurs)
         btn_layout.addWidget(self.currency_combo)
 
         # Tombol Hapus Filter
@@ -485,6 +486,9 @@ class HistoryView(QWidget):
         _translate = QCoreApplication.translate
         if lang:
             self.title_label.setText(_translate("Form", lang.get("history", {}).get("Title", "")))
+            self.filter_label.setText(_translate("Form", lang.get("history", {}).get("label", "") + ":"))
+            self.labelkurs.setText(_translate("Form", lang.get("history", {}).get("label2", "") + ":"))
+            self.clear_filter_btn.setText(_translate("Form", lang.get("history", {}).get("btn1", "")))
             self.radio_all.setText(_translate("Form", lang.get("history", {}).get("radbtn1", "")))
             self.radio_income.setText(_translate("Form", lang.get("history", {}).get("radbtn2", "")))
             self.radio_outcome.setText(_translate("Form", lang.get("history", {}).get("radbtn3", "")))

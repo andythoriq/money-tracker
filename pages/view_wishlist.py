@@ -90,7 +90,7 @@ class WishlistView(QWidget):
         self.fulfilled_status = QRadioButton("Sudah Terpenuhi")
 
         for radio in [self.all_status, self.unfulfilled_status, self.fulfilled_status]:
-            radio.setObjectName("wishlist_radio")
+            radio.setObjectName("radio_button")
             status_layout.addWidget(radio)
 
         self.all_status.setChecked(True)

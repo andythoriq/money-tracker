@@ -136,23 +136,6 @@ QLineEdit {
     gridline-color: #444444;
 }
 
-#history_table::item {
-    padding: 5px;
-    color: #FFFFFF;
-}
-    
-#history_table::item:selected {
-    background-color: #555555;
-    color: #FFFFFF;
-}
-
-#history_table::section {
-    background-color: #444444;
-    color: #FFFFFF;
-    padding: 5px;
-    border: none;
-}
-
 QHeaderView::section {
     background-color: #333333;
     color: #FFFFFF;
@@ -255,36 +238,9 @@ QPushButton#PopupAboutUs:hover {
 }
 
 /* Wallet View Styles */
-#editWallet {
-    QInputDialog {
-        background-color: #444444;
-    }
-    QLabel {
-        color: white;
-        font-size: 14px;
-    }
-    QLineEdit {
-        background-color:#ffffff;
-        border: 1px solid #555555;
-        border-radius: 5px;
-        padding: 5px;
-    }
-    QPushButton {
-        background-color: #555555;
-        color: white;
-        border-radius: 5px;
-        padding: 5px;
-        min-width: 70px;
-    }
-    QPushButton:hover {
-        background-color: #666666;
-    }
+QMessageBox {
+    background-color: #444444;
 }
-
-
-    QMessageBox {
-        background-color: #444444;
-    }
 
 
 /* Wishlist View Styles */
@@ -351,8 +307,9 @@ QPushButton#PopupAboutUs:hover {
 }
 
 #radio_button {
-    color: white;
+    color: #333333;
     font-size: 14px;
+    spacing: 5px;
 }
 
 #radio_button::indicator {
@@ -370,11 +327,6 @@ QPushButton#PopupAboutUs:hover {
     background-color: #333333;
     border: 2px solid #444444;
     border-radius: 7px;
-}
-
-#wishlist_label {
-    color: white;
-    font-size: 14px;
 }
 
 /* History View Styles */
@@ -680,38 +632,6 @@ QStackedWidget {
     border: none;
     padding: 0px;
     color: transparent;  /* Hide the text but still keep the arrow visible */
-}
-
-
-#textDesignStatistic {
-    QLabel {
-        font-family: 'Arimo';
-        font-size: 16px;             /* Sets font size */
-        color: #FFFFFF;                 /* Sets text color */
-        font-weight: bold;               /* Makes the font extra bold */
-        text-align: center;
-        border: none;
-    }
-
-#changeValue {
-    font-family: 'Arimo';
-    font-size: 10px;             /* Sets font size */
-    color: #B0B0B0;                 /* Sets lighter text color for change value */
-    font-weight: bold;               /* Makes the font extra bold */
-}
-
-#buttonDesignStatistic {
-    QPushButton {
-        background-color: #505C64;  /* Lighter gray button */
-        border-radius: 10px;
-        padding: 5px;
-        font-weight: bold;
-        color: white;
-    }
-
-    QPushButton:hover {
-        background-color: #3E4B53;  /* Darker on hover */
-    }
 }
 
 /* Quickview History Table */

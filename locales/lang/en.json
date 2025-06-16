@@ -13,6 +13,7 @@
       "l2col3": "Amount",
       "l2col4": "Category",
       "l2col5": "Wallet",
+      "l2btn": "View All",
       "layout3": "Your financial info for this week",
       "layout4": "Wishlist",
       "l4col1": "No",
@@ -54,6 +55,9 @@
     },
     "history": {
       "Title": "History",
+      "label": "Filter type",
+      "label2": "Currency",
+      "btn1": "Refresh Filter",
       "radbtn1": "All",
       "radbtn2": "Income",
       "radbtn3": "Outcome",
@@ -89,8 +93,8 @@
     },
     "wishlist": {
       "Title": "Wishlist",
-      "form1": "Name:",
-      "form2": "Price:",
+      "form1": "Name",
+      "form2": "Price",
       "btn1": "Add to Wishlist",
       "filter": "Filter Status",
       "radbtn1": "All",
@@ -108,5 +112,18 @@
       "type2": "outcome",
       "status0": "Not Fulfilled",
       "status1": "Fulfilled"
+    },
+    "Settings" : {
+      "label": "Hello, welcome to our app!",
+      "radbtn1": "Global",
+      "radbtn2": "Local",
+      "label2": "Connection Status:",
+      "status2": "Checking...",
+      "status1": "Connected ✅",
+      "status0": "Not Connected ❌",
+      "btn11": "Dark",
+      "btn12": "Light",
+      "btn13": "mono",
+      "btn14": "Customize Color"
     }
 }

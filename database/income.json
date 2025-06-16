@@ -5,7 +5,8 @@
         "category": "Gaji",
         "wallet": "Cash",
         "desc": "Kuli Bangunan",
-        "date": "09/06/2025"
+        "date": "09/06/2025",
+        "desc_translation": "\u5efa\u7b51\u5de5\u4eba"
     },
     {
         "ID": 2,
@@ -13,6 +14,7 @@
         "category": "Gaji",
         "wallet": "Cash",
         "desc": "Merancang Software",
-        "date": "16/06/2025"
+        "date": "16/06/2025",
+        "desc_translation": "\u8bbe\u8ba1\u8f6f\u4ef6"
     }
 ]

@@ -366,7 +366,7 @@ class Statistic:
     def generate_statistics(self, plot_widget):
         plot_widget.clear()
 
-        data = self.cur_data
+        data = self.generate_data()
 
         x = data[0]
         income_barItem = data[1]

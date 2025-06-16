@@ -247,14 +247,17 @@ class SettingsWindow(QDialog):
         self.setLayout(main_layout)
 
     def set_dark_theme(self):
+        self.mini_window.setStyleSheet(self.logic.load_theme("dark"))
         self.config["theme_color"] = "dark"
         Setting.save_config(self.config)
 
     def set_light_theme(self):
+        self.mini_window.setStyleSheet(self.logic.load_theme("light"))
         self.config["theme_color"] = "light"
         Setting.save_config(self.config)
 
     def set_mono_theme(self):
+        self.mini_window.setStyleSheet(self.logic.load_theme("mono"))
         self.config["theme_color"] = "mono"
         Setting.save_config(self.config)
 
