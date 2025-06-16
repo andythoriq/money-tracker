@@ -166,6 +166,7 @@ class SettingsWindow(QDialog):
         # Connect logic
         self.radioGlobal.toggled.connect(self.toggleCombos)
         self.radioLocal.toggled.connect(self.toggleCombos)
+        self.radioLocal.setEnabled(True)
 
         self.toggleCombos()
 

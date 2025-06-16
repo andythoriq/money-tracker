@@ -5,6 +5,8 @@ from PyQt5.QtWidgets import (
 from PyQt5.QtCore import Qt, QCoreApplication
 from controller.Popup import PopupWarning, PopupSuccess
 from controller.wallet import Wallet
+from components.MoneyLineEdit import MoneyLineEdit
+from utils.number_formatter import NumberFormat
 
 class WalletView(QWidget):
     def __init__(self, parent=None):
@@ -67,6 +69,7 @@ class WalletView(QWidget):
                 font-size: 14px;
             }
         """)
+        self.input_amount = MoneyLineEdit(locale_str='id_ID')
 
         self.btn_add = QPushButton("Tambah")
         self.btn_add.setObjectName("add_button")
@@ -113,14 +116,16 @@ class WalletView(QWidget):
 
         for row, wallet in enumerate(wallets):
             name_item = QTableWidgetItem(wallet.get("name"))
-            amount_item = QTableWidgetItem(f"Rp {wallet.get('amount')}")
+            amount_item = QTableWidgetItem(f"Rp {NumberFormat.getFormattedMoney(wallet.get('amount'))}")
 
-            self.btn_edit = QPushButton("Edit")
+            self.btn_edit = QPushButton()
             self.btn_edit.setFixedWidth(80)
             self.btn_edit.setObjectName("Edit")
-            self.btn_edit.clicked.connect(lambda _, n=wallet.get("name"): self.edit_wallet(n))
+            self.btn_edit.clicked.connect(
+                lambda _, n=wallet.get("name"), a=wallet.get("amount"): self.edit_wallet(n, a)
+            )
 
-            self.btn_delete = QPushButton("Hapus")
+            self.btn_delete = QPushButton()
             self.btn_delete.setFixedWidth(80)
             self.btn_delete.setObjectName("Delete")
             self.btn_delete.clicked.connect(lambda _, n=wallet.get("name"): self.delete_wallet(n))
@@ -133,13 +138,13 @@ class WalletView(QWidget):
     def add_wallet(self):
         """Menambah wallet baru"""
         name = self.input_name.text().strip()
-        amount = self.input_amount.value()
+        amount = self.input_amount.get_value()
 
         if name:
             self.wallet_controller.add_wallet(name, amount)
             self.load_wallets()
             self.input_name.clear()
-            self.input_amount.setValue(0)
+            self.input_amount.set_value(0)
         else:
             msg = QMessageBox()
 
@@ -195,24 +200,13 @@ class WalletView(QWidget):
                     lang.get("wallet", {}).get("col4", "")
                     ]
                 )
-            try:
-                if self.btn_edit:  # Pastikan btn_edit ada
-                    self.btn_edit.setText(_translate("Form", lang.get("wallet", {}).get("col3", "")))
-                else:
-                    # Jika btn_edit ada tapi None atau tidak valid, bisa diberi penanganan khusus
-                    print("btn_edit is None or invalid")
-            except AttributeError:
-                # Menangani jika btn_edit tidak ada sama sekali
-                print("btn_edit is missing")
-
-            try:
-                if self.btn_delete:  # Pastikan btn_delete ada
-                    self.btn_delete.setText(_translate("Form", lang.get("wallet", {}).get("col4", "")))
-                else:
-                    # Jika btn_delete ada tapi None atau tidak valid, bisa diberi penanganan khusus
-                    print("btn_delete is None or invalid")
-            except AttributeError:
-                # Menangani jika btn_delete tidak ada sama sekali
-                print("btn_delete is missing")
+            for row in range(self.table_wallet.rowCount()):
+                widget = self.table_wallet.cellWidget(row, 2)
+                if isinstance(widget, QPushButton):
+                    widget.setText(_translate("Form", lang.get("wallet", {}).get("col3", "")))
+            for row in range(self.table_wallet.rowCount()):
+                widget = self.table_wallet.cellWidget(row, 3)
+                if isinstance(widget, QPushButton):
+                    widget.setText(_translate("Form", lang.get("wallet", {}).get("col4", "")))
 
 

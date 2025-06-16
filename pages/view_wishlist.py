@@ -172,11 +172,11 @@ class WishlistView(QWidget):
             self.wishlist_table.setItem(row, 2, QTableWidgetItem(f"Rp {wishlist.get('price')}")) # Harga
             status_text = "Sudah Terpenuhi" if wishlist.get("status") else "Belum Terpenuhi"
             self.wishlist_table.setItem(row, 3, QTableWidgetItem(status_text))  # Status
-            edit_button = QPushButton("Edit")
+            edit_button = QPushButton()
             edit_button.setObjectName("Edit")
             edit_button.clicked.connect(lambda _, id=wishlist.get("ID"): self.show_edit_dialog(id))
             self.wishlist_table.setCellWidget(row, 4, edit_button)
-            delete_button = QPushButton("Hapus")
+            delete_button = QPushButton()
             delete_button.setObjectName("Delete")
             delete_button.clicked.connect(lambda _, id=wishlist.get("ID"), name=wishlist.get("label"), price=wishlist.get("price"): self.delete_wishlist(id, name, price))
             self.wishlist_table.setCellWidget(row, 5, delete_button)
@@ -298,3 +298,11 @@ class WishlistView(QWidget):
                     lang.get("wishlist", {}).get("col6", ""), 
                     ]
                 )
+            for row in range(self.wishlist_table.rowCount()):
+                widget = self.wishlist_table.cellWidget(row, 4)
+                if isinstance(widget, QPushButton):
+                    widget.setText(_translate("Form", lang.get("wishlist", {}).get("col5", "")))
+            for row in range(self.wishlist_table.rowCount()):
+                widget = self.wishlist_table.cellWidget(row, 5)
+                if isinstance(widget, QPushButton):
+                    widget.setText(_translate("Form", lang.get("wishlist", {}).get("col6", "")))

@@ -1,13 +1,12 @@
 from pyqtgraph import PlotWidget
-from matplotlib.backends.backend_qt5agg import FigureCanvasQTAgg as FigureCanvas
 from PyQt5.QtWidgets import (QWidget, QVBoxLayout, QHBoxLayout, QGridLayout, 
                              QFrame, QLabel, QComboBox, QPushButton, QSpacerItem, 
                              QSizePolicy)
+from PyQt5.QtChart import QChart, QChartView, QPieSeries
+from PyQt5.QtGui import QPainter, QColor
 from PyQt5 import QtCore, QtWidgets
 from controller.statistic import Statistic
 from PyQt5.QtCore import Qt
-from matplotlib.figure import Figure
-
 
 class StatisticView(QWidget):
     def __init__(self, parent=None):
@@ -177,10 +176,33 @@ class StatisticView(QWidget):
         self.pieChartLayout.addLayout(self.pieChartHeaderLayout)
         
         # Add pie chart placeholder
-        self.fig = Figure()
-        self.canvas = FigureCanvas(self.fig)
-        self.statistic_controller.generate_pie(self.fig)
-        self.pieChartLayout.addWidget(self.canvas)
+        # Buat series dan tambah data
+        self.series = QPieSeries()
+        self.series.append("Income", 0)
+        self.series.append("Outcome", 0)
+
+        # Simpan slice
+        self.slice_income = None
+        self.slice_outcome = None
+        for slice in self.series.slices():
+            if slice.label() == "Income":
+                self.slice_income = slice
+                slice.setBrush(QColor("green"))
+            elif slice.label() == "Outcome":
+                slice.setBrush(QColor("red"))
+                self.slice_outcome = slice
+
+        # Buat chart dan masukkan series
+        self.chart = QChart()
+        self.chart.addSeries(self.series)
+        self.chart.legend().setVisible(True)
+        self.chart.legend().setAlignment(Qt.AlignBottom)
+
+        self.chart_view = QChartView(self.chart)
+        self.chart_view.setRenderHint(QPainter.Antialiasing)
+        self.chart_view.setMinimumSize(200, 200)
+
+        self.pieChartLayout.addWidget(self.chart_view)
         
         # Add pie chart to right side layout
         self.rightSideLayout.addWidget(self.pieChart)
@@ -283,7 +305,7 @@ class StatisticView(QWidget):
             self.statistic_controller.jenis = "tahunan"
         self.statistic_controller.cur_data = self.statistic_controller.generate_data()
         self.statistic_controller.generate_statistics(self.plot_widget)
-        self.statistic_controller.generate_pie(self.fig)
+        # self.statistic_controller.generate_pie(self.fig)
         self.update_label()
 
     def on_pie_selection_changed(self, index):
@@ -302,18 +324,15 @@ class StatisticView(QWidget):
             self.statistic_controller.save_graph(self, self.plot_widget)       
 
     def change_offset(self, direction):
-        if direction == 'next':
-            self.statistic_controller.offset += 1
-        elif direction == 'prev':
-            self.statistic_controller.offset -= 1
-        self.statistic_controller.cur_data = self.statistic_controller.generate_data()
+        self.statistic_controller.update_data(direction)  # ⬅️ Update offset + net + new_balance
         self.statistic_controller.generate_statistics(self.plot_widget)
-        self.statistic_controller.generate_pie(self.fig)
-        self.statistic_controller.update_data(direction)
+        # self.statistic_controller.generate_pie(self.fig)
         self.update_label()
 
     def update_label(self):
         # Update the text of the QLabel
+        self.slice_income.setValue(self.statistic_controller.cur_data[4][0])
+        self.slice_outcome.setValue(self.statistic_controller.cur_data[4][1])
         self.IncomeValue.setText(str(self.statistic_controller.cur_data[4][0]))
         self.outcomeValue.setText(str(self.statistic_controller.cur_data[4][1]))
         self.prevValue.setText(str(self.statistic_controller.new_balance))

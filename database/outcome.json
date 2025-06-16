@@ -5,8 +5,7 @@
         "category": "Makanan",
         "wallet": "BCA",
         "desc": "Dinner",
-        "date": "01/06/2025",
-        "desc_translation": "\u665a\u9910"
+        "date": "01/06/2025"
     },
     {
         "ID": 2,
@@ -14,8 +13,7 @@
         "category": "Peralatan",
         "wallet": "BankMandiri",
         "desc": "Rakit PC",
-        "date": "13/06/2025",
-        "desc_translation": "PC\u7b4f"
+        "date": "13/06/2025"
     },
     {
         "ID": 3,
@@ -23,8 +21,7 @@
         "category": "Sewa",
         "wallet": "Cash",
         "desc": "Sewa Mobil 1 Hari",
-        "date": "17/06/2025",
-        "desc_translation": "1\u5929\u79df\u8f66"
+        "date": "17/06/2025"
     },
     {
         "ID": 4,
@@ -32,8 +29,7 @@
         "category": "Listrik",
         "wallet": "BRI",
         "desc": "Beli Token Listrik 100000",
-        "date": "23/06/2025",
-        "desc_translation": "\u8d2d\u4e70100000\u7535\u529b\u4ee4\u724c"
+        "date": "23/06/2025"
     },
     {
         "ID": 5,
@@ -41,7 +37,6 @@
         "category": "Utang",
         "wallet": "BRI",
         "desc": "Bayar hutang Bank",
-        "date": "15/06/2025",
-        "desc_translation": "\u507f\u8fd8\u94f6\u884c\u7684\u503a\u52a1"
+        "date": "15/06/2025"
     }
 ]

@@ -29,7 +29,6 @@ class Wishlist:
 
     def add_wishlist(self, label, price, status):
         """Menambah wishlist baru dengan ID."""
-        wishlists = self.load_wishlists()
 
         # validasi
         result = self.validate_wishlist({
@@ -47,7 +46,7 @@ class Wishlist:
             "price": price,
             "status": status
         })
-        self.save_wishlists(wishlists)
+        self.save_wishlists(self.wishlists)
         return result
 
     def edit_wishlist(self, wishlist_id, label, price, status):

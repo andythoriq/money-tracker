@@ -97,7 +97,8 @@ class CategoryView(QWidget):
     def add_category(self):
         """Menambahkan kategori baru"""
         name = self.input_name.text().strip()
-        category_type = self.input_type.currentText()
+        category_type = self.input_type.currentIndex()
+        category_type = "Income" if category_type == 0 else "Outcome"
 
         if not name:
             msg = QMessageBox()

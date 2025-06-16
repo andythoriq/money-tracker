@@ -68,5 +68,13 @@
         "name": "Kerja",
         "type": "Income",
         "name_translation": "\u52b3\u52a8"
+    },
+    {
+        "name": "Kursus",
+        "type": "Outcome"
+    },
+    {
+        "name": "Crypto",
+        "type": "Income"
     }
 ]

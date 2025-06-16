@@ -53,11 +53,11 @@ class HistoryView(QWidget):
         self.filter_label = QLabel("Filter Jenis:")
         self.filter_label.setObjectName("form_label")
         self.radio_all = QRadioButton("Semua")
-        self.radio_all.setObjectName("groupBox")
+        self.radio_all.setObjectName("radio_button")
         self.radio_income = QRadioButton("Income")
-        self.radio_income.setObjectName("groupBox")
+        self.radio_income.setObjectName("radio_button")
         self.radio_outcome = QRadioButton("Outcome")
-        self.radio_outcome.setObjectName("groupBox")
+        self.radio_outcome.setObjectName("radio_button")
         
         # Search bar untuk kategori
         self.search_bar = QLineEdit(self)
@@ -356,13 +356,13 @@ class HistoryView(QWidget):
             self.table.setItem(row, 5, QTableWidgetItem(transaction["desc"]))
 
             # Tombol Edit
-            btn_edit = QPushButton("Edit")
+            btn_edit = QPushButton()
             btn_edit.setObjectName("Edit")
             btn_edit.clicked.connect(lambda _, t=transaction: self.open_edit_popup(t))
             self.table.setCellWidget(row, 6, btn_edit)
 
             # Tombol Delete
-            btn_delete = QPushButton("Hapus")
+            btn_delete = QPushButton()
             btn_delete.setObjectName("Delete")
             btn_delete.clicked.connect(lambda _, t=transaction: self.confirm_delete(t))
             self.table.setCellWidget(row, 7, btn_delete)
@@ -505,3 +505,11 @@ class HistoryView(QWidget):
                     ]
                 )
             self.label.setText(_translate("Form", lang.get("history", {}).get("foot", "") + f"Rp {self.total}"))
+            for row in range(self.table.rowCount()):
+                widget = self.table.cellWidget(row, 6)
+                if isinstance(widget, QPushButton):
+                    widget.setText(_translate("Form", lang.get("history", {}).get("col7", "")))
+            for row in range(self.table.rowCount()):
+                widget = self.table.cellWidget(row, 7)
+                if isinstance(widget, QPushButton):
+                    widget.setText(_translate("Form", lang.get("history", {}).get("col8", "")))

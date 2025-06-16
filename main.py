@@ -15,7 +15,6 @@ def load_stylesheet(app, filename="styles/style.qss"):
     else:
         print(f"Warning: Stylesheet {filename} not found!")
 
-
 if __name__ == "__main__":
     app = QApplication(sys.argv)
 

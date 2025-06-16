@@ -1,1 +1,14 @@
-[]
+[
+    {
+        "ID": 1,
+        "label": "GoldenRetriever",
+        "price": 30000000,
+        "status": false
+    },
+    {
+        "ID": 2,
+        "label": "Ferrari",
+        "price": 99999999,
+        "status": false
+    }
+]
